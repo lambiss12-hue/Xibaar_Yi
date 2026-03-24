@@ -466,3 +466,4 @@ include 'entete.php';
 // pied.php contient la fermeture du HTML : le footer, </body>, </html>.
 include 'pied.php';
 ?>
+
