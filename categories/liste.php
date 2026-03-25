@@ -1,21 +1,21 @@
 <?php
-require_once '../config.php';
+    require_once '../config.php';
 
-if (!isset($_SESSION['user_role'])) {
-    header('Location: /xibaar_yi/connexion.php');
-    exit;
-}
+    if (!isset($_SESSION['user_role'])) {
+        header('Location: /xibaar_yi/connexion.php');
+        exit;
+    }
 
-if ($_SESSION['user_role'] !== 'editeur' && $_SESSION['user_role'] !== 'administrateur') {
-    header('Location: /xibaar_yi/accueil.php');
-    exit;
-}
+    if ($_SESSION['user_role'] !== 'editeur' && $_SESSION['user_role'] !== 'administrateur') {
+        header('Location: /xibaar_yi/accueil.php');
+        exit;
+    }
 
-$stmt = $pdo->query("SELECT * FROM categories ORDER BY nom ASC");
-$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $pdo->query("SELECT * FROM categories ORDER BY nom ASC");
+    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-require_once '../entete.php';
-require_once '../menu.php';
+    require_once '../entete.php';
+   
 ?>
 
 <div style="max-width:1100px; margin:32px auto; padding:0 24px;">

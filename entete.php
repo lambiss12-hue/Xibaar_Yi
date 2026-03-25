@@ -28,7 +28,7 @@ $prefix = ($dossier_racine === $dossier_script) ? '' : '../';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($titre_page, ENT_QUOTES, 'UTF-8'); ?> — Xibaar Yi</title>
     <meta name="description" content="Xibaar Yi — L'actualité du Sénégal.">
-    <link rel="stylesheet" href="/Projet%20back-end/Xibaar_Yi/style.css">
+    <link rel="stylesheet" href="/xibaar_yi/style.css">
 
 </head>
 <body>
@@ -81,7 +81,7 @@ $prefix = ($dossier_racine === $dossier_script) ? '' : '../';
             // 2. Boucle unique sur les catégories de la BDD
             if (isset($pdo)) {
                 // On utilise DISTINCT pour être sûr de ne pas avoir de doublons de noms
-                $stmt_nav = $pdo->query("SELECT DISTINCT nom FROM categories ORDER BY id ASC");
+                $stmt_nav = $pdo->query("SELECT id, nom FROM categories ORDER BY nom ASC");
                 while ($cat = $stmt_nav->fetch(PDO::FETCH_ASSOC)) {
                     $nom = $cat['nom'];
                     $is_active = (isset($_GET['categorie']) && $_GET['categorie'] === $nom) ? 'active' : '';
