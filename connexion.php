@@ -44,6 +44,7 @@
     ")->fetch(PDO::FETCH_ASSOC);
 ?>
 
+<link rel="stylesheet" type="text/css" href="style.css">
 
 <div style="display:grid; grid-template-columns:1fr 1fr; min-height:100vh;">
 
@@ -88,11 +89,11 @@
 
         <form method="POST" action="connexion.php" id="formConnexion">
             <div style="margin-bottom:18px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#444; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px;">Login</label>
+                <label style="display:block; font-size:13px; font-weight:700; color:#444; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px;">Login</label>
                 <input type="text" name="login" id="login" class="form-control" placeholder="Votre identifiant">
             </div>
             <div style="margin-bottom:18px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#444; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px;">Mot de passe</label>
+                <label style="display:block; font-size:13px; font-weight:700; color:#444; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px;">Mot de passe</label>
                 <input type="password" name="mot_de_passe" id="mdp" class="form-control" placeholder="••••••••">
             </div>
             <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:13px; font-size:13px; letter-spacing:.5px;">
