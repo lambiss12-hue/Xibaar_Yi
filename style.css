@@ -1,0 +1,812 @@
+/*
+ * ============================================================
+ *  XIBAAR YI — style.css
+ *  Rôle : Feuille de styles GLOBALE partagée par toutes les pages
+ *  Auteur : Personne 1
+ *
+ *  TABLE DES MATIÈRES :
+ *    1. Reset & base
+ *    2. Mise en page générale (.site)
+ *    3. Barre supérieure (.topbar)
+ *    4. En-tête / logo (.header)
+ *    5. Navigation catégories (.nav-cats)
+ *    6. Bandeau ticker (.ticker)
+ *    7. Grille principale (.main)
+ *    8. Article hero (grande carte)
+ *    9. Articles secondaires (.art-sm)
+ *   10. Colonne milieu (.main-mid)
+ *   11. Sidebar (.main-sidebar)
+ *   12. Pied de page (.footer)
+ *   13. Utilitaires (boutons, pills)
+ *   14. Responsive (mobile)
+ * ============================================================
+ */
+
+
+/* ============================================================
+   1. RESET & BASE
+   Supprime les marges/paddings par défaut du navigateur
+   et impose un comportement cohérent sur tous les éléments.
+   ============================================================ */
+
+/* Le sélecteur "*" cible TOUS les éléments de la page.
+   margin: 0 → supprime les espaces extérieurs par défaut
+   padding: 0 → supprime les espaces intérieurs par défaut
+   box-sizing: border-box → le padding et la bordure sont INCLUS
+   dans la largeur/hauteur déclarée (plus intuitif pour la mise en page). */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Styles de base appliqués à tout le corps de la page.
+   font-family → liste de polices par ordre de priorité :
+     1. 'Segoe UI' (Windows)
+     2. system-ui (police système par défaut)
+     3. sans-serif (police générique si aucune des autres n'est disponible)
+   background → couleur de fond de la page (gris très léger) */
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    /* background blanc : supprime l'espace gris autour du site */
+    background: #fff;
+    color: #111;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* Tous les liens héritent de la couleur du texte parent par défaut.
+   "inherit" signifie "prends la couleur de l'élément parent".
+   Cela évite les liens bleus soulignés non désirés. */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Les images ne dépassent jamais la largeur de leur conteneur.
+   "max-width: 100%" → l'image rétrécit si son conteneur est petit
+   mais n'agrandit pas au-delà de sa taille naturelle.
+   "display: block" → supprime l'espace en bas des images (comportement inline par défaut). */
+img {
+    max-width: 100%;
+    display: block;
+}
+
+
+/* ============================================================
+   2. MISE EN PAGE GÉNÉRALE
+   Le .site est le conteneur principal qui encadre tout le contenu.
+   ============================================================ */
+
+/* Conteneur principal du site.
+   background: #fff → fond blanc pour le contenu (contraste avec le fond gris de body)
+   border-radius: 10px → coins arrondis pour un effet "carte" sur fond gris
+   overflow: hidden → les éléments enfants ne débordent pas hors des coins arrondis
+   border → fine bordure grise autour du site
+   max-width → le site ne s'élargit pas à l'infini sur grand écran
+   margin: 0 auto → centre le site horizontalement */
+/* Le site prend toute la largeur du navigateur sans bords ni espaces */
+.site {
+    background: #fff;
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   3. BARRE SUPÉRIEURE (.topbar)
+   Petite barre en haut : date à gauche, liens utiles à droite.
+   ============================================================ */
+
+.topbar {
+    background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 6px 32px;
+    /* flexbox : place les enfants en ligne et les distribue
+       aux deux extrémités (date à gauche, liens à droite) */
+    display: flex;
+    align-items: center;         /* aligne verticalement au centre */
+    justify-content: space-between; /* pousse les éléments aux extrémités */
+}
+
+/* Style de la date affichée dans la topbar */
+.topbar-date {
+    font-size: 11px;
+    color: #999;
+    letter-spacing: 0.3px; /* légère espace entre les lettres pour la lisibilité */
+}
+
+/* Conteneur des liens (Météo, Newsletter, Contact) */
+.topbar-links {
+    display: flex;
+    gap: 16px; /* espace de 16px entre chaque lien */
+}
+
+/* Style de chaque lien dans la topbar */
+.topbar-links a {
+    font-size: 11px;
+    color: #777;
+    text-decoration: none;
+}
+
+/* Effet au survol des liens topbar.
+   La pseudo-classe ":hover" s'active quand la souris passe sur l'élément. */
+.topbar-links a:hover {
+    color: #111;
+}
+
+
+/* ============================================================
+   4. EN-TÊTE / LOGO (.header)
+   Contient le logo "Xibaar Yi", le slogan et les boutons.
+   ============================================================ */
+
+.header {
+    background: #fff;
+    padding: 20px 32px 0;
+    /* Ligne épaisse noire en bas pour séparer visuellement l'en-tête du reste */
+    border-bottom: 3px solid #111;
+}
+
+/* Ligne principale du header : logo à gauche, boutons à droite */
+.header-main {
+    display: flex;
+    align-items: flex-end; /* aligne les éléments par leur bas */
+    justify-content: space-between;
+    padding-bottom: 14px;
+}
+
+/* Le nom du site : typographie journal/presse.
+   Georgia est une police serif (avec empattements) qui donne
+   un aspect sérieux et éditorial, comme un vrai journal. */
+.logo-wordmark {
+    font-family: Georgia, serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #111;
+    letter-spacing: -1px; /* rapproche légèrement les lettres pour un effet compact */
+    line-height: 1;
+}
+
+/* Slogan sous le logo */
+.logo-tagline {
+    font-size: 10px;
+    color: #999;
+    letter-spacing: 2px;
+    text-transform: uppercase; /* met le texte en MAJUSCULES via CSS */
+    margin-top: 3px;
+}
+
+/* Conteneur des boutons "Se connecter" et "S'abonner" */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+/* ============================================================
+   5. NAVIGATION CATÉGORIES (.nav-cats)
+   Barre de liens horizontale : Accueil | Tech | Sport | ...
+   ============================================================ */
+
+.nav-cats {
+    display: flex;
+    align-items: center;
+    /* overflow-x: auto → si les liens dépassent la largeur,
+       une barre de défilement horizontale apparaît (utile sur mobile) */
+    overflow-x: auto;
+    padding-top: 2px;
+    gap: 0;
+}
+
+/* Style de chaque lien de navigation */
+.nav-cats a {
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    padding: 10px 14px;
+    text-decoration: none;
+    /* border-bottom transparent par défaut (sera coloré sur .active) */
+    border-bottom: 3px solid transparent;
+    white-space: nowrap; /* empêche le texte de se couper sur deux lignes */
+    letter-spacing: 0.3px;
+    /* transition : anime le changement de couleur en 0.15 seconde
+       pour un effet fluide au survol */
+    transition: color 0.15s;
+}
+
+/* Survol d'un lien de navigation */
+.nav-cats a:hover {
+    color: #111;
+}
+
+/* Lien actif (page courante) : soulignement noir en bas */
+.nav-cats a.active {
+    color: #111;
+    border-bottom-color: #111;
+}
+
+/* Séparateur visuel entre les liens (le "|") */
+.nav-cats .sep {
+    color: #ddd;
+    padding: 0 2px;
+    font-size: 10px;
+}
+
+
+/* ============================================================
+   6. BANDEAU TICKER (.ticker)
+   Bande noire avec l'info flash en italique.
+   ============================================================ */
+
+.ticker {
+    background: #111;
+    padding: 8px 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Badge "FLASH" rouge */
+.ticker-label {
+    background: #e00;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+    /* flex-shrink: 0 → ce badge ne rétrécit jamais,
+       même si l'espace est limité */
+    flex-shrink: 0;
+}
+
+/* Texte de l'info flash */
+.ticker-text {
+    font-size: 12px;
+    color: #ccc;
+    font-style: italic;
+}
+
+
+/* ============================================================
+   7. GRILLE PRINCIPALE (.main)
+   Disposition en colonnes de la page d'accueil :
+   [Articles principaux | Colonne milieu | Sidebar]
+   ============================================================ */
+
+.main {
+    padding: 24px 32px;
+    /* CSS Grid : système de grille en 4 colonnes.
+       "1fr" = une fraction de l'espace disponible (flexible)
+       "240px" = largeur fixe pour la sidebar
+       Résultat : colonne 1 + colonne 2 + colonne 3 + sidebar fixe */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 240px;
+    gap: 0;
+}
+
+/* Colonne gauche : occupe les 2 premières colonnes de la grille
+   (grid-column: 1/3 signifie "de la ligne 1 à la ligne 3") */
+.main-left {
+    grid-column: 1 / 3;
+    border-right: 1px solid #e8e8e8;
+    padding-right: 20px;
+    margin-right: 20px;
+}
+
+/* Colonne du milieu : occupe la 3ème colonne */
+.main-mid {
+    grid-column: 3 / 4;
+    border-right: 1px solid #e8e8e8;
+    padding-right: 20px;
+    margin-right: 20px;
+}
+
+/* Sidebar : occupe la 4ème colonne (la plus à droite) */
+.main-sidebar {
+    grid-column: 4 / 5;
+}
+
+
+/* ============================================================
+   8. ARTICLE HERO (grande carte principale)
+   Le premier et plus grand article mis en avant.
+   ============================================================ */
+
+.hero {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e8e8e8;
+    cursor: pointer; /* indique que l'élément est cliquable */
+}
+
+/* Souligne le titre quand on survole toute la carte hero */
+.hero:hover .hero-title {
+    text-decoration: underline;
+}
+
+/* Zone image de l'article hero */
+.hero-img {
+    width: 100%;
+    height: 220px;
+    background: #111;
+    border-radius: 4px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* nécessaire pour positionner l'overlay en absolute */
+    overflow: hidden;
+}
+
+/* Dégradé sombre en bas de l'image pour rendre le texte lisible dessus */
+.hero-img-overlay {
+    position: absolute; /* se positionne par rapport à .hero-img */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* linear-gradient : dégradé de transparent en haut vers noir semi-transparent en bas */
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    padding: 16px 14px 12px;
+}
+
+/* Étiquette de catégorie sur l'image */
+.hero-img-cat {
+    font-size: 9px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.85;
+}
+
+/* "À la une" en rouge au-dessus du titre */
+.hero-kicker {
+    font-size: 10px;
+    font-weight: 700;
+    color: #cc0000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+/* Titre principal de l'article hero */
+.hero-title {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.3;
+    margin-bottom: 8px;
+}
+
+/* Description courte sous le titre */
+.hero-desc {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+/* Ligne de métadonnées : auteur et date */
+.hero-meta {
+    font-size: 11px;
+    color: #bbb;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+/* Icônes SVG dans les métadonnées */
+.hero-meta svg {
+    width: 10px;
+    height: 10px;
+    vertical-align: middle;
+    margin-right: 3px;
+}
+
+
+/* ============================================================
+   9. ARTICLES SECONDAIRES (.art-sm)
+   Petites cartes avec image à gauche et texte à droite.
+   ============================================================ */
+
+.art-sm {
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start; /* aligne les éléments en haut */
+}
+
+/* Supprime la bordure du dernier article de la liste */
+.art-sm:last-child {
+    border-bottom: none;
+}
+
+/* Souligne le titre au survol de toute la carte */
+.art-sm:hover .art-sm-title {
+    text-decoration: underline;
+}
+
+/* Miniature de l'article */
+.art-sm-img {
+    width: 72px;
+    height: 56px;
+    background: #111;
+    border-radius: 3px;
+    /* flex-shrink: 0 → l'image ne rétrécit jamais,
+       c'est le texte à droite qui s'adapte */
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Étiquette catégorie rouge */
+.art-sm-cat {
+    font-size: 9px;
+    font-weight: 700;
+    color: #cc0000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+/* Titre de l'article secondaire */
+.art-sm-title {
+    font-family: Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+/* Auteur et date */
+.art-sm-meta {
+    font-size: 10px;
+    color: #bbb;
+}
+
+
+/* ============================================================
+   10. COLONNE MILIEU (.main-mid)
+   Liste d'articles avec image optionnelle en haut.
+   ============================================================ */
+
+/* Titre de section (ex: "POLITIQUE") avec ligne noire en dessous */
+.mid-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: #111;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #111;
+    margin-bottom: 14px;
+}
+
+/* Chaque article de la liste */
+.art-list-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.art-list-item:last-child {
+    border-bottom: none;
+}
+
+.art-list-item:hover .ali-title {
+    text-decoration: underline;
+}
+
+/* Étiquette catégorie */
+.ali-cat {
+    font-size: 9px;
+    font-weight: 700;
+    color: #cc0000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+/* Titre de l'article */
+.ali-title {
+    font-family: Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+/* Description courte */
+.ali-desc {
+    font-size: 11px;
+    color: #888;
+    line-height: 1.5;
+    margin-bottom: 5px;
+}
+
+/* Métadonnées */
+.ali-meta {
+    font-size: 10px;
+    color: #bbb;
+}
+
+/* Image optionnelle en haut d'un article de la liste */
+.ali-img {
+    width: 100%;
+    height: 90px;
+    background: #111;
+    border-radius: 3px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ============================================================
+   11. SIDEBAR (.main-sidebar)
+   Colonne droite : articles les plus lus, navigation catégories.
+   ============================================================ */
+
+/* Section de la sidebar avec séparateur en bas */
+.sidebar-section {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar-section:last-child {
+    border-bottom: none;
+}
+
+/* Titre de chaque section de la sidebar */
+.sb-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: #111;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #111;
+    margin-bottom: 12px;
+}
+
+/* Chaque item dans la sidebar */
+.sb-item {
+    padding: 8px 0;
+    border-bottom: 0.5px solid #f0f0f0;
+    cursor: pointer;
+    /* overflow: hidden → nécessaire car le numéro est en "float" */
+    overflow: hidden;
+}
+
+.sb-item:last-child {
+    border-bottom: none;
+}
+
+.sb-item:hover .sb-item-title {
+    text-decoration: underline;
+}
+
+/* Grand numéro décoratif gris clair (01, 02, 03...)
+   float: left → fait flotter le numéro à gauche,
+   le texte à droite s'enroule autour de lui */
+.sb-num {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #e8e8e8;
+    float: left;
+    margin-right: 10px;
+    line-height: 1;
+}
+
+/* Titre dans la sidebar */
+.sb-item-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #111;
+    line-height: 1.4;
+    overflow: hidden; /* empêche le texte de déborder sous le numéro flottant */
+}
+
+/* Catégorie sous le titre */
+.sb-item-cat {
+    font-size: 10px;
+    color: #bbb;
+    margin-top: 3px;
+    overflow: hidden;
+}
+
+/* Boutons de filtre par catégorie (pills/badges cliquables) */
+.cat-pill {
+    display: inline-block;
+    background: #f5f5f5;
+    color: #666;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin: 2px 3px 2px 0;
+    cursor: pointer;
+    /* transition sur background et color pour un effet fluide au clic/survol */
+    transition: background 0.15s, color 0.15s;
+}
+
+/* Survol d'une pill */
+.cat-pill:hover {
+    background: #111;
+    color: #fff;
+}
+
+/* Pill active (catégorie sélectionnée) */
+.cat-pill.active {
+    background: #111;
+    color: #fff;
+}
+
+
+/* ============================================================
+   12. PIED DE PAGE (.footer)
+   Bande noire en bas avec logo et liens.
+   ============================================================ */
+
+.footer {
+    background: #111;
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Logo blanc dans le footer */
+.footer-logo {
+    font-family: Georgia, serif;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 700;
+}
+
+/* Texte secondaire sous le logo (copyright) */
+.footer-text {
+    font-size: 10px;
+    color: #555;
+    margin-top: 2px;
+}
+
+/* Liens du footer */
+.footer-links {
+    display: flex;
+    gap: 14px;
+}
+
+.footer-links a {
+    font-size: 10px;
+    color: #555;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    color: #aaa;
+}
+
+
+/* ============================================================
+   13. UTILITAIRES : BOUTONS
+   Styles des boutons partagés sur toutes les pages.
+   ============================================================ */
+
+/* Bouton sombre "S'abonner" */
+.btn-abonne {
+    background: #111;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    border: none;
+    /* transition pour un effet fluide au survol */
+    transition: background 0.15s;
+}
+
+.btn-abonne:hover {
+    background: #333;
+}
+
+/* Bouton clair "Se connecter" */
+.btn-cnx {
+    background: #fff;
+    color: #111;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.btn-cnx:hover {
+    border-color: #111;
+}
+
+
+/* ============================================================
+   14. RESPONSIVE — MOBILE
+   Adaptations quand l'écran est petit (téléphone, tablette).
+   "@media" est une règle CSS qui s'applique UNIQUEMENT
+   si la condition entre parenthèses est vraie.
+   "max-width: 768px" → s'applique si l'écran fait max 768px de large.
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    /* Sur mobile, les colonnes passent en mode vertical
+       (une seule colonne au lieu de 4) */
+    .main {
+        grid-template-columns: 1fr; /* une seule colonne */
+        padding: 16px;
+    }
+
+    /* Chaque colonne prend toute la largeur */
+    .main-left,
+    .main-mid,
+    .main-sidebar {
+        grid-column: 1 / 2;
+        border-right: none; /* supprime les bordures verticales */
+        padding-right: 0;
+        margin-right: 0;
+        border-bottom: 1px solid #e8e8e8; /* séparateur horizontal à la place */
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* Réduit le padding de l'en-tête */
+    .header,
+    .topbar,
+    .ticker,
+    .footer {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    /* Réduit la taille du logo sur mobile */
+    .logo-wordmark {
+        font-size: 24px;
+    }
+
+    /* Cache les boutons d'action sur très petit écran */
+    .header-actions {
+        display: none;
+    }
+
+    /* Réduit la hauteur de l'image hero */
+    .hero-img {
+        height: 160px;
+    }
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.site {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.footer {
+    margin-top: auto;
+}
