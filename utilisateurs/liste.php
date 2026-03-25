@@ -11,7 +11,6 @@ if ($_SESSION['user_role'] !== 'administrateur') {
     exit;
 }
 
-// Récupérer tous les utilisateurs
 $stmt = $pdo->query("SELECT * FROM utilisateurs ORDER BY nom ASC");
 $utilisateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -19,7 +18,8 @@ require_once '../entete.php';
 require_once '../menu.php';
 ?>
 
-<main>
+<div style="max-width:1100px; margin:32px auto; padding:0 24px;">
+
     <div class="page-header">
         <div class="page-title">Gestion des utilisateurs</div>
         <a href="/xibaar_yi/utilisateurs/ajouter.php" class="btn btn-primary">
@@ -64,6 +64,7 @@ require_once '../menu.php';
             <?php endforeach; ?>
         </tbody>
     </table>
-</main>
+
+</div>
 
 <?php require_once '../pied.php'; ?>

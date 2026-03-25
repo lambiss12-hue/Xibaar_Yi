@@ -161,9 +161,6 @@
             max-width: 1100px;
             margin: 32px auto;
             padding: 0 24px;
-            display: grid;
-            grid-template-columns: 1fr 280px;
-            gap: 24px;
         }
 
         /* CARDS */
