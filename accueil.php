@@ -274,117 +274,85 @@ include 'entete.php';
         <?php endforeach; // Fin de la boucle foreach ?>
     </div>
 </div> -->
-
-<!-- Zone principale : liste des articles -->
-<div class="main" style="padding: 24px 32px;">
-
-    <!-- Titre de la section avec indication du filtre actif si applicable -->
-    <div style="margin-bottom: 20px;">
-        <?php if ($filtre_categorie !== '') : ?>
-            <!-- On affiche le nom de la catégorie filtrée dans le titre -->
-            <h2 style="font-family: Georgia, serif; font-size: 18px; color: #111;">
-                Catégorie :
-                <!-- htmlspecialchars() ici aussi, car $filtre_categorie vient de l'URL (= utilisateur) -->
-                <?php echo htmlspecialchars($filtre_categorie, ENT_QUOTES, 'UTF-8'); ?>
+<!-- On n'utilise QU'UN SEUL conteneur .main -->
+<main class="main">
+    
+    <!-- 1. COLONNE GAUCHE (Prend 2 colonnes de large via CSS) -->
+    <div class="main-left">
+        
+        <!-- Titre de la section (Large) -->
+        <div style="margin-bottom: 24px;">
+            <h2 style="font-family: Georgia, serif; font-size: 22px; color: #111;">
+                <?php echo ($filtre_categorie !== '') ? 'Catégorie : ' . htmlspecialchars($filtre_categorie) : 'Derniers articles'; ?>
             </h2>
+            <p style="font-size: 11px; color: #999; margin-top: 5px;">
+                <?php echo $total_articles; ?> article(s) au total
+            </p>
+            <hr style="border: 0; border-top: 1px solid #eee; margin-top: 10px;">
+        </div>
+
+        <?php if (count($articles) === 0) : ?>
+            <p style="color: #888; font-size: 14px;">Aucun article trouvé.</p>
         <?php else : ?>
-            <h2 style="font-family: Georgia, serif; font-size: 18px; color: #111;">
-                Derniers articles
-            </h2>
+            <?php foreach ($articles as $index => $article) : ?>
+                
+                <!-- Carte Article -->
+                <a href="articles/detail.php?id=<?php echo intval($article['id']); ?>" class="hero">
+                    <div class="hero-img">
+                        <div class="hero-img-overlay">
+                            <span class="hero-img-cat"><?php echo htmlspecialchars($article['categorie_nom']); ?></span>
+                        </div>
+                    </div>
+                    <h2 class="hero-title"><?php echo htmlspecialchars($article['titre']); ?></h2>
+                    <p class="hero-desc"><?php echo htmlspecialchars($article['description_courte']); ?></p>
+                    <div class="hero-meta">Par <b><?php echo htmlspecialchars($article['auteur_nom']); ?></b></div>
+                </a>
+
+            <?php endforeach; ?>
         <?php endif; ?>
 
-        <!-- Affiche le nombre total d'articles trouvés -->
-        <p style="font-size: 12px; color: #999; margin-top: 4px;">
-            <?php echo $total_articles; ?> article(s) au total
-        </p>
+    </div> <!-- FIN .main-left -->
+
+    <!-- 2. COLONNE MILIEU -->
+    <div class="main-mid">
+        <div class="mid-section-title">En bref</div>
+        <p style="font-size: 11px; color: #999; padding-top: 10px;">Plus d'actualités...</p>
     </div>
 
-    <?php
-    // ============================================================
-    //  ÉTAPE 7 : AFFICHER LES ARTICLES OU UN MESSAGE SI VIDE
-    // ============================================================
+    <!-- 3. SIDEBAR -->
+<div class="main-sidebar">
 
-    // count() retourne le nombre d'éléments dans le tableau $articles.
-    // Si le tableau est vide (aucun article trouvé), on affiche un message.
-    if (count($articles) === 0) :
-    ?>
-        <p style="color: #888; font-size: 14px;">Aucun article trouvé.</p>
+    <!-- Bloc 1 : Articles populaires (géré par vos camarades plus tard) -->
+    <div class="sidebar-section">
+        <div class="sb-title">À ne pas manquer</div>
+        <p style="font-size: 11px; color: #999;">Contenu à venir...</p>
+    </div>
 
-    <?php else : ?>
+    <!-- Bloc 2 : Newsletter (Votre partie) -->
+    <div class="sidebar-section" style="background: #f9f9f9; padding: 20px; border-radius: 4px; margin-top: 30px; border: 1px solid #eee;">
+        <div class="sb-title" style="border-bottom: 1px solid #cc0000; color: #cc0000;">Newsletter</div>
+        <p style="font-size: 11px; color: #666; margin-bottom: 15px; line-height: 1.4;">
+            Recevez l'essentiel de l'actualité sénégalaise directement dans votre boîte mail.
+        </p>
+        
+        <form action="traitement_newsletter.php" method="POST">
+            <input type="email" name="email" placeholder="Votre email..." required 
+                   style="width: 100%; padding: 10px; font-size: 12px; border: 1px solid #ddd; margin-bottom: 10px; display: block;">
+            
+            <button type="submit" 
+                    style="width: 100%; background: #111; color: #fff; border: none; padding: 10px; font-size: 11px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">
+                S'ABONNER
+            </button>
+        </form>
+    </div>
 
-        <?php
-        // On boucle sur chaque article du tableau $articles.
-        // À chaque itération, $article contient les données d'un article :
-        // $article['id'], $article['titre'], $article['description_courte'],
-        // $article['date_publication'], $article['categorie_nom'], $article['auteur_nom']
-        foreach ($articles as $article) :
-        ?>
+</div> <!-- Fin .main-sidebar -->
 
-            <!-- Carte article -->
-            <!-- On entoure l'article d'un lien <a> vers sa page de détail.
-                 L'URL pointe vers articles/detail.php avec l'id de l'article en paramètre.
-                 Exemple : articles/detail.php?id=7 -->
-            <a href="articles/detail.php?id=<?php echo intval($article['id']); ?>"
-               style="text-decoration: none; color: inherit; display: block;">
 
-                <div class="art-sm" style="padding: 18px 0; cursor: pointer;">
+    </div>
 
-                    <!-- Image de l'article (placeholder SVG pour l'instant) -->
-                    <div class="art-sm-img">
-                        <!-- Icône SVG générique en attendant une vraie image -->
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                             stroke="#444" stroke-width="1.5">
-                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                        </svg>
-                    </div>
+</main>
 
-                    <!-- Texte de l'article -->
-                    <div class="art-sm-body">
-
-                        <!-- Nom de la catégorie en rouge -->
-                        <div class="art-sm-cat">
-                            <!-- htmlspecialchars() protège contre le XSS à chaque affichage
-                                 de données qui viennent de la base de données. -->
-                            <?php echo htmlspecialchars($article['categorie_nom'], ENT_QUOTES, 'UTF-8'); ?>
-                        </div>
-
-                        <!-- Titre de l'article -->
-                        <div class="art-sm-title">
-                            <?php echo htmlspecialchars($article['titre'], ENT_QUOTES, 'UTF-8'); ?>
-                        </div>
-
-                        <!-- Description courte de l'article -->
-                        <div style="font-size: 12px; color: #666; margin: 4px 0 6px; line-height: 1.5;">
-                            <?php echo htmlspecialchars($article['description_courte'], ENT_QUOTES, 'UTF-8'); ?>
-                        </div>
-
-                        <!-- Métadonnées : auteur et date -->
-                        <div class="art-sm-meta">
-
-                            <!-- Nom de l'auteur -->
-                            <?php echo htmlspecialchars($article['auteur_nom'], ENT_QUOTES, 'UTF-8'); ?>
-
-                            &nbsp;·&nbsp;
-
-                            <!-- Date de publication : on la formate pour l'affichage.
-                                 date() formate une date PHP selon un format donné.
-                                 strtotime() convertit la date MySQL (ex: "2026-03-19 14:30:00")
-                                 en un timestamp Unix (nombre de secondes depuis le 1er janvier 1970)
-                                 que date() peut ensuite formater.
-                                 'd/m/Y' → affiche "19/03/2026" -->
-                            <?php echo date('d/m/Y', strtotime($article['date_publication'])); ?>
-                        </div>
-                    </div>
-                </div>
-
-            </a><!-- Fin du lien cliquable -->
-
-        <?php endforeach; // Fin de la boucle sur les articles ?>
-
-    <?php endif; // Fin du if/else sur le nombre d'articles ?>
-
-</div><!-- Fin de .main -->
 
 
 <!-- ============================================================

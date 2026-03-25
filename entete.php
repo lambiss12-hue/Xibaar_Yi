@@ -28,7 +28,8 @@ $prefix = ($dossier_racine === $dossier_script) ? '' : '../';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($titre_page, ENT_QUOTES, 'UTF-8'); ?> — Xibaar Yi</title>
     <meta name="description" content="Xibaar Yi — L'actualité du Sénégal.">
-    <link rel="stylesheet" href="<?php echo $prefix; ?>style.css">
+    <link rel="stylesheet" href="/Projet%20back-end/Xibaar_Yi/style.css">
+
 </head>
 <body>
 
@@ -43,10 +44,6 @@ $prefix = ($dossier_racine === $dossier_script) ? '' : '../';
             $nom_mois = $mois_fr[date('F')]  ?? date('F');
             echo $nom_jour . ' ' . date('j') . ' ' . $nom_mois . ' ' . date('Y') . ' · Dakar, Sénégal';
             ?>
-        </div>
-        <div class="topbar-links">
-            <a href="#">Newsletter</a>
-            <a href="#">Contact</a>
         </div>
     </div>
 
@@ -66,8 +63,11 @@ $prefix = ($dossier_racine === $dossier_script) ? '' : '../';
                     <a href="<?php echo $prefix; ?>deconnexion.php" class="btn-cnx">Se déconnecter</a>
                 <?php else : ?>
                     <a href="<?php echo $prefix; ?>connexion.php" class="btn-cnx">Se connecter</a>
-                    <div class="btn-abonne">S'abonner</div>
                 <?php endif; ?>
+
+                <div class="header-actions">
+                    <a href="contact.php" class="btn-cnx">Contact</a>
+                </div>
             </div>
         </div>
 

@@ -1,5 +1,6 @@
 <?php
-    // TOUT LE PHP EN PREMIER
+    // 1. DÉMARRER LA SESSION EN PREMIER
+    session_start();
 
     require_once 'config.php';
 
@@ -16,19 +17,24 @@
             $stmt->execute([$login]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-          if ($user && $user['mot_de_passe'] === hash('sha256', $mdp)) {
-    $_SESSION['user_id']    = $user['id'];
-    $_SESSION['user_login'] = $user['login'];
-    $_SESSION['user_role']  = $user['role'];
-    $_SESSION['user_nom']   = $user['prenom'] . ' ' . $user['nom'];
-    
-    echo '<script>window.location.href = "http://localhost/xibaar_yi/accueil.php";</script>';
-    exit;
-}
+            // On compare le mot de passe haché
+            if ($user && $user['mot_de_passe'] === hash('sha256', $mdp)) {
+                // On remplit les informations de session
+                $_SESSION['user_id']    = $user['id'];
+                $_SESSION['user_login'] = $user['login'];
+                $_SESSION['user_role']  = $user['role'];
+                $_SESSION['user_nom']   = $user['prenom'] . ' ' . $user['nom'];
+                
+                // Redirection propre vers l'accueil
+                header('Location: accueil.php');
+                exit;
+            } else {
+                $erreur = "Login ou mot de passe incorrect.";
+            }
         }
     }
 
-    // RECUPERER LE DERNIER ARTICLE
+    // RÉCUPÉRER LE DERNIER ARTICLE (reste inchangé)
     $dernierArticle = $pdo->query("
         SELECT a.titre, u.nom, a.date_publication
         FROM articles a
@@ -36,9 +42,8 @@
         ORDER BY a.date_publication DESC
         LIMIT 1
     ")->fetch(PDO::FETCH_ASSOC);
-
-
 ?>
+
 
 <div style="display:grid; grid-template-columns:1fr 1fr; min-height:100vh;">
 

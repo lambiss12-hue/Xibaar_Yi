@@ -1,13 +1,16 @@
 <?php
-    if(session_status()===PHP_SESSION_NONE){session_start();}
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
 
-    //on detruit toutes les data de session
+    // On vide le tableau de session
     $_SESSION = [];
+
+    // On détruit la session sur le serveur
     session_destroy();
 
-    //on redirige vers l'acceuil
-    header('Location: /xibaar_yi/accueil.php');
+    // CORRECTION DU CHEMIN : 
+    // On repart de la racine "/" pour être sûr de trouver le fichier
+    header('Location: /Projet%20back-end/Xibaar_Yi/accueil.php');
     exit;
-
-
 ?>

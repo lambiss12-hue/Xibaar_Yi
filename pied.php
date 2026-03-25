@@ -41,6 +41,9 @@ $prefix = ($dossier_racine === $dossier_script) ? '' : '../';
             <a href="<?php echo $prefix; ?>accueil.php">Accueil</a>
             <a href="<?php echo $prefix; ?>accueil.php?categorie=Technologie">Technologie</a>
             <a href="<?php echo $prefix; ?>accueil.php?categorie=Sport">Sport</a>
+             <a href="<?php echo $prefix; ?>accueil.php?categorie=Politique">Politique</a>
+              <a href="<?php echo $prefix; ?>accueil.php?categorie=Education">Education</a>
+               <a href="<?php echo $prefix; ?>accueil.php?categorie=Culture">Culture</a>
             <a href="<?php echo $prefix; ?>connexion.php">Connexion</a>
             <a href="#">Contact</a>
         </div>

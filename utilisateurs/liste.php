@@ -16,7 +16,6 @@ $stmt = $pdo->query("SELECT * FROM utilisateurs ORDER BY nom ASC");
 $utilisateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 require_once '../entete.php';
-require_once '../menu.php';
 ?>
 
 <main>
