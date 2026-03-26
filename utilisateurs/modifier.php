@@ -72,7 +72,7 @@
     }
 
     require_once '../entete.php';
-    require_once '../menu.php';
+   
 ?>
 
 <div style="max-width:600px; margin:32px auto; padding:0 24px;">
