@@ -5,12 +5,12 @@ require_once '../config.php';
 require_once '../entete.php';
 
 if (!isset($_SESSION['user_role'])) {
-    header('Location: /xibaar_yi/connexion.php');
+    header('Location: /Projet back-end/Xibaar_Yi/connexion.php');
     exit;
 }
 
 if ($_SESSION['user_role'] !== 'editeur' && $_SESSION['user_role'] !== 'administrateur') {
-    header('Location: /xibaar_yi/accueil.php');
+    header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
     exit;
 }
 

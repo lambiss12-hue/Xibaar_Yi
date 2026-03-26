@@ -2,17 +2,17 @@
     require_once '../config.php';
 
     if (!isset($_SESSION['user_role'])) {
-        header('Location: /xibaar_yi/connexion.php');
+        header('Location: /Projet back-end/Xibaar_Yi/connexion.php');
         exit;
     }
 
     if ($_SESSION['user_role'] !== 'editeur' && $_SESSION['user_role'] !== 'administrateur') {
-        header('Location: /xibaar_yi/accueil.php');
+        header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
         exit;
     }
 
     if (!isset($_GET['id'])) {
-        header('Location: /xibaar_yi/categories/liste.php');
+        header('Location: /Projet back-end/Xibaar_Yi/categories/liste.php');
         exit;
     }
 
@@ -23,7 +23,7 @@
     $cat = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$cat) {
-        header('Location: /xibaar_yi/categories/liste.php');
+        header('Location: /Projet back-end/Xibaar_Yi/categories/liste.php');
         exit;
     }
 
@@ -49,7 +49,7 @@
 
     <div class="page-header">
         <div class="page-title">Modifier la catégorie</div>
-        <a href="/xibaar_yi/categories/liste.php" class="btn btn-secondary">
+        <a href="/Projet back-end/Xibaar_Yi/categories/liste.php" class="btn btn-secondary">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Retour à la liste
         </a>

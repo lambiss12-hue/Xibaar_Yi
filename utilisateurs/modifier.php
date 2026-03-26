@@ -2,17 +2,17 @@
     require_once '../config.php';
 
     if (!isset($_SESSION['user_role'])) {
-        header('Location: /xibaar_yi/connexion.php');
+        header('Location: /Projet back-end/Xibaar_Xi/connexion.php');
         exit;
     }
 
     if ($_SESSION['user_role'] !== 'administrateur') {
-        header('Location: /xibaar_yi/accueil.php');
+        header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
         exit;
     }
 
     if (!isset($_GET['id'])) {
-        header('Location: /xibaar_yi/utilisateurs/liste.php');
+        header('Location: /Projet back-end/Xibaar_Yi/utilisateurs/liste.php');
         exit;
     }
 
@@ -28,7 +28,7 @@
 
     // Si l'utilisateur n'existe pas on redirige
     if (!$user) {
-        header('Location: /xibaar_yi/utilisateurs/liste.php');
+        header('Location: /Projet back-end/Xibaar_Xi/utilisateurs/liste.php');
         exit;
     }
 
@@ -72,6 +72,7 @@
     }
 
     require_once '../entete.php';
+
 ?>
 
 <div style="max-width:600px; margin:32px auto; padding:0 24px;">

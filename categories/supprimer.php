@@ -4,17 +4,17 @@
     require_once '../config.php';
 
     if (!isset($_SESSION['user_role'])) {
-        header('Location: /xibaar_yi/connexion.php');
+        header('Location: /Projet back-end/Xibaar_Yi/connexion.php');
         exit;
     }
 
     if ($_SESSION['user_role'] !== 'editeur' && $_SESSION['user_role'] !== 'administrateur') {
-        header('Location: /xibaar_yi/accueil.php');
+        header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
         exit;
     }
 
     if (!isset($_GET['id'])) {
-        header('Location: /xibaar_yi/categories/liste.php');
+        header('Location: /Projet back-end/Xibaar_Yi/categories/liste.php');
         exit;
     }
 
@@ -23,7 +23,7 @@
     $stmt = $pdo->prepare("DELETE  FROM categories WHERE id = ?");
     $stmt->execute([$id]);
 
-    header('Location: /xibaar_yi/categories/liste.php');
+    header('Location: /Projet back-end/Xibaar_Yi/categories/liste.php');
     exit;
 
 ?>

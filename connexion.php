@@ -51,7 +51,7 @@
     <!-- GAUCHE -->
     <div style="background:#0a0a0a; padding:48px 40px; display:flex; flex-direction:column; justify-content:space-between;">
         <div>
-            <a href="/xibaar_yi/accueil.php" style="text-decoration:none;">
+            <a href="/Projet back-end/Xibaar_Yi/accueil.php" style="text-decoration:none;">
                 <div style="font-family:Georgia,serif; font-size:28px; font-weight:700; color:#fff;">Xibaar Yi</div>
                 <div style="font-size:11px; color:#555; letter-spacing:2px; text-transform:uppercase; margin-top:4px;">L'actualité du Sénégal</div>
             </a>
