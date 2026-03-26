@@ -942,3 +942,26 @@ body {
     color: #cc0000; 
 }
 .btn-danger:hover { text-decoration: underline; }
+
+
+/* On cible spécifiquement les INPUT ayant la classe form-control */
+input.form-control {
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 14px;
+    color: #111;
+    background-color: #fff;
+    border: 1px solid #ddd; 
+    border-radius: 2px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box; /* IMPORTANT : pour que le padding ne dépasse pas des 100% */
+}
+
+input.form-control:focus {
+    border-color: #111;
+    background-color: #fcfcfc;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
