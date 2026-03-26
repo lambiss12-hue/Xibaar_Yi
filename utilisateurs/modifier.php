@@ -72,14 +72,13 @@
     }
 
     require_once '../entete.php';
-    require_once '../menu.php';
 ?>
 
 <div style="max-width:600px; margin:32px auto; padding:0 24px;">
 
     <div class="page-header">
         <div class="page-title">Modifier l'utilisateur</div>
-        <a href="/xibaar_yi/utilisateurs/liste.php" class="btn btn-secondary">
+        <a href="/Projet back-end/Xibaar_Yi/utilisateurs/liste.php" class="btn btn-secondary">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Retour à la liste
         </a>

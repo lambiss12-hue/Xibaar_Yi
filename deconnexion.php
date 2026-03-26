@@ -11,6 +11,6 @@
 
     // CORRECTION DU CHEMIN : 
     // On repart de la racine "/" pour être sûr de trouver le fichier
-    header('Location: /xibaar_yi/accueil.php');
+    header('Location: accueil.php');
     exit;
 ?>

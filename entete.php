@@ -17,10 +17,17 @@ if (session_status() === PHP_SESSION_NONE) {
 $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
 
 // Gestion du préfixe pour les sous-dossiers
-$dossier_racine = dirname(__FILE__);
-$dossier_script = dirname(realpath($_SERVER['SCRIPT_FILENAME']));
-$prefix = ($dossier_racine === $dossier_script) ? '' : '../';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
+
+// On définit le chemin absolu pour XAMPP
+// Attention aux majuscules et à l'espace
+$prefix = "/Projet back-end/Xibaar_Yi/"; 
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -28,7 +35,7 @@ $prefix = ($dossier_racine === $dossier_script) ? '' : '../';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($titre_page, ENT_QUOTES, 'UTF-8'); ?> — Xibaar Yi</title>
     <meta name="description" content="Xibaar Yi — L'actualité du Sénégal.">
-    <link rel="stylesheet" href="/xibaar_yi/style.css">
+    <link rel="stylesheet" href="/Projet back-end/Xibaar_Yi/style.css">
 
 </head>
 <body>
@@ -66,7 +73,7 @@ $prefix = ($dossier_racine === $dossier_script) ? '' : '../';
                 <?php endif; ?>
 
                 <div class="header-actions">
-                    <a href="contact.php" class="btn-cnx">Contact</a>
+                    <a href="/Projet back-end/Xibaar_Yi/contact.php" class="btn-cnx">Contact</a>
                 </div>
             </div>
         </div>
