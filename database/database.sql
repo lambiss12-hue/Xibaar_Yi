@@ -34,8 +34,9 @@ CREATE TABLE IF NOT EXISTS articles (
 );
 
 CREATE TABLE IF NOT EXISTS newsletter (
-    id    INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(150) NOT NULL UNIQUE
+    id               INT AUTO_INCREMENT PRIMARY KEY,
+    email            VARCHAR(255) NOT NULL UNIQUE,
+    date_inscription DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Données de départ

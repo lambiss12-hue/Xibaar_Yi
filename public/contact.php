@@ -68,7 +68,9 @@ include __DIR__ . '/../includes/entete.php';
 
         <div class="sidebar-section" style="background: #f9f9f9; padding: 15px; border-radius: 4px; margin-top: 20px; border: 1px solid #eee;">
             <div class="sb-title">Newsletter</div>
+            <?php include __DIR__ . '/../includes/message_newsletter.php'; ?>
             <form action="<?= url('traitement_newsletter.php') ?>" method="POST">
+                <input type="hidden" name="retour" value="contact.php">
                 <input type="email" name="email" placeholder="Votre email" required style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; margin-bottom: 8px;">
                 <button type="submit" style="width: 100%; background: #111; color: #fff; border: none; padding: 8px; font-size: 11px; font-weight: bold; cursor: pointer; width: 100%;">S'ABONNER</button>
             </form>
