@@ -1,14 +1,9 @@
 <?php
-/*
- * ============================================================
- *  XIBAAR YI — entete.php (version finale)
- *  Rôle : En-tête HTML commun à TOUTES les pages du site.
- *
- *  Inclus dans chaque page avec :
- *    - include 'entete.php';        (depuis la racine)
- *    - include '../entete.php';     (depuis un sous-dossier)
- * ============================================================
- */
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -16,15 +11,6 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
 
-// Gestion du préfixe pour les sous-dossiers
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-$titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
-
-// On définit le chemin absolu pour XAMPP
-// Attention aux majuscules et à l'espace
 $prefix = "/Projet back-end/Xibaar_Yi/"; 
 ?>
 
@@ -41,7 +27,6 @@ $prefix = "/Projet back-end/Xibaar_Yi/";
 <body>
 
 <div class="site">
-    <!-- BARRE SUPÉRIEURE -->
     <div class="topbar">
         <div class="topbar-date">
             <?php
@@ -54,7 +39,6 @@ $prefix = "/Projet back-end/Xibaar_Yi/";
         </div>
     </div>
 
-    <!-- EN-TÊTE PRINCIPAL -->
     <div class="header">
         <div class="header-main">
             <a href="<?php echo $prefix; ?>accueil.php" style="text-decoration:none;">
@@ -78,16 +62,12 @@ $prefix = "/Projet back-end/Xibaar_Yi/";
             </div>
         </div>
 
-        <!-- NAVIGATION DYNAMIQUE (CORRECTION DES DOUBLONS ICI) -->
         <nav class="nav-cats">
-            <!-- 1. Lien Accueil (Tout) -->
             <?php $active_all = (!isset($_GET['categorie']) || empty($_GET['categorie'])) ? 'active' : ''; ?>
             <a href="<?php echo $prefix; ?>accueil.php" class="<?php echo $active_all; ?>">Accueil</a>
 
             <?php
-            // 2. Boucle unique sur les catégories de la BDD
             if (isset($pdo)) {
-                // On utilise DISTINCT pour être sûr de ne pas avoir de doublons de noms
                 $stmt_nav = $pdo->query("SELECT id, nom FROM categories ORDER BY nom ASC");
                 while ($cat = $stmt_nav->fetch(PDO::FETCH_ASSOC)) {
                     $nom = $cat['nom'];
@@ -100,8 +80,7 @@ $prefix = "/Projet back-end/Xibaar_Yi/";
                 }
             }
             ?>
-
-            <!-- 3. Liens d'administration -->
+            
             <?php if (isset($_SESSION['user_role'])) : ?>
                 <span class="sep">|</span>
                 <?php if ($_SESSION['user_role'] === 'editeur' || $_SESSION['user_role'] === 'administrateur') : ?>

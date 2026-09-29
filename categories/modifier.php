@@ -16,13 +16,14 @@
         exit;
     }
 
-    $id = (int) $_GET['id'];
+     $id = (int) $_GET['id'];
 
     $stmt = $pdo->prepare("SELECT * FROM categories WHERE id = ?");
     $stmt->execute([$id]);
-    $cat = $stmt->fetch(PDO::FETCH_ASSOC);
+    //changement de nom
+    $categorie_actuelle = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$cat) {
+    if (!$categorie_actuelle) {
         header('Location: /Projet back-end/Xibaar_Yi/categories/liste.php');
         exit;
     }
@@ -38,6 +39,9 @@
         } else {
             $stmt = $pdo->prepare("UPDATE categories SET nom = ? WHERE id = ?");
             $stmt->execute([$nom, $id]);
+            
+            // mise à jour de la nouvelle variable
+            $categorie_actuelle['nom'] = $nom; 
             $succes = "Catégorie modifiée avec succès !";
         }
     }
@@ -73,7 +77,9 @@
         <form method="POST" action="modifier.php?id=<?= $id ?>" id="formModifier">
             <div class="form-group">
                 <label class="form-label">Nom *</label>
-                <input type="text" name="nom" class="form-control" value="<?= htmlspecialchars($cat['nom']) ?>" style="width:100%; margin-bottom:16px;">
+                <input type="text" name="nom" class="form-control" 
+                    value="<?= htmlspecialchars($categorie_actuelle['nom']) ?>" 
+                    style="width:100%; margin-bottom:16px;">
             </div>
             <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v14a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
