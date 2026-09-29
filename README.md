@@ -45,7 +45,7 @@ Xibaar_Yi/
 │   └── uploads/             images des articles
 ├── includes/
 │   ├── config.php           connexion BDD, session, fonction url()
-│   ├── auth.php             exiger_role() pour protéger les pages admin
+│   ├── auth.php             exiger_role(), jeton CSRF (csrf_champ, exiger_post_csrf)
 │   ├── entete.php           en-tête commun (menu, catégories)
 │   └── pied.php             pied de page commun
 └── database/
@@ -122,6 +122,13 @@ exiger_role(['editeur', 'administrateur']);   // ou ['administrateur']
 require_once __DIR__ . '/../../../includes/entete.php';
 ?>
 <a href="<?= url('admin/categories/liste.php') ?>">Catégories</a>
+
+<!-- Action sensible (suppression...) : formulaire POST + jeton CSRF -->
+<form method="POST" action="<?= url('admin/categories/supprimer.php') ?>">
+    <?= csrf_champ() ?>
+    <input type="hidden" name="id" value="3">
+    <button type="submit">Supprimer</button>
+</form>
 <?php require_once __DIR__ . '/../../../includes/pied.php'; ?>
 ```
 
@@ -129,7 +136,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
 
 - [ ] Traiter le formulaire de contact (`traitement_contact.php` n'existe pas encore)
 - [ ] Hacher les mots de passe avec `password_hash()` / `password_verify()` au lieu de SHA-256
-- [ ] Supprimer via un formulaire POST avec jeton CSRF plutôt qu'un simple lien
+- [x] Supprimer via un formulaire POST avec jeton CSRF plutôt qu'un simple lien
 - [ ] Gérer l'inscription en double à la newsletter
 
 ## Équipe

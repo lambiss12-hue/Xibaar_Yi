@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/auth.php';
 
 
 
@@ -176,6 +176,7 @@ include __DIR__ . '/../includes/entete.php';
                       padding: 10px 20px; border: 1px solid #ccc; border-radius: 2px;
                       text-decoration: none;">
                 ← Retour aux articles
+            </a>
 
                 <?php if (isset($_SESSION['user_role']) && ($_SESSION['user_role'] === 'editeur' || $_SESSION['user_role'] === 'administrateur')): ?>
     <a href="<?= url('admin/articles/modifier.php') ?>?id=<?= $article['id'] ?>"
@@ -188,20 +189,23 @@ include __DIR__ . '/../includes/entete.php';
         </svg>
         Modifier
     </a>
-    <a href="<?= url('admin/articles/supprimer.php') ?>?id=<?= $article['id'] ?>"
-       onclick="return confirm('Supprimer cet article ?')"
-       style="margin-left:10px; background:#cc0000; color:#fff; font-size:12px;
-              font-weight:600; padding:10px 20px; border-radius:2px; text-decoration:none;
-              display:inline-flex; align-items:center; gap:6px;">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3 6 5 6 21 6"/>
-            <path d="M19 6l-1 14H6L5 6"/>
-            <path d="M10 11v6M14 11v6"/>
-        </svg>
-        Supprimer
-    </a>
+    <form method="POST" action="<?= url('admin/articles/supprimer.php') ?>" class="form-inline"
+          onsubmit="return confirm('Supprimer cet article ?')">
+        <?= csrf_champ() ?>
+        <input type="hidden" name="id" value="<?= $article['id'] ?>">
+        <button type="submit"
+           style="margin-left:10px; background:#cc0000; color:#fff; font-size:12px;
+                  font-weight:600; padding:10px 20px; border:none; border-radius:2px; cursor:pointer;
+                  font-family:inherit; display:inline-flex; align-items:center; gap:6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14H6L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+            </svg>
+            Supprimer
+        </button>
+    </form>
 <?php endif; ?>
-            </a>
             <a href="<?= url('index.php') ?>?categorie=<?php echo urlencode($article['categorie_nom']); ?>"
                style="margin-left: 10px; background: #111; color: #fff; font-size: 12px;
                       font-weight: 600; padding: 10px 20px; border-radius: 2px;
