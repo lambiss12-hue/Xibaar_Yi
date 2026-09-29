@@ -64,9 +64,11 @@ Xibaar_Yi/
 │   ├── entete.php           en-tête commun (menu, catégories)
 │   ├── pied.php             pied de page commun
 │   └── message_newsletter.php  message après inscription à la newsletter
-└── database/
-    ├── database.sql         création des tables + données de test
-    └── migrations/          mises à jour pour les bases déjà créées
+├── database/
+│   ├── database.sql         création des tables + données de test
+│   ├── demo.sql             données de démonstration (optionnel)
+│   └── migrations/          mises à jour pour les bases déjà créées
+└── docs/                    architecture, base de données, démo de soutenance
 ```
 
 ## Installation
@@ -123,6 +125,25 @@ le nom ou l'emplacement du dossier.
 | `admin` | `admin123` | administrateur |
 
 > ⚠️ Changer ce mot de passe avant toute mise en ligne.
+
+### Données de démonstration (optionnel)
+
+Pour une démo plus vivante (15 articles de plus, commentaires, messages, 2 éditeurs) :
+
+```bash
+mysql -u root < database/demo.sql
+```
+
+Comptes éditeurs ajoutés : `fatou` et `moussa`, mot de passe `redac123`.
+Le fichier explique aussi comment retirer ces données.
+
+## Documentation
+
+| Document | Contenu |
+|---|---|
+| [docs/architecture.md](docs/architecture.md) | organisation du code, construction d'une page, rôles, mesures de sécurité |
+| [docs/base-de-donnees.md](docs/base-de-donnees.md) | schéma de la base, tables, relations, migrations |
+| [docs/demo.md](docs/demo.md) | scénario de démonstration et questions probables pour la soutenance |
 
 ## Travailler à plusieurs (Git)
 
