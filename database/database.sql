@@ -50,6 +50,18 @@ CREATE TABLE IF NOT EXISTS messages_contact (
     lu         TINYINT(1) NOT NULL DEFAULT 0
 );
 
+-- Commentaires des visiteurs : publiés seulement après validation (statut 'approuve')
+CREATE TABLE IF NOT EXISTS commentaires (
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    id_article    INT NOT NULL,
+    nom           VARCHAR(100) NOT NULL,
+    email         VARCHAR(150) NOT NULL,
+    contenu       TEXT NOT NULL,
+    date_envoi    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    statut        ENUM('en_attente', 'approuve') NOT NULL DEFAULT 'en_attente',
+    FOREIGN KEY (id_article) REFERENCES articles(id) ON DELETE CASCADE
+);
+
 -- Données de départ
 INSERT IGNORE INTO categories (id, nom) VALUES
     (1, 'Politique'), (2, 'Sport'), (3, 'Culture'), (4, 'Education'), (5, 'Technologie');
@@ -64,3 +76,7 @@ INSERT IGNORE INTO articles (id, titre, description_courte, contenu, image, id_c
     (3, 'Festival de Saint-Louis : une édition record', 'Artistes et visiteurs venus du monde entier pour célébrer la musique.', 'Le festival a rassemblé un public nombreux pendant plusieurs jours de concerts.', 'culture.png', 3, 1, NOW() - INTERVAL 3 DAY),
     (4, 'Rentrée scolaire : ce qui change cette année', 'Nouveaux programmes et nouvelles écoles pour les élèves.', 'Le ministère a présenté les principales nouveautés de la rentrée scolaire.', 'education.png', 4, 1, NOW() - INTERVAL 2 DAY),
     (5, 'Dakar, nouveau pôle des startups africaines', 'L''écosystème tech sénégalais attire de plus en plus d''investisseurs.', 'Les startups dakaroises multiplient les levées de fonds et les partenariats.', 'technologie.png', 5, 1, NOW() - INTERVAL 1 DAY);
+
+INSERT IGNORE INTO commentaires (id, id_article, nom, email, contenu, statut, date_envoi) VALUES
+    (1, 4, 'Fatou Sow', 'fatou@exemple.sn', 'Merci pour ces informations, très utile pour les parents !', 'approuve', NOW() - INTERVAL 1 DAY),
+    (2, 4, 'Ibrahima', 'ibrahima@exemple.sn', 'Et pour les écoles privées, qu''est-ce qui change ?', 'approuve', NOW() - INTERVAL 20 HOUR);

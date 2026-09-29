@@ -81,12 +81,18 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
 
         <?php if (in_array($_SESSION['user_role'] ?? '', ['editeur', 'administrateur'], true)) : ?>
             <?php
-            // Nombre de messages non lus (affiché à côté de "Messages")
-            $nb_messages_non_lus = 0;
-            try {
-                $nb_messages_non_lus = (int) $pdo->query("SELECT COUNT(*) FROM messages_contact WHERE lu = 0")->fetchColumn();
-            } catch (PDOException $e) {
-                // Migration 004 pas encore exécutée : on n'affiche simplement pas le compteur
+            // Compteurs affichés à côté des liens : messages non lus, commentaires à valider
+            $requetes_compteurs = [
+                'admin/messages/liste.php'     => "SELECT COUNT(*) FROM messages_contact WHERE lu = 0",
+                'admin/commentaires/liste.php' => "SELECT COUNT(*) FROM commentaires WHERE statut = 'en_attente'",
+            ];
+            $compteurs_admin = [];
+            foreach ($requetes_compteurs as $chemin => $sql) {
+                try {
+                    $compteurs_admin[$chemin] = (int) $pdo->query($sql)->fetchColumn();
+                } catch (PDOException $e) {
+                    // Migration pas encore exécutée : on n'affiche simplement pas ce compteur
+                }
             }
 
             // Lien actif = section admin de la page courante
@@ -96,6 +102,7 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
                 'admin/articles/ajouter.php'   => '+ Nouvel article',
                 'admin/categories/liste.php'   => 'Catégories',
                 'admin/messages/liste.php'     => 'Messages',
+                'admin/commentaires/liste.php' => 'Commentaires',
             ];
             if ($_SESSION['user_role'] === 'administrateur') {
                 $liens_admin['admin/utilisateurs/liste.php'] = 'Utilisateurs';
@@ -123,8 +130,8 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
                 <?php foreach ($liens_admin as $chemin => $libelle) : ?>
                     <a href="<?= url($chemin) ?>" class="<?= $chemin === $lien_actif ? 'active' : '' ?>">
                         <?= $libelle ?>
-                        <?php if ($chemin === 'admin/messages/liste.php' && $nb_messages_non_lus > 0) : ?>
-                            <span class="nav-admin-compteur"><?= $nb_messages_non_lus ?></span>
+                        <?php if (($compteurs_admin[$chemin] ?? 0) > 0) : ?>
+                            <span class="nav-admin-compteur"><?= $compteurs_admin[$chemin] ?></span>
                         <?php endif; ?>
                     </a>
                 <?php endforeach; ?>

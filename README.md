@@ -13,6 +13,8 @@ publier et gérer le contenu.
 - Recherche d'articles (titre, résumé, contenu) depuis l'en-tête
 - « Les plus lus » : compteur de vues par article (une vue par visiteur et par session)
 - Page de détail d'un article (image, nombre de vues) avec suggestions « À lire aussi »
+- Commentaires sous chaque article, publiés après validation par la rédaction
+  (anti-spam : champ piège invisible + un commentaire toutes les 30 secondes)
 - Site adapté aux téléphones et tablettes
 - Inscription à la newsletter
 - Page de contact (messages enregistrés en base, consultables dans le back-office)
@@ -26,7 +28,7 @@ publier et gérer le contenu.
 
 Une barre « Rédaction » apparaît sous le menu une fois connecté : liste des articles
 (recherche par titre, filtre par catégorie), catégories, messages de contact
-(avec le nombre de messages non lus), les utilisateurs pour l'administrateur, et « Mon compte »
+(avec le nombre de messages non lus), les commentaires à valider, les utilisateurs pour l'administrateur, et « Mon compte »
 où chacun modifie ses informations et son mot de passe (l'ancien mot de passe est demandé).
 
 ## Technologies
@@ -44,11 +46,13 @@ Xibaar_Yi/
 │   ├── article.php          détail d'un article
 │   ├── connexion.php / deconnexion.php
 │   ├── contact.php / traitement_contact.php
+│   ├── traitement_commentaire.php
 │   ├── traitement_newsletter.php
 │   ├── admin/
 │   │   ├── articles/        liste (recherche, filtre), ajouter, modifier, supprimer
 │   │   ├── categories/      liste, ajouter, modifier, supprimer
 │   │   ├── messages/        liste, action (lu / non lu, supprimer)
+│   │   ├── commentaires/    liste (en attente / approuvés), action (approuver, masquer, supprimer)
 │   │   ├── utilisateurs/    liste, ajouter, modifier, supprimer
 │   │   └── compte.php       mon compte (infos + mot de passe)
 │   ├── assets/css/style.css
@@ -84,7 +88,7 @@ mysql -u root < database/database.sql
 
 Ou via phpMyAdmin / HeidiSQL : **Importer** → `database/database.sql`.
 
-Le script crée la base `xibaar_yi`, les tables `categories`, `utilisateurs`, `articles`, `newsletter`, `messages_contact`,
+Le script crée la base `xibaar_yi`, les tables `categories`, `utilisateurs`, `articles`, `newsletter`, `messages_contact`, `commentaires`,
 ainsi que 5 catégories, 5 articles d'exemple et un compte administrateur.
 
 > **Base déjà existante ?** Exécuter aussi les scripts de `database/migrations/` (une seule fois).
