@@ -9,27 +9,35 @@ if ($page_courante < 1) {
 
 $filtre_categorie = isset($_GET['categorie']) ? trim($_GET['categorie']) : '';
 
+// Recherche par mot-clé (titre, résumé ou contenu)
+$recherche = isset($_GET['q']) ? trim($_GET['q']) : '';
+
 $articles_par_page = 5;
 
 $offset = ($page_courante - 1) * $articles_par_page;
 
+// On construit le WHERE selon les filtres utilisés (catégorie et/ou recherche)
+$conditions = [];
+$params     = [];
+
 if ($filtre_categorie !== '') {
-    
-    $sql_count = "SELECT COUNT(*) 
-                  FROM articles 
-                  JOIN categories ON articles.id_categorie = categories.id 
-                  WHERE categories.nom = :nom_categorie";
-
-    $stmt_count = $pdo->prepare($sql_count);
-
-    $stmt_count->bindValue(':nom_categorie', $filtre_categorie, PDO::PARAM_STR);
-
-} else {
-    $sql_count = "SELECT COUNT(*) FROM articles";
-    $stmt_count = $pdo->prepare($sql_count);
+    $conditions[] = "categories.nom = ?";
+    $params[]     = $filtre_categorie;
 }
 
-$stmt_count->execute();
+if ($recherche !== '') {
+    $conditions[] = "(articles.titre LIKE ? OR articles.description_courte LIKE ? OR articles.contenu LIKE ?)";
+    $mot          = motif_like($recherche);
+    array_push($params, $mot, $mot, $mot);
+}
+
+$where = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
+
+$stmt_count = $pdo->prepare("SELECT COUNT(*)
+                             FROM articles
+                             JOIN categories ON articles.id_categorie = categories.id
+                             $where");
+$stmt_count->execute($params);
 
 $total_articles = intval($stmt_count->fetchColumn());
 
@@ -40,49 +48,23 @@ if ($total_pages > 0 && $page_courante > $total_pages) {
     $offset = ($page_courante - 1) * $articles_par_page;
 }
 
-if ($filtre_categorie !== '') {
-  
-    $sql = "SELECT articles.id,
-                   articles.titre,
-                   articles.description_courte,
-                   articles.date_publication,
-                   articles.image,
-                   categories.nom AS categorie_nom,
-                   CONCAT(u.prenom, ' ', u.nom) AS auteur_nom
-            FROM articles
-            JOIN categories ON articles.id_categorie = categories.id
-            JOIN utilisateurs u ON articles.id_auteur = u.id
-            WHERE categories.nom = :nom_categorie
-            ORDER BY articles.date_publication DESC
-            LIMIT :limite OFFSET :offset";
+// LIMIT / OFFSET sont des entiers calculés par nous : on peut les écrire directement
+$sql = "SELECT articles.id,
+               articles.titre,
+               articles.description_courte,
+               articles.date_publication,
+               articles.image,
+               categories.nom AS categorie_nom,
+               CONCAT(u.prenom, ' ', u.nom) AS auteur_nom
+        FROM articles
+        JOIN categories ON articles.id_categorie = categories.id
+        JOIN utilisateurs u ON articles.id_auteur = u.id
+        $where
+        ORDER BY articles.date_publication DESC
+        LIMIT " . (int) $articles_par_page . " OFFSET " . (int) $offset;
 
-    $stmt = $pdo->prepare($sql);
-
-    $stmt->bindValue(':nom_categorie', $filtre_categorie, PDO::PARAM_STR);
-    $stmt->bindValue(':limite', $articles_par_page, PDO::PARAM_INT);
-    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-
-} else {
-    $sql = "SELECT articles.id,
-                   articles.titre,
-                   articles.description_courte,
-                   articles.date_publication,
-                   articles.image,
-                   categories.nom AS categorie_nom,
-                   CONCAT(u.prenom, ' ', u.nom) AS auteur_nom
-            FROM articles
-            JOIN categories ON articles.id_categorie = categories.id
-            JOIN utilisateurs u ON articles.id_auteur = u.id
-            ORDER BY articles.date_publication DESC
-            LIMIT :limite OFFSET :offset";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':limite', $articles_par_page, PDO::PARAM_INT);
-    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-}
-
-
-$stmt->execute();
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
 
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -92,31 +74,26 @@ $stmt_cats = $pdo->query($sql_cats);
 
 $categories = $stmt_cats->fetchAll(PDO::FETCH_ASSOC);
 
-$ids_affiches = array_column($articles, 'id');
-
-if (!empty($ids_affiches)) {
-  
-    $ids_str = implode(',', array_map('intval', $ids_affiches));
-
-    $sql_sidebar = "SELECT articles.id, articles.titre,
-                           categories.nom AS categorie_nom
-                    FROM articles
-                    JOIN categories ON articles.id_categorie = categories.id
-                    WHERE articles.id NOT IN ($ids_str)
-                    ORDER BY RAND()
-                    LIMIT 3";
-} else {
-    
-    $sql_sidebar = "SELECT articles.id, articles.titre,
-                           categories.nom AS categorie_nom
-                    FROM articles
-                    JOIN categories ON articles.id_categorie = categories.id
-                    ORDER BY RAND()
-                    LIMIT 3";
-}
+// Barre latérale : les articles les plus lus
+$sql_sidebar = "SELECT articles.id, articles.titre, articles.vues,
+                       categories.nom AS categorie_nom
+                FROM articles
+                JOIN categories ON articles.id_categorie = categories.id
+                ORDER BY articles.vues DESC, articles.date_publication DESC
+                LIMIT 3";
 
 $stmt_sidebar = $pdo->query($sql_sidebar);
 $articles_sidebar = $stmt_sidebar->fetchAll(PDO::FETCH_ASSOC);
+
+// Paramètres à garder dans les liens de pagination
+function url_page($numero, $categorie, $recherche)
+{
+    $params = ['page' => $numero];
+    if ($categorie !== '') { $params['categorie'] = $categorie; }
+    if ($recherche !== '') { $params['q'] = $recherche; }
+    return url('index.php') . '?' . http_build_query($params);
+}
+
 
 
 ?>
@@ -130,16 +107,30 @@ include __DIR__ . '/../includes/entete.php';
         
         <div style="margin-bottom: 24px;">
             <h2 style="font-family: Georgia, serif; font-size: 22px; color: #111;">
-                <?php echo ($filtre_categorie !== '') ? 'Catégorie : ' . htmlspecialchars($filtre_categorie) : 'Derniers articles'; ?>
+                <?php
+                if ($recherche !== '') {
+                    echo 'Résultats pour « ' . htmlspecialchars($recherche) . ' »';
+                    if ($filtre_categorie !== '') { echo ' dans ' . htmlspecialchars($filtre_categorie); }
+                } elseif ($filtre_categorie !== '') {
+                    echo 'Catégorie : ' . htmlspecialchars($filtre_categorie);
+                } else {
+                    echo 'Derniers articles';
+                }
+                ?>
             </h2>
             <p style="font-size: 11px; color: #999; margin-top: 5px;">
-                <?php echo $total_articles; ?> article(s) au total
+                <?php echo $total_articles; ?> article(s) <?= $recherche !== '' ? 'trouvé(s)' : 'au total' ?>
+                <?php if ($recherche !== '') : ?>
+                    · <a href="<?= url('index.php') ?>" style="color:#cc0000;">Effacer la recherche</a>
+                <?php endif; ?>
             </p>
             <hr style="border: 0; border-top: 1px solid #eee; margin-top: 10px;">
         </div>
 
         <?php if (count($articles) === 0) : ?>
-            <p style="color: #888; font-size: 14px;">Aucun article trouvé.</p>
+            <p style="color: #888; font-size: 14px;">
+                Aucun article trouvé<?= $recherche !== '' ? ' pour cette recherche. Essayez un autre mot-clé.' : '.' ?>
+            </p>
         <?php else : ?>
             <?php foreach ($articles as $index => $article) : ?>
                 
@@ -209,7 +200,7 @@ include __DIR__ . '/../includes/entete.php';
 
 <div class="main-sidebar">
     <div class="sidebar-section">
-        <div class="sb-title">À ne pas manquer</div>
+        <div class="sb-title">Les plus lus</div>
 
         <?php if (empty($articles_sidebar)) : ?>
             <p style="font-size: 11px; color: #999; margin-top: 8px;">
@@ -233,6 +224,7 @@ include __DIR__ . '/../includes/entete.php';
 
                         <div class="sb-item-cat">
                             <?php echo htmlspecialchars($sb['categorie_nom'], ENT_QUOTES, 'UTF-8'); ?>
+                            &nbsp;·&nbsp; <?= (int) $sb['vues'] ?> vue(s)
                         </div>
 
                     </div>
@@ -265,8 +257,6 @@ include __DIR__ . '/../includes/entete.php';
 </div>
 
 
-    </div>
-
 </main>
 
 <div style="display: flex; justify-content: center; gap: 16px;
@@ -276,12 +266,7 @@ include __DIR__ . '/../includes/entete.php';
     if ($page_courante > 1) :
 
         $page_precedente = $page_courante - 1;
-
-        if ($filtre_categorie !== '') {
-            $url_precedente = url('index.php') . "?page={$page_precedente}&categorie=" . urlencode($filtre_categorie);
-        } else {
-            $url_precedente = url('index.php') . "?page={$page_precedente}";
-        }
+        $url_precedente = url_page($page_precedente, $filtre_categorie, $recherche);
     ?>
         <a href="<?php echo $url_precedente; ?>"
            style="background: #fff; color: #111; font-size: 13px; font-weight: 600;
@@ -301,12 +286,7 @@ include __DIR__ . '/../includes/entete.php';
     if ($page_courante < $total_pages) :
 
         $page_suivante = $page_courante + 1;
-
-        if ($filtre_categorie !== '') {
-            $url_suivante = url('index.php') . "?page={$page_suivante}&categorie=" . urlencode($filtre_categorie);
-        } else {
-            $url_suivante = url('index.php') . "?page={$page_suivante}";
-        }
+        $url_suivante = url_page($page_suivante, $filtre_categorie, $recherche);
     ?>
         <a href="<?php echo $url_suivante; ?>"
            style="background: #111; color: #fff; font-size: 13px; font-weight: 600;

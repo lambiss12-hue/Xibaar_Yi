@@ -19,6 +19,8 @@ $sql = "SELECT articles.id,
                articles.contenu,
                articles.description_courte,
                articles.date_publication,
+               articles.image,
+               articles.vues,
                categories.nom AS categorie_nom,
                CONCAT(u.prenom, ' ', u.nom) AS auteur_nom
         FROM articles
@@ -43,6 +45,18 @@ $article = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$article) {
     header('Location: ' . url('index.php'));
     exit();
+}
+
+// Compteur de vues : une seule vue par article et par visiteur (session),
+// pour qu'actualiser la page ne gonfle pas le compteur
+$_SESSION['articles_vus'] = $_SESSION['articles_vus'] ?? [];
+
+if (!in_array($id_article, $_SESSION['articles_vus'], true)) {
+    $stmt_vue = $pdo->prepare("UPDATE articles SET vues = vues + 1 WHERE id = ?");
+    $stmt_vue->execute([$id_article]);
+
+    $_SESSION['articles_vus'][] = $id_article;
+    $article['vues']++;
 }
 
 
@@ -73,8 +87,7 @@ include __DIR__ . '/../includes/entete.php';
 
 
 
-<div style="max-width: 1400px; margin: 0 auto; padding: 32px;
-            display: grid; grid-template-columns: 1fr 300px; gap: 60px;">
+<div class="article-page">
 
     <div>
 
@@ -99,8 +112,9 @@ include __DIR__ . '/../includes/entete.php';
 
             <span>
                 <?php
-                $titre_court = htmlspecialchars($article['titre'], ENT_QUOTES, 'UTF-8');
-                echo (strlen($titre_court) > 50) ? substr($titre_court, 0, 50) . '...' : $titre_court;
+                // mb_ : compte les caractères (é = 1), pas les octets ; on coupe AVANT d'échapper
+                $titre_court = (mb_strlen($article['titre']) > 50) ? mb_substr($article['titre'], 0, 50) . '...' : $article['titre'];
+                echo htmlspecialchars($titre_court, ENT_QUOTES, 'UTF-8');
                 ?>
             </span>
         </div>
@@ -161,7 +175,22 @@ include __DIR__ . '/../includes/entete.php';
                 echo $jour . ' ' . $mois_fr[$mois] . ' ' . $annee;
                 ?>
             </span>
+
+            <span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <?= (int) $article['vues'] ?> vue(s)
+            </span>
         </div>
+
+        <?php if (!empty($article['image'])) : ?>
+            <img src="<?= url('uploads/' . rawurlencode($article['image'])) ?>"
+                 alt="<?= htmlspecialchars($article['titre'], ENT_QUOTES, 'UTF-8') ?>"
+                 class="article-image">
+        <?php endif; ?>
 
         <div style="font-size: 15px; color: #333; line-height: 1.8;">
             <?php
@@ -170,7 +199,7 @@ include __DIR__ . '/../includes/entete.php';
         </div>
 
         
-        <div style="margin-top: 36px; padding-top: 20px; border-top: 1px solid #e8e8e8;">
+        <div class="article-actions">
             <a href="<?= url('index.php') ?>"
                style="background: #fff; color: #111; font-size: 12px; font-weight: 600;
                       padding: 10px 20px; border: 1px solid #ccc; border-radius: 2px;

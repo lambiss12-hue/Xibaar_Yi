@@ -77,7 +77,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
         <form method="POST" action="ajouter.php" id="formAjouter">
             <?= csrf_champ() ?>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Nom *</label>
                     <input type="text" name="nom" class="form-control" placeholder="Diallo">
@@ -88,7 +88,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Email</label>
                     <input type="email" name="email" class="form-control" placeholder="amadou@esp.sn">

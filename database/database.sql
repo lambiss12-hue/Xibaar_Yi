@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS articles (
     contenu            LONGTEXT NOT NULL,
     image              VARCHAR(255) DEFAULT '',
     date_publication   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    vues               INT NOT NULL DEFAULT 0,
     id_categorie       INT NOT NULL,
     id_auteur          INT NOT NULL,
     FOREIGN KEY (id_categorie) REFERENCES categories(id) ON DELETE CASCADE,

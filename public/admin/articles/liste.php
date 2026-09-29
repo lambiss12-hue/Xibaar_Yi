@@ -12,7 +12,7 @@ $params     = [];
 
 if ($recherche !== '') {
     $conditions[] = "a.titre LIKE ?";
-    $params[]     = '%' . $recherche . '%';
+    $params[]     = motif_like($recherche);
 }
 if ($id_categorie > 0) {
     $conditions[] = "a.id_categorie = ?";

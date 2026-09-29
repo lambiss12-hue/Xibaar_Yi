@@ -112,7 +112,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
                     style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:4px; font-size:14px; font-family:inherit; resize:vertical;"><?= htmlspecialchars($article['contenu']) ?></textarea>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+            <div class="form-grille" style="margin-bottom:20px;">
                 <div>
                     <label style="display:block; font-size:12px; font-weight:700; color:#444; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px;">Catégorie *</label>
                     <select name="id_categorie"

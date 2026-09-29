@@ -64,13 +64,22 @@
         LIMIT 1
     ")->fetch(PDO::FETCH_ASSOC);
 ?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion — Xibaar Yi</title>
+    <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
+</head>
+<body>
+<!-- .site est fermé dans pied.php -->
+<div class="site">
 
-<link rel="stylesheet" type="text/css" href="<?= url('assets/css/style.css') ?>">
-
-<div style="display:grid; grid-template-columns:1fr 1fr; min-height:100vh;">
+<div class="connexion-page">
 
     <!-- GAUCHE -->
-    <div style="background:#0a0a0a; padding:48px 40px; display:flex; flex-direction:column; justify-content:space-between;">
+    <div class="connexion-panneau">
         <div>
             <a href="<?= url('index.php') ?>" style="text-decoration:none;">
                 <div style="font-family:Georgia,serif; font-size:28px; font-weight:700; color:#fff;">Xibaar Yi</div>
@@ -96,7 +105,7 @@
     </div>
 
     <!-- DROITE -->
-    <div style="background:#fff; padding:48px 40px; display:flex; flex-direction:column; justify-content:center;">
+    <div class="connexion-formulaire">
 
         <div style="font-family:Georgia,serif; font-size:24px; font-weight:700; color:#111; margin-bottom:6px;">Connexion</div>
         <div style="font-size:13px; color:#999; margin-bottom:32px;">Accès réservé aux membres de la rédaction</div>

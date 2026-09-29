@@ -98,7 +98,7 @@
         <form method="POST" action="modifier.php?id=<?= $id ?>" id="formModifier">
             <?= csrf_champ() ?>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Nom *</label>
                     <input type="text" name="nom" class="form-control" value="<?= htmlspecialchars($user['nom']) ?>">
@@ -109,7 +109,7 @@
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Email</label>
                     <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($user['email'] ?? '') ?>">
