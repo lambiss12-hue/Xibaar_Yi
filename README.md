@@ -12,14 +12,14 @@ publier et gérer le contenu.
 - Page d'accueil avec les derniers articles, pagination (5 par page) et filtre par catégorie
 - Page de détail d'un article avec suggestions « À lire aussi »
 - Inscription à la newsletter
-- Page de contact
+- Page de contact (messages enregistrés en base, consultables dans le back-office)
 
 **Back-office** (après connexion)
 
-| Rôle | Articles | Catégories | Utilisateurs |
-|------|:--------:|:----------:|:------------:|
-| Éditeur | ✅ | ✅ | ❌ |
-| Administrateur | ✅ | ✅ | ✅ |
+| Rôle | Articles | Catégories | Messages | Utilisateurs |
+|------|:--------:|:----------:|:--------:|:------------:|
+| Éditeur | ✅ | ✅ | ✅ | ❌ |
+| Administrateur | ✅ | ✅ | ✅ | ✅ |
 
 ## Technologies
 
@@ -35,11 +35,12 @@ Xibaar_Yi/
 │   ├── index.php            accueil
 │   ├── article.php          détail d'un article
 │   ├── connexion.php / deconnexion.php
-│   ├── contact.php
+│   ├── contact.php / traitement_contact.php
 │   ├── traitement_newsletter.php
 │   ├── admin/
 │   │   ├── articles/        ajouter, modifier, supprimer
 │   │   ├── categories/      liste, ajouter, modifier, supprimer
+│   │   ├── messages/        liste des messages de contact
 │   │   └── utilisateurs/    liste, ajouter, modifier, supprimer
 │   ├── assets/css/style.css
 │   └── uploads/             images des articles
@@ -49,7 +50,8 @@ Xibaar_Yi/
 │   ├── entete.php           en-tête commun (menu, catégories)
 │   └── pied.php             pied de page commun
 └── database/
-    └── database.sql         création des tables + données de test
+    ├── database.sql         création des tables + données de test
+    └── migrations/          mises à jour pour les bases déjà créées
 ```
 
 ## Installation
@@ -71,8 +73,10 @@ mysql -u root < database/database.sql
 
 Ou via phpMyAdmin / HeidiSQL : **Importer** → `database/database.sql`.
 
-Le script crée la base `xibaar_yi`, les tables `categories`, `utilisateurs`, `articles`, `newsletter`,
+Le script crée la base `xibaar_yi`, les tables `categories`, `utilisateurs`, `articles`, `newsletter`, `messages_contact`,
 ainsi que 5 catégories, 5 articles d'exemple et un compte administrateur.
+
+> **Base déjà existante ?** Exécuter aussi les scripts de `database/migrations/` (une seule fois).
 
 ### 3. Configurer la connexion
 
@@ -127,7 +131,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
 
 ## Améliorations prévues
 
-- [ ] Traiter le formulaire de contact (`traitement_contact.php` n'existe pas encore)
+- [x] Traiter le formulaire de contact
 - [ ] Hacher les mots de passe avec `password_hash()` / `password_verify()` au lieu de SHA-256
 - [ ] Supprimer via un formulaire POST avec jeton CSRF plutôt qu'un simple lien
 - [ ] Gérer l'inscription en double à la newsletter
