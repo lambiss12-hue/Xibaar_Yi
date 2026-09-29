@@ -46,9 +46,9 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
                 </form>
 
                 <?php if (isset($_SESSION['user_role'])) : ?>
-                    <span style="font-size:11px; color:#555;">
+                    <a href="<?= url('admin/compte.php') ?>" class="lien-compte" title="Mon compte">
                         <?php echo htmlspecialchars($_SESSION['user_login'], ENT_QUOTES, 'UTF-8'); ?>
-                    </span>
+                    </a>
                     <a href="<?= url('deconnexion.php') ?>" class="btn-cnx">Se déconnecter</a>
                 <?php else : ?>
                     <a href="<?= url('connexion.php') ?>" class="btn-cnx">Se connecter</a>
@@ -100,6 +100,7 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
             if ($_SESSION['user_role'] === 'administrateur') {
                 $liens_admin['admin/utilisateurs/liste.php'] = 'Utilisateurs';
             }
+            $liens_admin['admin/compte.php'] = 'Mon compte';
 
             // Lien à mettre en surbrillance : la page elle-même si elle est dans le menu,
             // sinon la liste de sa section (ex. categories/modifier.php -> Catégories)
