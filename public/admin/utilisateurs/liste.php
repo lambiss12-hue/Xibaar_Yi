@@ -1,20 +1,12 @@
 <?php
-require_once '../config.php';
+require_once __DIR__ . '/../../../includes/auth.php';
 
-if (!isset($_SESSION['user_role'])) {
-    header('Location: /Projet back-end/Xibaar_Yi/connexion.php');
-    exit;
-}
-
-if ($_SESSION['user_role'] !== 'administrateur') {
-    header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
-    exit;
-}
+exiger_role(['administrateur']);
 
 $stmt = $pdo->query("SELECT * FROM utilisateurs ORDER BY nom ASC");
 $utilisateurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-include '../entete.php';
+include __DIR__ . '/../../../includes/entete.php';
 ?>
 
 <div style="max-width:1100px; margin:32px auto; padding:0 24px;">
@@ -22,8 +14,7 @@ include '../entete.php';
     <div class="page-header">
     <h1 class="page-title">Gestion des utilisateurs</h1>
     
-    <!-- Utilise le prefixe absolu pour que le lien fonctionne -->
-    <a href="/Projet back-end/Xibaar_Yi/utilisateurs/ajouter.php" class="btn btn-primary">
+    <a href="<?= url('admin/utilisateurs/ajouter.php') ?>" class="btn btn-primary">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 5v14M5 12h14")/>>
         </svg>
@@ -49,11 +40,11 @@ include '../entete.php';
                     <span class="badge"><?= htmlspecialchars($u['role']) ?></span>
                 </td>
                 <td style="display:flex; gap:8px;">
-                    <a href="/Projet back-end/Xibaar_Yi/utilisateurs/modifier.php?id=<?= $u['id'] ?>" class="btn btn-secondary">
+                    <a href="<?= url('admin/utilisateurs/modifier.php') ?>?id=<?= $u['id'] ?>" class="btn btn-secondary">
                         Modifier
                     </a>
                     <?php if ($u['id'] !== $_SESSION['user_id']): ?>
-                    <a href="/Projet back-end/Xibaar_Yi/utilisateurs/supprimer.php?id=<?= $u['id'] ?>" class="btn btn-danger" onclick="return confirm('Supprimer ?')">
+                    <a href="<?= url('admin/utilisateurs/supprimer.php') ?>?id=<?= $u['id'] ?>" class="btn btn-danger" onclick="return confirm('Supprimer ?')">
                         Supprimer
                     </a>
                     <?php endif; ?>
@@ -64,4 +55,4 @@ include '../entete.php';
     </table>
 </div>
 
-<?php include '../pied.php'; ?>
+<?php include __DIR__ . '/../../../includes/pied.php'; ?>

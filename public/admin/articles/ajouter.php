@@ -1,15 +1,7 @@
 <?php
-require_once '../config.php';
+require_once __DIR__ . '/../../../includes/auth.php';
 
-if (!isset($_SESSION['user_role'])) {
-    header('Location: /Projet back-end/Xibaar_Yi/connexion.php');
-    exit;
-}
-
-if ($_SESSION['user_role'] !== 'editeur' && $_SESSION['user_role'] !== 'administrateur') {
-    header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
-    exit;
-}
+exiger_role(['editeur', 'administrateur']);
 
 // Récupérer les catégories pour le formulaire
 $categories = $pdo->query("SELECT * FROM categories ORDER BY nom ASC")->fetchAll(PDO::FETCH_ASSOC);
@@ -38,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $erreur = "Format d'image non autorisé. Utilisez jpg, jpeg, png ou webp.";
             } else {
                 $nom_image = uniqid() . '.' . $extension;
-                $dossier   = '../uploads/';
+                $dossier   = __DIR__ . '/../../uploads/';
 
                 if (!is_dir($dossier)) {
                     mkdir($dossier, 0755, true);
@@ -60,14 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-require_once '../entete.php';
+require_once __DIR__ . '/../../../includes/entete.php';
 ?>
 
 <div style="max-width:760px; margin:32px auto; padding:0 24px;">
 
     <div class="page-header">
         <div class="page-title">Nouvel article</div>
-        <a href="/Projet back-end/Xibaar_Yi/accueil.php" class="btn btn-secondary">
+        <a href="<?= url('index.php') ?>" class="btn btn-secondary">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Retour à l'accueil
         </a>
@@ -144,7 +136,7 @@ require_once '../entete.php';
 <script>
 document.querySelector('select[name="id_categorie"]').addEventListener('change', function() {
     if (this.value === 'new_category') {
-        window.location.href = '/Projet back-end/Xibaar_Yi/categories/ajouter.php';
+        window.location.href = '<?= url('admin/categories/ajouter.php') ?>';
     }
 });
 </script>
@@ -164,4 +156,4 @@ document.getElementById('formArticle').addEventListener('submit', function(e) {
 });
 </script>
 
-<?php require_once '../pied.php'; ?>
+<?php require_once __DIR__ . '/../../../includes/pied.php'; ?>

@@ -1,17 +1,7 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/config.php';
 
 $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-$titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
-
-$prefix = "/Projet back-end/Xibaar_Yi/"; 
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +11,7 @@ $prefix = "/Projet back-end/Xibaar_Yi/";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($titre_page, ENT_QUOTES, 'UTF-8'); ?> — Xibaar Yi</title>
     <meta name="description" content="Xibaar Yi — L'actualité du Sénégal.">
-    <link rel="stylesheet" href="/Projet back-end/Xibaar_Yi/style.css">
+    <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
 
 </head>
 <body>
@@ -41,7 +31,7 @@ $prefix = "/Projet back-end/Xibaar_Yi/";
 
     <div class="header">
         <div class="header-main">
-            <a href="<?php echo $prefix; ?>accueil.php" style="text-decoration:none;">
+            <a href="<?= url('index.php') ?>" style="text-decoration:none;">
                 <div class="logo-wordmark">Xibaar Yi</div>
                 <div class="logo-tagline">L'actualité du Sénégal</div>
             </a>
@@ -51,20 +41,20 @@ $prefix = "/Projet back-end/Xibaar_Yi/";
                     <span style="font-size:11px; color:#555;">
                         <?php echo htmlspecialchars($_SESSION['user_login'], ENT_QUOTES, 'UTF-8'); ?>
                     </span>
-                    <a href="<?php echo $prefix; ?>deconnexion.php" class="btn-cnx">Se déconnecter</a>
+                    <a href="<?= url('deconnexion.php') ?>" class="btn-cnx">Se déconnecter</a>
                 <?php else : ?>
-                    <a href="<?php echo $prefix; ?>connexion.php" class="btn-cnx">Se connecter</a>
+                    <a href="<?= url('connexion.php') ?>" class="btn-cnx">Se connecter</a>
                 <?php endif; ?>
 
                 <div class="header-actions">
-                    <a href="/Projet back-end/Xibaar_Yi/contact.php" class="btn-cnx">Contact</a>
+                    <a href="<?= url('contact.php') ?>" class="btn-cnx">Contact</a>
                 </div>
             </div>
         </div>
 
         <nav class="nav-cats">
             <?php $active_all = (!isset($_GET['categorie']) || empty($_GET['categorie'])) ? 'active' : ''; ?>
-            <a href="<?php echo $prefix; ?>accueil.php" class="<?php echo $active_all; ?>">Accueil</a>
+            <a href="<?= url('index.php') ?>" class="<?php echo $active_all; ?>">Accueil</a>
 
             <?php
             if (isset($pdo)) {
@@ -74,7 +64,7 @@ $prefix = "/Projet back-end/Xibaar_Yi/";
                     $is_active = (isset($_GET['categorie']) && $_GET['categorie'] === $nom) ? 'active' : '';
                     
                     echo '<span class="sep">|</span>';
-                    echo '<a href="' . $prefix . 'accueil.php?categorie=' . urlencode($nom) . '" class="' . $is_active . '">';
+                    echo '<a href="' . url('index.php') . '?categorie=' . urlencode($nom) . '" class="' . $is_active . '">';
                     echo htmlspecialchars($nom);
                     echo '</a>';
                 }
@@ -84,11 +74,11 @@ $prefix = "/Projet back-end/Xibaar_Yi/";
             <?php if (isset($_SESSION['user_role'])) : ?>
                 <span class="sep">|</span>
                 <?php if ($_SESSION['user_role'] === 'editeur' || $_SESSION['user_role'] === 'administrateur') : ?>
-                    <a href="<?php echo $prefix; ?>articles/ajouter.php" style="color:#cc0000;font-weight:700;">+ Article</a>
+                    <a href="<?= url('admin/articles/ajouter.php') ?>" style="color:#cc0000;font-weight:700;">+ Article</a>
                 <?php endif; ?>
                 <?php if ($_SESSION['user_role'] === 'administrateur') : ?>
                     <span class="sep">|</span>
-                    <a href="<?php echo $prefix; ?>utilisateurs/liste.php" style="color:#cc0000;font-weight:700;">Admin</a>
+                    <a href="<?= url('admin/utilisateurs/liste.php') ?>" style="color:#cc0000;font-weight:700;">Admin</a>
                 <?php endif; ?>
             <?php endif; ?>
         </nav>

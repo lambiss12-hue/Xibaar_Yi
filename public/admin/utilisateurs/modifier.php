@@ -1,18 +1,10 @@
 <?php
-    require_once '../config.php';
+    require_once __DIR__ . '/../../../includes/auth.php';
 
-    if (!isset($_SESSION['user_role'])) {
-        header('Location: /Projet back-end/Xibaar_Xi/connexion.php');
-        exit;
-    }
-
-    if ($_SESSION['user_role'] !== 'administrateur') {
-        header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
-        exit;
-    }
+    exiger_role(['administrateur']);
 
     if (!isset($_GET['id'])) {
-        header('Location: /Projet back-end/Xibaar_Yi/utilisateurs/liste.php');
+        header('Location: ' . url('admin/utilisateurs/liste.php'));
         exit;
     }
 
@@ -28,7 +20,7 @@
 
     // Si l'utilisateur n'existe pas on redirige
     if (!$user) {
-        header('Location: /Projet back-end/Xibaar_Xi/utilisateurs/liste.php');
+        header('Location: ' . url('admin/utilisateurs/liste.php'));
         exit;
     }
 
@@ -71,7 +63,7 @@
         }
     }
 
-    require_once '../entete.php';
+    require_once __DIR__ . '/../../../includes/entete.php';
 
 ?>
 
@@ -79,7 +71,7 @@
 
     <div class="page-header">
         <div class="page-title">Modifier l'utilisateur</div>
-        <a href="/Projet back-end/Xibaar_Yi/utilisateurs/liste.php" class="btn btn-secondary">
+        <a href="<?= url('admin/utilisateurs/liste.php') ?>" class="btn btn-secondary">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Retour à la liste
         </a>
@@ -171,4 +163,4 @@ document.getElementById('formModifier').addEventListener('submit', function(e) {
 });
 </script>
 
-<?php require_once '../pied.php'; ?>
+<?php require_once __DIR__ . '/../../../includes/pied.php'; ?>

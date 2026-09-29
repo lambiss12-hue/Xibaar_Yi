@@ -1,8 +1,5 @@
 <?php
-    // 1. DÉMARRER LA SESSION EN PREMIER
-    session_start();
-
-    require_once 'config.php';
+    require_once __DIR__ . '/../includes/config.php';
 
     $erreur = '';
 
@@ -26,7 +23,7 @@
                 $_SESSION['user_nom']   = $user['prenom'] . ' ' . $user['nom'];
                 
                 // Redirection propre vers l'accueil
-                header('Location: accueil.php');
+                header('Location: ' . url('index.php'));
                 exit;
             } else {
                 $erreur = "Login ou mot de passe incorrect.";
@@ -44,14 +41,14 @@
     ")->fetch(PDO::FETCH_ASSOC);
 ?>
 
-<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="<?= url('assets/css/style.css') ?>">
 
 <div style="display:grid; grid-template-columns:1fr 1fr; min-height:100vh;">
 
     <!-- GAUCHE -->
     <div style="background:#0a0a0a; padding:48px 40px; display:flex; flex-direction:column; justify-content:space-between;">
         <div>
-            <a href="/Projet back-end/Xibaar_Yi/accueil.php" style="text-decoration:none;">
+            <a href="<?= url('index.php') ?>" style="text-decoration:none;">
                 <div style="font-family:Georgia,serif; font-size:28px; font-weight:700; color:#fff;">Xibaar Yi</div>
                 <div style="font-size:11px; color:#555; letter-spacing:2px; text-transform:uppercase; margin-top:4px;">L'actualité du Sénégal</div>
             </a>
@@ -139,4 +136,4 @@ document.getElementById('formConnexion').addEventListener('submit', function(e) 
 });
 </script>
 
-<?php require_once 'pied.php'; ?>
+<?php require_once __DIR__ . '/../includes/pied.php'; ?>

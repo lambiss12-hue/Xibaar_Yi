@@ -1,6 +1,6 @@
 <?php
-require_once 'config.php';
-include 'entete.php'; 
+require_once __DIR__ . '/../includes/config.php';
+include __DIR__ . '/../includes/entete.php'; 
 ?>
 
 <main class="main">
@@ -68,7 +68,7 @@ include 'entete.php';
 
         <div class="sidebar-section" style="background: #f9f9f9; padding: 15px; border-radius: 4px; margin-top: 20px; border: 1px solid #eee;">
             <div class="sb-title">Newsletter</div>
-            <form action="traitement_newsletter.php" method="POST">
+            <form action="<?= url('traitement_newsletter.php') ?>" method="POST">
                 <input type="email" name="email" placeholder="Votre email" required style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; margin-bottom: 8px;">
                 <button type="submit" style="width: 100%; background: #111; color: #fff; border: none; padding: 8px; font-size: 11px; font-weight: bold; cursor: pointer; width: 100%;">S'ABONNER</button>
             </form>
@@ -77,5 +77,5 @@ include 'entete.php';
 </main>
 
 <?php 
-include 'pied.php'; 
+include __DIR__ . '/../includes/pied.php'; 
 ?>
