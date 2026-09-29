@@ -73,7 +73,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
     <div style="background:#fff; border-radius:8px; border:0.5px solid #e0e0e0; padding:28px;">
         <form method="POST" action="ajouter.php" id="formAjouter">
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Nom *</label>
                     <input type="text" name="nom" class="form-control" placeholder="Diallo">
@@ -84,7 +84,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Email</label>
                     <input type="email" name="email" class="form-control" placeholder="amadou@esp.sn">

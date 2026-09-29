@@ -574,8 +574,17 @@ img {
         font-size: 24px;
     }
 
+    /* Avant : display:none cachait "Se connecter" et "Contact" sur mobile */
+    .header-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
     .header-actions {
-        display: none;
+        flex-wrap: wrap;
+        gap: 8px;
+        width: 100%;
     }
 
     .hero-img {
@@ -803,4 +812,192 @@ button.btn-danger {
     color: #fff;
     font-size: 10px;
     text-align: center;
+}
+
+/* ============================================================
+   Recherche (en-tête)
+   ============================================================ */
+.recherche {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background: #fff;
+}
+.recherche input {
+    border: none;
+    outline: none;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-family: inherit;
+    width: 200px;
+    background: transparent;
+}
+.recherche button {
+    border: none;
+    background: none;
+    padding: 0 10px;
+    cursor: pointer;
+    color: #555;
+    display: flex;
+    align-items: center;
+}
+.recherche:focus-within {
+    border-color: #111;
+}
+
+/* ============================================================
+   Page article
+   ============================================================ */
+.article-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 60px;
+}
+.article-image {
+    width: 100%;
+    max-height: 460px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 24px;
+}
+
+/* ============================================================
+   Page de connexion
+   ============================================================ */
+.connexion-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+}
+.connexion-panneau {
+    background: #0a0a0a;
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 32px;
+}
+.connexion-formulaire {
+    background: #fff;
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Formulaires du back-office sur deux colonnes */
+.form-grille {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Pied de page : les liens passent à la ligne si besoin */
+.footer {
+    flex-wrap: wrap;
+    gap: 16px;
+}
+.footer-links {
+    flex-wrap: wrap;
+}
+
+/* ============================================================
+   Tablette (≤ 1100px) : 2 colonnes au lieu de 4
+   ============================================================ */
+@media (max-width: 1100px) {
+    .main {
+        grid-template-columns: minmax(0, 1fr) 240px;
+    }
+    .main-left,
+    .main-mid {
+        grid-column: 1 / 2;
+        border-right: none;
+        margin-right: 0;
+        padding-right: 0;
+    }
+    .main-sidebar {
+        grid-column: 2 / 3;
+        grid-row: 1 / span 2;
+    }
+    .article-page {
+        gap: 32px;
+        grid-template-columns: minmax(0, 1fr) 260px;
+    }
+}
+
+/* ============================================================
+   Mobile (≤ 768px) : une seule colonne
+   ============================================================ */
+@media (max-width: 768px) {
+    /* Doit venir APRÈS la règle tablette ci-dessus, sinon elle garderait 2 colonnes */
+    .main {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .main-sidebar {
+        grid-column: 1 / 2;
+        grid-row: auto;
+    }
+
+    .recherche {
+        flex: 1 1 100%;
+    }
+    .recherche input {
+        width: 100%;
+    }
+
+    .article-page {
+        grid-template-columns: 1fr;
+        padding: 16px;
+    }
+
+    .connexion-page {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+    .connexion-panneau {
+        padding: 24px 16px;
+    }
+    .connexion-formulaire {
+        padding: 32px 16px;
+    }
+
+    .form-grille {
+        grid-template-columns: 1fr;
+    }
+
+    /* Les tableaux du back-office défilent horizontalement au lieu de déborder */
+    .table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .page-header {
+        flex-wrap: wrap;
+    }
+
+    .footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Boutons en bas d'un article : passent à la ligne proprement sur petit écran */
+.article-actions {
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid #e8e8e8;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+.article-actions > a,
+.article-actions > form button {
+    margin-left: 0 !important; /* les marges en ligne sont remplacées par gap */
+    display: inline-flex !important;
+    align-items: center;
 }

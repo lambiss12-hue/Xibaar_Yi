@@ -94,7 +94,7 @@
     <div style="background:#fff; border-radius:8px; border:0.5px solid #e0e0e0; padding:28px;">
         <form method="POST" action="modifier.php?id=<?= $id ?>" id="formModifier">
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Nom *</label>
                     <input type="text" name="nom" class="form-control" value="<?= htmlspecialchars($user['nom']) ?>">
@@ -105,7 +105,7 @@
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Email</label>
                     <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($user['email'] ?? '') ?>">

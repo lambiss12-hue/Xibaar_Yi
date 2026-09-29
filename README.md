@@ -10,7 +10,10 @@ publier et gérer le contenu.
 
 **Partie publique**
 - Page d'accueil avec les derniers articles, pagination (5 par page) et filtre par catégorie
-- Page de détail d'un article avec suggestions « À lire aussi »
+- Recherche d'articles (titre, résumé, contenu) depuis l'en-tête
+- « Les plus lus » : compteur de vues par article (une vue par visiteur et par session)
+- Page de détail d'un article (image, nombre de vues) avec suggestions « À lire aussi »
+- Site adapté aux téléphones et tablettes
 - Inscription à la newsletter
 - Page de contact (messages enregistrés en base, consultables dans le back-office)
 

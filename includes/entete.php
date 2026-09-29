@@ -37,6 +37,14 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
             </a>
 
             <div class="header-actions">
+                <form method="GET" action="<?= url('index.php') ?>" class="recherche" role="search">
+                    <input type="search" name="q" placeholder="Rechercher un article..." aria-label="Rechercher un article"
+                           value="<?= htmlspecialchars($_GET['q'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                    <button type="submit" aria-label="Lancer la recherche">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                    </button>
+                </form>
+
                 <?php if (isset($_SESSION['user_role'])) : ?>
                     <span style="font-size:11px; color:#555;">
                         <?php echo htmlspecialchars($_SESSION['user_login'], ENT_QUOTES, 'UTF-8'); ?>
@@ -46,9 +54,7 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
                     <a href="<?= url('connexion.php') ?>" class="btn-cnx">Se connecter</a>
                 <?php endif; ?>
 
-                <div class="header-actions">
-                    <a href="<?= url('contact.php') ?>" class="btn-cnx">Contact</a>
-                </div>
+                <a href="<?= url('contact.php') ?>" class="btn-cnx">Contact</a>
             </div>
         </div>
 

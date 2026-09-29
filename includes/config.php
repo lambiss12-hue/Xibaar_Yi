@@ -33,6 +33,13 @@ if ($racine_web !== '' && stripos($dossier_public, $racine_web) === 0) {
 }
 define('BASE_URL', rtrim($base_url, '/'));
 
+// Prépare un mot-clé pour une recherche LIKE : % et _ sont des jokers en SQL,
+// on les échappe pour que "100%" cherche vraiment "100%" et pas tout.
+function motif_like($texte)
+{
+    return '%' . addcslashes($texte, '\\%_') . '%';
+}
+
 // Construit un lien vers une page du site : url('admin/articles/ajouter.php')
 function url($chemin = '')
 {
