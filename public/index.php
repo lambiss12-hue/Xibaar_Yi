@@ -247,8 +247,11 @@ include __DIR__ . '/../includes/entete.php';
         <p style="font-size: 11px; color: #666; margin-bottom: 15px; line-height: 1.4;">
             Recevez l'essentiel de l'actualité sénégalaise directement dans votre boîte mail.
         </p>
-        
+
+        <?php include __DIR__ . '/../includes/message_newsletter.php'; ?>
+
         <form action="<?= url('traitement_newsletter.php') ?>" method="POST">
+            <input type="hidden" name="retour" value="index.php">
             <input type="email" name="email" placeholder="Votre email..." required 
                    style="width: 100%; padding: 10px; font-size: 12px; border: 1px solid #ddd; margin-bottom: 10px; display: block;">
             
@@ -315,18 +318,6 @@ include __DIR__ . '/../includes/entete.php';
     <?php endif; ?>
 
 </div>
-
-<?php if (isset($_GET['newsletter'])) : ?>
-    <?php if ($_GET['newsletter'] === 'ok') : ?>
-        <p style="color:green; font-size:11px; margin-bottom:8px;">
-            ✓ Inscription réussie !
-        </p>
-    <?php else : ?>
-        <p style="color:red; font-size:11px; margin-bottom:8px;">
-            ✗ Email invalide.
-        </p>
-    <?php endif; ?>
-<?php endif; ?>
 
 <?php
 include __DIR__ . '/../includes/pied.php';

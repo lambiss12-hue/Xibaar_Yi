@@ -137,7 +137,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
 - [ ] Traiter le formulaire de contact (`traitement_contact.php` n'existe pas encore)
 - [ ] Hacher les mots de passe avec `password_hash()` / `password_verify()` au lieu de SHA-256
 - [x] Supprimer via un formulaire POST avec jeton CSRF plutôt qu'un simple lien
-- [ ] Gérer l'inscription en double à la newsletter
+- [x] Gérer l'inscription en double à la newsletter
 
 ## Équipe
 
