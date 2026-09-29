@@ -53,7 +53,8 @@ Xibaar_Yi/
 │   └── uploads/             images des articles
 ├── includes/
 │   ├── config.php           connexion BDD, session, fonction url()
-│   ├── auth.php             exiger_role(), jeton CSRF (csrf_champ, exiger_post_csrf)
+│   ├── auth.php             exiger_role(), jeton CSRF (csrf_champ, csrf_valide, exiger_post_csrf)
+│   ├── upload.php           enregistrer_image() : vérifie le contenu et la taille des images
 │   ├── entete.php           en-tête commun (menu, catégories)
 │   ├── pied.php             pied de page commun
 │   └── message_newsletter.php  message après inscription à la newsletter
@@ -145,6 +146,17 @@ require_once __DIR__ . '/../../../includes/entete.php';
 </form>
 <?php require_once __DIR__ . '/../../../includes/pied.php'; ?>
 ```
+
+## Sécurité
+
+- Mots de passe hachés avec `password_hash()` (bcrypt)
+- Requêtes SQL préparées (PDO) contre les injections SQL
+- Jeton CSRF sur tous les formulaires du back-office
+- Suppressions uniquement en POST ; impossible de supprimer une catégorie ou un
+  utilisateur qui a encore des articles (évite d'effacer des articles par erreur)
+- Images vérifiées par leur contenu réel (jpg, png, webp, 5 Mo max), renommées aléatoirement
+- Textes affichés avec `htmlspecialchars()` contre le XSS
+- Erreurs de base de données écrites dans le journal PHP, jamais affichées aux visiteurs
 
 ## Améliorations prévues
 

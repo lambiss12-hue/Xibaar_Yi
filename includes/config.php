@@ -17,7 +17,11 @@ try {
     );
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
+    // Le détail technique (serveur, utilisateur...) va dans le journal d'erreurs de PHP,
+    // pas à l'écran : un visiteur n'a pas à le voir.
+    error_log("Xibaar Yi - connexion BDD impossible : " . $e->getMessage());
+    http_response_code(503);
+    die("Le site est momentanément indisponible. Merci de réessayer dans quelques instants.");
 }
 
 // URL de base du site (le dossier public/ vu depuis le navigateur).

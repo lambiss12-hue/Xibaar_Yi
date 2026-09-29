@@ -6,7 +6,10 @@ exiger_role(['editeur', 'administrateur']);
 $erreur = '';
 $succes = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Jeton CSRF : le formulaire doit venir de notre site
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valide()) {
+    $erreur = "Le formulaire a expiré. Veuillez réessayer.";
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = trim($_POST['nom'] ?? '');
 
     if (empty($nom)) {
@@ -52,6 +55,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
 
     <div style="background:#fff; border-radius:8px; border:0.5px solid #e0e0e0; padding:28px;">
         <form method="POST" action="ajouter.php" id="formAjouter">
+            <?= csrf_champ() ?>
             <div class="form-group">
                 <label class="form-label">Nom *</label>
                 <input type="text" name="nom" class="form-control" placeholder="Agriculture" style="width:100%; margin-bottom:16px;">
