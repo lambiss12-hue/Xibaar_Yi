@@ -4,13 +4,14 @@ if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 // Connexion à la base de données
 $host     = 'localhost';
+$port     = getenv('DB_PORT') ?: '3306';
 $dbname   = 'xibaar_yi';
 $user     = 'root';
 $password = '';
 
 try {
     $pdo = new PDO(
-        "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
+        "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",
         $user,
         $password
     );

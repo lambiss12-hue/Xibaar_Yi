@@ -1,13 +1,9 @@
 <?php
-// Inclusion de la configuration (si besoin de la base de données plus tard)
 require_once 'config.php';
-
-// Inclusion de l'entête commune (Logo, Menu, Ticker)
 include 'entete.php'; 
 ?>
 
 <main class="main">
-    <!-- On utilise .main-left pour que le formulaire occupe la partie large à gauche -->
     <div class="main-left">
         
         <div style="margin-bottom: 30px;">
@@ -19,7 +15,7 @@ include 'entete.php';
             </p>
         </div>
 
-        <!-- Formulaire de contact stylisé "Journal" -->
+        
         <form action="traitement_contact.php" method="POST" style="max-width: 600px;">
             
             <div style="margin-bottom: 20px;">
@@ -58,7 +54,6 @@ include 'entete.php';
 
     </div>
 
-    <!-- On garde la barre latérale pour la cohérence visuelle -->
     <aside class="main-sidebar">
         <div class="sidebar-section">
             <div class="sb-title">Nos bureaux</div>
@@ -71,7 +66,6 @@ include 'entete.php';
             </p>
         </div>
 
-        <!-- Rappel Newsletter dans la page contact -->
         <div class="sidebar-section" style="background: #f9f9f9; padding: 15px; border-radius: 4px; margin-top: 20px; border: 1px solid #eee;">
             <div class="sb-title">Newsletter</div>
             <form action="traitement_newsletter.php" method="POST">
@@ -83,6 +77,5 @@ include 'entete.php';
 </main>
 
 <?php 
-// fichier pied.php (footer), inclure ici
 include 'pied.php'; 
 ?>

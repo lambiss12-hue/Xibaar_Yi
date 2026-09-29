@@ -117,6 +117,7 @@ require_once '../entete.php';
                     <?php foreach ($categories as $cat): ?>
                     <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['nom']) ?></option>
                     <?php endforeach; ?>
+                    <option value="new_category" style="font-weight: bold; color: #007bff;">+ Ajouter une catégorie</option>
                 </select>
             </div>
             <div>
@@ -138,6 +139,16 @@ require_once '../entete.php';
 
     </form>
 </div>
+
+
+<script>
+document.querySelector('select[name="id_categorie"]').addEventListener('change', function() {
+    if (this.value === 'new_category') {
+        window.location.href = '/Projet back-end/Xibaar_Yi/categories/ajouter.php';
+    }
+});
+</script>
+
 
 <script>
 document.getElementById('formArticle').addEventListener('submit', function(e) {

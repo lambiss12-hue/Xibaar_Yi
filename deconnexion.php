@@ -8,9 +8,6 @@
 
     // On détruit la session sur le serveur
     session_destroy();
-
-    // CORRECTION DU CHEMIN : 
-    // On repart de la racine "/" pour être sûr de trouver le fichier
     header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
     exit;
 ?>
