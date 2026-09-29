@@ -52,9 +52,9 @@ CREATE TABLE IF NOT EXISTS messages_contact (
 INSERT IGNORE INTO categories (id, nom) VALUES
     (1, 'Politique'), (2, 'Sport'), (3, 'Culture'), (4, 'Education'), (5, 'Technologie');
 
--- Compte admin : login "admin", mot de passe "admin123"
+-- Compte admin : login "admin", mot de passe "admin123" (hash généré avec password_hash)
 INSERT IGNORE INTO utilisateurs (id, nom, prenom, email, telephone, login, mot_de_passe, role) VALUES
-    (1, 'Admin', 'Xibaar', 'admin@xibaar.sn', '', 'admin', SHA2('admin123', 256), 'administrateur');
+    (1, 'Admin', 'Xibaar', 'admin@xibaar.sn', '', 'admin', '$2y$10$Bg0oIp.tAJt5hq8njUCo0.TydQPgntFgHy1lEEbUqNacBfYmojjKK', 'administrateur');
 
 INSERT IGNORE INTO articles (id, titre, description_courte, contenu, image, id_categorie, id_auteur, date_publication) VALUES
     (1, 'Session parlementaire : les grands dossiers de la rentrée', 'Les députés reprennent les travaux avec un calendrier chargé.', 'Les députés ont ouvert la nouvelle session avec plusieurs projets de loi à l''ordre du jour.', 'politique.png', 1, 1, NOW() - INTERVAL 5 DAY),

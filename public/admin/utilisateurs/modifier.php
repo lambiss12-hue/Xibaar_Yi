@@ -51,7 +51,7 @@
                         $erreur = "Le mot de passe doit contenir au moins 6 caractères.";
                     } else {
                         $stmt = $pdo->prepare("UPDATE utilisateurs SET nom=?, prenom=?, email=?, telephone=?, login=?, mot_de_passe=?, role=? WHERE id=?");
-                        $stmt->execute([$nom, $prenom, $email, $telephone, $login, hash('sha256', $mdp), $role, $id]);
+                        $stmt->execute([$nom, $prenom, $email, $telephone, $login, password_hash($mdp, PASSWORD_DEFAULT), $role, $id]);
                         $succes = "Utilisateur modifié avec succès !";
                     }
                 } else {
