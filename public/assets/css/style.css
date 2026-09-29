@@ -759,3 +759,48 @@ button.btn-danger {
     cursor: pointer;
     font-family: inherit;
 }
+
+/* Barre du back-office (visible uniquement par la rédaction connectée) */
+.nav-admin {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    background: #111;
+    padding: 0 8px;
+}
+.nav-admin-titre {
+    font-size: 10px;
+    font-weight: 700;
+    color: #cc0000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 12px 0 6px;
+    white-space: nowrap;
+}
+.nav-admin a {
+    font-size: 12px;
+    font-weight: 600;
+    color: #bbb;
+    padding: 10px 14px;
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+}
+.nav-admin a:hover {
+    color: #fff;
+}
+.nav-admin a.active {
+    color: #fff;
+    border-bottom-color: #cc0000;
+}
+.nav-admin-compteur {
+    display: inline-block;
+    min-width: 18px;
+    padding: 1px 6px;
+    margin-left: 4px;
+    border-radius: 9px;
+    background: #cc0000;
+    color: #fff;
+    font-size: 10px;
+    text-align: center;
+}
