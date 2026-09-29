@@ -21,6 +21,10 @@ publier et gérer le contenu.
 | Éditeur | ✅ | ✅ | ✅ | ❌ |
 | Administrateur | ✅ | ✅ | ✅ | ✅ |
 
+Une barre « Rédaction » apparaît sous le menu une fois connecté : liste des articles
+(recherche par titre, filtre par catégorie), catégories, messages de contact
+(avec le nombre de messages non lus) et, pour l'administrateur, les utilisateurs.
+
 ## Technologies
 
 - PHP 8 (PDO, sessions) — sans framework
@@ -38,9 +42,9 @@ Xibaar_Yi/
 │   ├── contact.php / traitement_contact.php
 │   ├── traitement_newsletter.php
 │   ├── admin/
-│   │   ├── articles/        ajouter, modifier, supprimer
+│   │   ├── articles/        liste (recherche, filtre), ajouter, modifier, supprimer
 │   │   ├── categories/      liste, ajouter, modifier, supprimer
-│   │   ├── messages/        liste des messages de contact
+│   │   ├── messages/        liste, action (lu / non lu, supprimer)
 │   │   └── utilisateurs/    liste, ajouter, modifier, supprimer
 │   ├── assets/css/style.css
 │   └── uploads/             images des articles

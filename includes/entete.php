@@ -53,7 +53,7 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
         </div>
 
         <nav class="nav-cats">
-            <?php $active_all = (!isset($_GET['categorie']) || empty($_GET['categorie'])) ? 'active' : ''; ?>
+            <?php $active_all = (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'index.php' && empty($_GET['categorie'])) ? 'active' : ''; ?>
             <a href="<?= url('index.php') ?>" class="<?php echo $active_all; ?>">Accueil</a>
 
             <?php
@@ -71,19 +71,58 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
             }
             ?>
             
-            <?php if (isset($_SESSION['user_role'])) : ?>
-                <span class="sep">|</span>
-                <?php if ($_SESSION['user_role'] === 'editeur' || $_SESSION['user_role'] === 'administrateur') : ?>
-                    <a href="<?= url('admin/articles/ajouter.php') ?>" style="color:#cc0000;font-weight:700;">+ Article</a>
-                    <span class="sep">|</span>
-                    <a href="<?= url('admin/messages/liste.php') ?>" style="color:#cc0000;font-weight:700;">Messages</a>
-                <?php endif; ?>
-                <?php if ($_SESSION['user_role'] === 'administrateur') : ?>
-                    <span class="sep">|</span>
-                    <a href="<?= url('admin/utilisateurs/liste.php') ?>" style="color:#cc0000;font-weight:700;">Admin</a>
-                <?php endif; ?>
-            <?php endif; ?>
         </nav>
+
+        <?php if (in_array($_SESSION['user_role'] ?? '', ['editeur', 'administrateur'], true)) : ?>
+            <?php
+            // Nombre de messages non lus (affiché à côté de "Messages")
+            $nb_messages_non_lus = 0;
+            try {
+                $nb_messages_non_lus = (int) $pdo->query("SELECT COUNT(*) FROM messages_contact WHERE lu = 0")->fetchColumn();
+            } catch (PDOException $e) {
+                // Migration 004 pas encore exécutée : on n'affiche simplement pas le compteur
+            }
+
+            // Lien actif = section admin de la page courante
+            $page_admin = $_SERVER['SCRIPT_NAME'] ?? '';
+            $liens_admin = [
+                'admin/articles/liste.php'     => 'Articles',
+                'admin/articles/ajouter.php'   => '+ Nouvel article',
+                'admin/categories/liste.php'   => 'Catégories',
+                'admin/messages/liste.php'     => 'Messages',
+            ];
+            if ($_SESSION['user_role'] === 'administrateur') {
+                $liens_admin['admin/utilisateurs/liste.php'] = 'Utilisateurs';
+            }
+
+            // Lien à mettre en surbrillance : la page elle-même si elle est dans le menu,
+            // sinon la liste de sa section (ex. categories/modifier.php -> Catégories)
+            $lien_actif = null;
+            foreach ($liens_admin as $chemin => $libelle) {
+                if (substr($page_admin, -strlen($chemin)) === $chemin) {
+                    $lien_actif = $chemin;
+                }
+            }
+            if ($lien_actif === null) {
+                foreach ($liens_admin as $chemin => $libelle) {
+                    if (basename($chemin) === 'liste.php' && strpos($page_admin, '/' . dirname($chemin) . '/') !== false) {
+                        $lien_actif = $chemin;
+                    }
+                }
+            }
+            ?>
+            <nav class="nav-admin">
+                <span class="nav-admin-titre">Rédaction</span>
+                <?php foreach ($liens_admin as $chemin => $libelle) : ?>
+                    <a href="<?= url($chemin) ?>" class="<?= $chemin === $lien_actif ? 'active' : '' ?>">
+                        <?= $libelle ?>
+                        <?php if ($chemin === 'admin/messages/liste.php' && $nb_messages_non_lus > 0) : ?>
+                            <span class="nav-admin-compteur"><?= $nb_messages_non_lus ?></span>
+                        <?php endif; ?>
+                    </a>
+                <?php endforeach; ?>
+            </nav>
+        <?php endif; ?>
     </div>
 
     <div class="ticker">

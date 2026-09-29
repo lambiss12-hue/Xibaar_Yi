@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS messages_contact (
     email      VARCHAR(150) NOT NULL,
     sujet      VARCHAR(30)  NOT NULL,
     message    TEXT NOT NULL,
-    date_envoi DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    date_envoi DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    lu         TINYINT(1) NOT NULL DEFAULT 0
 );
 
 -- Données de départ

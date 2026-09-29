@@ -70,9 +70,9 @@ require_once __DIR__ . '/../../../includes/entete.php';
 
     <div class="page-header">
         <div class="page-title">Modifier l'article</div>
-        <a href="<?= url('index.php') ?>" class="btn btn-secondary">
+        <a href="<?= url('admin/articles/liste.php') ?>" class="btn btn-secondary">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Retour à l'accueil
+            Retour aux articles
         </a>
     </div>
 
