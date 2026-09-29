@@ -1,0 +1,13 @@
+# Images envoyées depuis le back-office (on garde seulement celles des catégories)
+public/uploads/*
+!public/uploads/culture.png
+!public/uploads/education.png
+!public/uploads/politique.png
+!public/uploads/sport.png
+!public/uploads/technologie.png
+
+# Éditeurs / système
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

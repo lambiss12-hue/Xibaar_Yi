@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once __DIR__ . '/../includes/config.php';
 
 $page_courante = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
@@ -121,7 +121,7 @@ $articles_sidebar = $stmt_sidebar->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <?php
-include 'entete.php';
+include __DIR__ . '/../includes/entete.php';
 ?>
 
 <main class="main">
@@ -143,10 +143,10 @@ include 'entete.php';
         <?php else : ?>
             <?php foreach ($articles as $index => $article) : ?>
                 
-                <a href="articles/detail.php?id=<?php echo intval($article['id']); ?>" class="hero">
+                <a href="<?= url('article.php') ?>?id=<?php echo intval($article['id']); ?>" class="hero">
                     <div class="hero-img">
                         <?php if (!empty($article['image'])) : ?>
-                            <img src="/Projet back-end/Xibaar_Yi/uploads/<?php echo htmlspecialchars($article['image'], ENT_QUOTES, 'UTF-8'); ?>"
+                            <img src="<?= url('uploads/') ?><?php echo htmlspecialchars($article['image'], ENT_QUOTES, 'UTF-8'); ?>"
                                  alt="<?php echo htmlspecialchars($article['titre'], ENT_QUOTES, 'UTF-8'); ?>"
                                  style="width:100%; height:100%; object-fit:cover; display:block;">
                         <?php else : ?>
@@ -188,7 +188,7 @@ include 'entete.php';
                         <?php echo htmlspecialchars($bref['categorie_nom'], ENT_QUOTES, 'UTF-8'); ?>
                     </div>
 
-                    <a href="articles/detail.php?id=<?php echo intval($bref['id']); ?>"
+                    <a href="<?= url('article.php') ?>?id=<?php echo intval($bref['id']); ?>"
                        style="text-decoration:none;">
                         <div class="ali-title">
                             <?php echo htmlspecialchars($bref['titre'], ENT_QUOTES, 'UTF-8'); ?>
@@ -221,7 +221,7 @@ include 'entete.php';
             $num = 1;
             foreach ($articles_sidebar as $sb) :
             ?>
-                <a href="articles/detail.php?id=<?php echo intval($sb['id']); ?>"
+                <a href="<?= url('article.php') ?>?id=<?php echo intval($sb['id']); ?>"
                    style="text-decoration:none; color:inherit;">
                     <div class="sb-item">
 
@@ -248,7 +248,7 @@ include 'entete.php';
             Recevez l'essentiel de l'actualité sénégalaise directement dans votre boîte mail.
         </p>
         
-        <form action="traitement_newsletter.php" method="POST">
+        <form action="<?= url('traitement_newsletter.php') ?>" method="POST">
             <input type="email" name="email" placeholder="Votre email..." required 
                    style="width: 100%; padding: 10px; font-size: 12px; border: 1px solid #ddd; margin-bottom: 10px; display: block;">
             
@@ -275,9 +275,9 @@ include 'entete.php';
         $page_precedente = $page_courante - 1;
 
         if ($filtre_categorie !== '') {
-            $url_precedente = "accueil.php?page={$page_precedente}&categorie=" . urlencode($filtre_categorie);
+            $url_precedente = url('index.php') . "?page={$page_precedente}&categorie=" . urlencode($filtre_categorie);
         } else {
-            $url_precedente = "accueil.php?page={$page_precedente}";
+            $url_precedente = url('index.php') . "?page={$page_precedente}";
         }
     ?>
         <a href="<?php echo $url_precedente; ?>"
@@ -300,9 +300,9 @@ include 'entete.php';
         $page_suivante = $page_courante + 1;
 
         if ($filtre_categorie !== '') {
-            $url_suivante = "accueil.php?page={$page_suivante}&categorie=" . urlencode($filtre_categorie);
+            $url_suivante = url('index.php') . "?page={$page_suivante}&categorie=" . urlencode($filtre_categorie);
         } else {
-            $url_suivante = "accueil.php?page={$page_suivante}";
+            $url_suivante = url('index.php') . "?page={$page_suivante}";
         }
     ?>
         <a href="<?php echo $url_suivante; ?>"
@@ -329,5 +329,5 @@ include 'entete.php';
 <?php endif; ?>
 
 <?php
-include 'pied.php';
+include __DIR__ . '/../includes/pied.php';
 ?>

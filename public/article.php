@@ -1,6 +1,6 @@
 <?php
 
-require_once '../config.php';
+require_once __DIR__ . '/../includes/config.php';
 
 
 
@@ -8,7 +8,7 @@ $id_article = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 
 if ($id_article <= 0) {
-    header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
+    header('Location: ' . url('index.php'));
     exit();
 }
 
@@ -41,7 +41,7 @@ $article = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
 if (!$article) {
-    header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
+    header('Location: ' . url('index.php'));
     exit();
 }
 
@@ -67,7 +67,7 @@ $articles_recents = $stmt_recents->fetchAll(PDO::FETCH_ASSOC);
 <?php
 
 
-include '../entete.php';
+include __DIR__ . '/../includes/entete.php';
 
 ?>
 
@@ -82,7 +82,7 @@ include '../entete.php';
         <div style="font-size: 11px; color: #999; margin-bottom: 20px;">
 
             <!-- Lien retour vers la page d'accueil -->
-            <a href="/Projet back-end/Xibaar_Yi/accueil.php" style="color: #999; text-decoration: none;">
+            <a href="<?= url('index.php') ?>" style="color: #999; text-decoration: none;">
                 Accueil
             </a>
 
@@ -90,7 +90,7 @@ include '../entete.php';
             &nbsp;›&nbsp;
 
             
-            <a href="/Projet back-end/Xibaar_Yi/accueil.php?categorie=<?php echo urlencode($article['categorie_nom']); ?>"
+            <a href="<?= url('index.php') ?>?categorie=<?php echo urlencode($article['categorie_nom']); ?>"
                style="color: #999; text-decoration: none;">
                 <?php echo htmlspecialchars($article['categorie_nom'], ENT_QUOTES, 'UTF-8'); ?>
             </a>
@@ -171,14 +171,14 @@ include '../entete.php';
 
         
         <div style="margin-top: 36px; padding-top: 20px; border-top: 1px solid #e8e8e8;">
-            <a href="/Projet back-end/Xibaar_Yi/accueil.php"
+            <a href="<?= url('index.php') ?>"
                style="background: #fff; color: #111; font-size: 12px; font-weight: 600;
                       padding: 10px 20px; border: 1px solid #ccc; border-radius: 2px;
                       text-decoration: none;">
                 ← Retour aux articles
 
                 <?php if (isset($_SESSION['user_role']) && ($_SESSION['user_role'] === 'editeur' || $_SESSION['user_role'] === 'administrateur')): ?>
-    <a href="modifier.php?id=<?= $article['id'] ?>"
+    <a href="<?= url('admin/articles/modifier.php') ?>?id=<?= $article['id'] ?>"
        style="margin-left:10px; background:#333; color:#fff; font-size:12px;
               font-weight:600; padding:10px 20px; border-radius:2px; text-decoration:none;
               display:inline-flex; align-items:center; gap:6px;">
@@ -188,7 +188,7 @@ include '../entete.php';
         </svg>
         Modifier
     </a>
-    <a href="supprimer.php?id=<?= $article['id'] ?>"
+    <a href="<?= url('admin/articles/supprimer.php') ?>?id=<?= $article['id'] ?>"
        onclick="return confirm('Supprimer cet article ?')"
        style="margin-left:10px; background:#cc0000; color:#fff; font-size:12px;
               font-weight:600; padding:10px 20px; border-radius:2px; text-decoration:none;
@@ -202,7 +202,7 @@ include '../entete.php';
     </a>
 <?php endif; ?>
             </a>
-            <a href="../accueil.php?categorie=<?php echo urlencode($article['categorie_nom']); ?>"
+            <a href="<?= url('index.php') ?>?categorie=<?php echo urlencode($article['categorie_nom']); ?>"
                style="margin-left: 10px; background: #111; color: #fff; font-size: 12px;
                       font-weight: 600; padding: 10px 20px; border-radius: 2px;
                       text-decoration: none;">
@@ -230,7 +230,7 @@ include '../entete.php';
                 foreach ($articles_recents as $recent) :
             ?>
                
-                <a href="detail.php?id=<?php echo intval($recent['id']); ?>"
+                <a href="<?= url('article.php') ?>?id=<?php echo intval($recent['id']); ?>"
                    style="text-decoration: none; color: inherit;">
 
                     <div class="sb-item">
@@ -266,5 +266,5 @@ include '../entete.php';
 </div>
 
 <?php
-include '../pied.php';
+include __DIR__ . '/../includes/pied.php';
 ?>

@@ -1,18 +1,10 @@
 <?php
-require_once '../config.php';
+require_once __DIR__ . '/../../../includes/auth.php';
 
-if (!isset($_SESSION['user_role'])) {
-    header('Location: /Projet back-end/Xibaar_Yi/connexion.php');
-    exit;
-}
-
-if ($_SESSION['user_role'] !== 'editeur' && $_SESSION['user_role'] !== 'administrateur') {
-    header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
-    exit;
-}
+exiger_role(['editeur', 'administrateur']);
 
 if (!isset($_GET['id'])) {
-    header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
+    header('Location: ' . url('index.php'));
     exit;
 }
 
@@ -24,7 +16,7 @@ $stmt->execute([$id]);
 $article = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$article) {
-    header('Location: /Projet back-end/Xibaar_Yi/accueil.php');
+    header('Location: ' . url('index.php'));
     exit;
 }
 
@@ -53,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $erreur = "Format d'image non autorisé.";
             } else {
                 $nom_image = uniqid() . '.' . $extension;
-                $dossier   = '../uploads/';
+                $dossier   = __DIR__ . '/../../uploads/';
                 if (!is_dir($dossier)) {
                     mkdir($dossier, 0755, true);
                 }
@@ -79,14 +71,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-require_once '../entete.php';
+require_once __DIR__ . '/../../../includes/entete.php';
 ?>
 
 <div style="max-width:760px; margin:32px auto; padding:0 24px;">
 
     <div class="page-header">
         <div class="page-title">Modifier l'article</div>
-        <a href="/Projet back-end/Xibaar_Yi/accueil.php" class="btn btn-secondary">
+        <a href="<?= url('index.php') ?>" class="btn btn-secondary">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             Retour à l'accueil
         </a>
@@ -142,7 +134,7 @@ require_once '../entete.php';
                 <div>
                     <label style="display:block; font-size:12px; font-weight:700; color:#444; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px;">Image (optionnelle)</label>
                     <?php if ($article['image']): ?>
-                        <img src="/xibaar_yi/uploads/<?= htmlspecialchars($article['image']) ?>" 
+                        <img src="<?= url('uploads/') ?><?= htmlspecialchars($article['image']) ?>" 
                              style="width:100%; height:80px; object-fit:cover; border-radius:4px; margin-bottom:8px;">
                     <?php endif; ?>
                     <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp"
@@ -173,4 +165,4 @@ document.getElementById('formModifier').addEventListener('submit', function(e) {
 });
 </script>
 
-<?php require_once '../pied.php'; ?>
+<?php require_once __DIR__ . '/../../../includes/pied.php'; ?>

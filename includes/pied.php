@@ -7,15 +7,11 @@
  *         et les balises </body> et </html>.
  *
  *  Inclus dans chaque page avec :
- *    - include 'pied.php';       (depuis la racine)
- *    - include '../pied.php';    (depuis un sous-dossier)
+ *    include __DIR__ . '/../includes/pied.php';
+ *  Les liens utilisent url() (défini dans config.php).
  * ============================================================
  */
-
-// Même logique que dans entete.php pour calculer le préfixe de chemin.
-$dossier_racine = dirname(__FILE__);
-$dossier_script = dirname(realpath($_SERVER['SCRIPT_FILENAME']));
-$prefix = ($dossier_racine === $dossier_script) ? '' : '../';
+require_once __DIR__ . '/config.php';
 ?>
 
     <!-- ============================================================
@@ -26,7 +22,7 @@ $prefix = ($dossier_racine === $dossier_script) ? '' : '../';
 
         <!-- Bloc gauche : logo + copyright -->
         <div>
-            <a href="<?php echo $prefix; ?>accueil.php" style="text-decoration: none;">
+            <a href="<?= url('index.php') ?>" style="text-decoration: none;">
                 <div class="footer-logo">Xibaar Yi</div>
             </a>
             <!-- date('Y') affiche l'année courante dynamiquement.
@@ -38,14 +34,14 @@ $prefix = ($dossier_racine === $dossier_script) ? '' : '../';
 
         <!-- Bloc droit : liens de navigation -->
         <div class="footer-links">
-            <a href="<?php echo $prefix; ?>accueil.php">Accueil</a>
-            <a href="<?php echo $prefix; ?>accueil.php?categorie=Technologie">Technologie</a>
-            <a href="<?php echo $prefix; ?>accueil.php?categorie=Sport">Sport</a>
-             <a href="<?php echo $prefix; ?>accueil.php?categorie=Politique">Politique</a>
-              <a href="<?php echo $prefix; ?>accueil.php?categorie=Education">Education</a>
-               <a href="<?php echo $prefix; ?>accueil.php?categorie=Culture">Culture</a>
-            <a href="<?php echo $prefix; ?>connexion.php">Connexion</a>
-            <a href="#">Contact</a>
+            <a href="<?= url('index.php') ?>">Accueil</a>
+            <a href="<?= url('index.php') ?>?categorie=Technologie">Technologie</a>
+            <a href="<?= url('index.php') ?>?categorie=Sport">Sport</a>
+             <a href="<?= url('index.php') ?>?categorie=Politique">Politique</a>
+              <a href="<?= url('index.php') ?>?categorie=Education">Education</a>
+               <a href="<?= url('index.php') ?>?categorie=Culture">Culture</a>
+            <a href="<?= url('connexion.php') ?>">Connexion</a>
+            <a href="<?= url('contact.php') ?>">Contact</a>
         </div>
 
     </div>
