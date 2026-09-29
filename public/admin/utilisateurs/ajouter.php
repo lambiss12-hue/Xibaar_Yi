@@ -37,7 +37,7 @@
                 ");
                 $stmt->execute([
                     $nom, $prenom, $email, $telephone,
-                    $login, hash('sha256', $mdp), $role
+                    $login, password_hash($mdp, PASSWORD_DEFAULT), $role
                 ]);
                 $succes = "Utilisateur créé avec succès !";
             }

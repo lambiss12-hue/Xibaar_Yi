@@ -14,8 +14,32 @@
             $stmt->execute([$login]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // On compare le mot de passe haché
-            if ($user && $user['mot_de_passe'] === hash('sha256', $mdp)) {
+            $mdp_valide = false;
+
+            if ($user) {
+                $hash = $user['mot_de_passe'];
+
+                if (password_verify($mdp, $hash)) {
+                    // Mot de passe au format actuel (password_hash)
+                    $mdp_valide = true;
+                } elseif (hash_equals($hash, hash('sha256', $mdp))) {
+                    // Ancien format SHA-256 : on accepte une dernière fois
+                    // puis on le remplace par un hash sécurisé
+                    $mdp_valide = true;
+                    $hash = '';
+                }
+
+                // Conversion automatique si le hash est ancien ou obsolète
+                if ($mdp_valide && ($hash === '' || password_needs_rehash($hash, PASSWORD_DEFAULT))) {
+                    $stmt = $pdo->prepare("UPDATE utilisateurs SET mot_de_passe = ? WHERE id = ?");
+                    $stmt->execute([password_hash($mdp, PASSWORD_DEFAULT), $user['id']]);
+                }
+            }
+
+            if ($mdp_valide) {
+                // Nouvel identifiant de session à la connexion (évite le vol de session)
+                session_regenerate_id(true);
+
                 // On remplit les informations de session
                 $_SESSION['user_id']    = $user['id'];
                 $_SESSION['user_login'] = $user['login'];

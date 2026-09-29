@@ -49,7 +49,8 @@ Xibaar_Yi/
 │   ├── entete.php           en-tête commun (menu, catégories)
 │   └── pied.php             pied de page commun
 └── database/
-    └── database.sql         création des tables + données de test
+    ├── database.sql         création des tables + données de test
+    └── migrations/          mises à jour pour les bases déjà créées
 ```
 
 ## Installation
@@ -73,6 +74,10 @@ Ou via phpMyAdmin / HeidiSQL : **Importer** → `database/database.sql`.
 
 Le script crée la base `xibaar_yi`, les tables `categories`, `utilisateurs`, `articles`, `newsletter`,
 ainsi que 5 catégories, 5 articles d'exemple et un compte administrateur.
+
+> **Base déjà existante ?** Exécuter aussi les scripts de `database/migrations/` (une seule fois).
+> Les anciens mots de passe SHA-256 restent valides : ils sont convertis en `password_hash()`
+> automatiquement à la prochaine connexion.
 
 ### 3. Configurer la connexion
 
@@ -128,7 +133,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
 ## Améliorations prévues
 
 - [ ] Traiter le formulaire de contact (`traitement_contact.php` n'existe pas encore)
-- [ ] Hacher les mots de passe avec `password_hash()` / `password_verify()` au lieu de SHA-256
+- [x] Hacher les mots de passe avec `password_hash()` / `password_verify()` au lieu de SHA-256
 - [ ] Supprimer via un formulaire POST avec jeton CSRF plutôt qu'un simple lien
 - [ ] Gérer l'inscription en double à la newsletter
 
