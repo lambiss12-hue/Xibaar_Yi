@@ -77,6 +77,22 @@ $stmt_recents->execute();
 // fetchAll() récupère les 4 articles récents dans un tableau.
 $articles_recents = $stmt_recents->fetchAll(PDO::FETCH_ASSOC);
 
+// Commentaires validés par la rédaction (les plus anciens en premier, comme une conversation)
+$stmt_com = $pdo->prepare("SELECT nom, contenu, date_envoi
+                           FROM commentaires
+                           WHERE id_article = ? AND statut = 'approuve'
+                           ORDER BY date_envoi ASC");
+$stmt_com->execute([$id_article]);
+$commentaires = $stmt_com->fetchAll(PDO::FETCH_ASSOC);
+
+// Message après l'envoi d'un commentaire (traitement_commentaire.php)
+$messages_commentaire = [
+    'attente'     => ['alert-success', "Merci ! Votre commentaire sera publié après validation par la rédaction."],
+    'erreur'      => ['alert-danger',  "Commentaire non envoyé : vérifiez votre nom, votre email et votre message (2 à 2000 caractères)."],
+    'trop_rapide' => ['alert-danger',  "Merci de patienter quelques secondes avant d'envoyer un autre commentaire."],
+];
+$message_commentaire = $messages_commentaire[$_GET['commentaire'] ?? ''] ?? null;
+
 ?>
 <?php
 
@@ -243,6 +259,59 @@ include __DIR__ . '/../includes/entete.php';
                 <?php echo htmlspecialchars($article['categorie_nom'], ENT_QUOTES, 'UTF-8'); ?>
             </a>
         </div>
+
+        <!-- ===== Commentaires ===== -->
+        <section class="commentaires" id="commentaires">
+            <h2 class="commentaires-titre">Commentaires (<?= count($commentaires) ?>)</h2>
+
+            <?php if (empty($commentaires)) : ?>
+                <p class="commentaires-vide">Aucun commentaire pour le moment. Soyez le premier à réagir !</p>
+            <?php else : ?>
+                <?php foreach ($commentaires as $com) : ?>
+                    <div class="commentaire">
+                        <div class="commentaire-auteur">
+                            <?= htmlspecialchars($com['nom'], ENT_QUOTES, 'UTF-8') ?>
+                            <span class="commentaire-date">· <?= date('d/m/Y à H:i', strtotime($com['date_envoi'])) ?></span>
+                        </div>
+                        <div class="commentaire-texte"><?= nl2br(htmlspecialchars($com['contenu'], ENT_QUOTES, 'UTF-8')) ?></div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+            <h3 class="commentaires-sous-titre">Laisser un commentaire</h3>
+
+            <?php if ($message_commentaire) : ?>
+                <div class="alert <?= $message_commentaire[0] ?>"><?= htmlspecialchars($message_commentaire[1]) ?></div>
+            <?php endif; ?>
+
+            <form method="POST" action="<?= url('traitement_commentaire.php') ?>" class="commentaire-form">
+                <input type="hidden" name="id_article" value="<?= (int) $article['id'] ?>">
+
+                <!-- Champ piège anti-robots : invisible pour les humains, ne pas remplir -->
+                <div class="champ-piege" aria-hidden="true">
+                    <label for="site_web">Ne pas remplir ce champ</label>
+                    <input type="text" id="site_web" name="site_web" tabindex="-1" autocomplete="off">
+                </div>
+
+                <div class="form-grille">
+                    <div class="form-group">
+                        <label class="form-label" for="com_nom">Nom *</label>
+                        <input type="text" id="com_nom" name="nom" class="form-control" maxlength="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="com_email">Email * <span class="commentaire-note">(non publié)</span></label>
+                        <input type="email" id="com_email" name="email" class="form-control" maxlength="150" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="com_contenu">Commentaire *</label>
+                    <textarea id="com_contenu" name="contenu" class="form-control" rows="4"
+                              minlength="2" maxlength="2000" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary compte-bouton">Publier le commentaire</button>
+                <p class="commentaire-note">Les commentaires sont vérifiés par la rédaction avant publication.</p>
+            </form>
+        </section>
 
     </div>
 
