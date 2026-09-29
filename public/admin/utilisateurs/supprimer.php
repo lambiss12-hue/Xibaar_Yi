@@ -5,18 +5,16 @@
 
     exiger_role(['administrateur']);
 
-    if (!isset($_GET['id'])) {
-        header('Location: ' . url('admin/utilisateurs/liste.php'));
-        exit;
+    // Suppression uniquement via le formulaire (POST + jeton CSRF)
+    exiger_post_csrf('admin/utilisateurs/liste.php');
+
+    $id = (int) ($_POST['id'] ?? 0);
+
+    // On ne peut pas supprimer son propre compte
+    if ($id !== (int) $_SESSION['user_id']) {
+        $stmt = $pdo->prepare("DELETE FROM utilisateurs WHERE id = ?");
+        $stmt->execute([$id]);
     }
-
-    $id = (int) $_GET['id'];
-
-    $stmt = $pdo->prepare("DELETE  FROM utilisateurs WHERE id = ?");
-    $stmt->execute([$id]);
 
     header('Location: ' . url('admin/utilisateurs/liste.php'));
     exit;
-
-?>
-        
