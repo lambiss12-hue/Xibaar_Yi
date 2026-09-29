@@ -39,6 +39,15 @@ CREATE TABLE IF NOT EXISTS newsletter (
     date_inscription DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS messages_contact (
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    nom        VARCHAR(150) NOT NULL,
+    email      VARCHAR(150) NOT NULL,
+    sujet      VARCHAR(30)  NOT NULL,
+    message    TEXT NOT NULL,
+    date_envoi DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Données de départ
 INSERT IGNORE INTO categories (id, nom) VALUES
     (1, 'Politique'), (2, 'Sport'), (3, 'Culture'), (4, 'Education'), (5, 'Technologie');

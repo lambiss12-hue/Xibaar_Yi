@@ -75,6 +75,8 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
                 <span class="sep">|</span>
                 <?php if ($_SESSION['user_role'] === 'editeur' || $_SESSION['user_role'] === 'administrateur') : ?>
                     <a href="<?= url('admin/articles/ajouter.php') ?>" style="color:#cc0000;font-weight:700;">+ Article</a>
+                    <span class="sep">|</span>
+                    <a href="<?= url('admin/messages/liste.php') ?>" style="color:#cc0000;font-weight:700;">Messages</a>
                 <?php endif; ?>
                 <?php if ($_SESSION['user_role'] === 'administrateur') : ?>
                     <span class="sep">|</span>

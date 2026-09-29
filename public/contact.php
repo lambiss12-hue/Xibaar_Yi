@@ -15,8 +15,19 @@ include __DIR__ . '/../includes/entete.php';
             </p>
         </div>
 
-        
-        <form action="traitement_contact.php" method="POST" style="max-width: 600px;">
+        <?php if (isset($_GET['envoi'])) : ?>
+            <?php if ($_GET['envoi'] === 'ok') : ?>
+                <p style="max-width: 600px; background: #f0fff4; color: #1a7f37; border: 1px solid #b7ebc6; padding: 12px 16px; font-size: 13px; margin-bottom: 20px;">
+                    ✓ Merci, votre message a bien été envoyé à la rédaction.
+                </p>
+            <?php else : ?>
+                <p style="max-width: 600px; background: #fff0f0; color: #cc0000; border: 1px solid #ffcccc; padding: 12px 16px; font-size: 13px; margin-bottom: 20px;">
+                    ✗ Message non envoyé : vérifiez que tous les champs sont remplis et que l'email est valide.
+                </p>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <form action="<?= url('traitement_contact.php') ?>" method="POST" style="max-width: 600px;">
             
             <div style="margin-bottom: 20px;">
                 <label style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">Nom complet</label>
