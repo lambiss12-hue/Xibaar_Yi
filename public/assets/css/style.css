@@ -747,3 +747,15 @@ input.form-control:focus {
 
 
 
+
+/* Boutons "Supprimer" : formulaires POST affichés en ligne */
+.form-inline {
+    display: inline;
+    margin: 0;
+}
+button.btn-danger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}

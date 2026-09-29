@@ -5,18 +5,13 @@
 
     exiger_role(['editeur', 'administrateur']);
 
-    if (!isset($_GET['id'])) {
-        header('Location: ' . url('index.php'));
-        exit;
-    }
+    // Suppression uniquement via le formulaire (POST + jeton CSRF)
+    exiger_post_csrf('index.php');
 
-    $id = (int) $_GET['id'];
+    $id = (int) ($_POST['id'] ?? 0);
 
-    $stmt = $pdo->prepare("DELETE  FROM articles WHERE id = ?");
+    $stmt = $pdo->prepare("DELETE FROM articles WHERE id = ?");
     $stmt->execute([$id]);
 
     header('Location: ' . url('index.php'));
     exit;
-
-?>
-        
