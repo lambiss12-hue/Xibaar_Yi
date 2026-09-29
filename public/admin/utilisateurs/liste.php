@@ -44,9 +44,12 @@ include __DIR__ . '/../../../includes/entete.php';
                         Modifier
                     </a>
                     <?php if ($u['id'] !== $_SESSION['user_id']): ?>
-                    <a href="<?= url('admin/utilisateurs/supprimer.php') ?>?id=<?= $u['id'] ?>" class="btn btn-danger" onclick="return confirm('Supprimer ?')">
-                        Supprimer
-                    </a>
+                    <form method="POST" action="<?= url('admin/utilisateurs/supprimer.php') ?>" class="form-inline"
+                          onsubmit="return confirm('Supprimer cet utilisateur et tous ses articles ?')">
+                        <?= csrf_champ() ?>
+                        <input type="hidden" name="id" value="<?= $u['id'] ?>">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
                     <?php endif; ?>
                 </td>
             </tr>
