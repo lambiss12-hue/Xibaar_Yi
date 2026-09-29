@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../../includes/auth.php';
+require_once __DIR__ . '/../../../includes/upload.php';
 
 exiger_role(['editeur', 'administrateur']);
 
@@ -26,7 +27,10 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY nom ASC")->fetchAll
 $erreur = '';
 $succes = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Jeton CSRF : le formulaire doit venir de notre site
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valide()) {
+    $erreur = "Le formulaire a expiré. Veuillez réessayer.";
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titre        = trim($_POST['titre'] ?? '');
     $description  = trim($_POST['description_courte'] ?? '');
     $contenu      = trim($_POST['contenu'] ?? '');
@@ -36,22 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($titre) || empty($description) || empty($contenu) || $id_categorie === 0) {
         $erreur = "Tous les champs obligatoires doivent être remplis.";
     } else {
-        // Gestion image si nouvelle image uploadée
-        if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-            $extension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-            $extensions_autorisees = ['jpg', 'jpeg', 'png', 'webp'];
-
-            if (!in_array($extension, $extensions_autorisees)) {
-                $erreur = "Format d'image non autorisé.";
-            } else {
-                $nom_image = uniqid() . '.' . $extension;
-                $dossier   = __DIR__ . '/../../uploads/';
-                if (!is_dir($dossier)) {
-                    mkdir($dossier, 0755, true);
-                }
-                move_uploaded_file($_FILES['image']['tmp_name'], $dossier . $nom_image);
-                $image = $nom_image;
-            }
+        // Nouvelle image envoyée ? Sinon on garde l'ancienne
+        $nouvelle_image = enregistrer_image($_FILES['image'] ?? null, $erreur);
+        if ($nouvelle_image !== null) {
+            $image = $nouvelle_image;
         }
 
         if (empty($erreur)) {
@@ -100,6 +92,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
 
     <div style="background:#fff; border-radius:8px; border:0.5px solid #e0e0e0; padding:28px;">
         <form method="POST" action="modifier.php?id=<?= $id ?>" enctype="multipart/form-data" id="formModifier">
+            <?= csrf_champ() ?>
 
             <div style="margin-bottom:20px;">
                 <label style="display:block; font-size:12px; font-weight:700; color:#444; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px;">Titre *</label>

@@ -27,7 +27,10 @@
     $erreur = '';
     $succes = '';
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Jeton CSRF : le formulaire doit venir de notre site
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valide()) {
+        $erreur = "Le formulaire a expiré. Veuillez réessayer.";
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nom       = trim($_POST['nom'] ?? '');
         $prenom    = trim($_POST['prenom'] ?? '');
         $email     = trim($_POST['email'] ?? '');
@@ -93,6 +96,7 @@
 
     <div style="background:#fff; border-radius:8px; border:0.5px solid #e0e0e0; padding:28px;">
         <form method="POST" action="modifier.php?id=<?= $id ?>" id="formModifier">
+            <?= csrf_champ() ?>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
                 <div class="form-group">

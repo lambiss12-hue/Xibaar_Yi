@@ -34,6 +34,12 @@ function csrf_champ()
     return '<input type="hidden" name="csrf_token" value="' . csrf_token() . '">';
 }
 
+// Pour les formulaires d'ajout / modification : true si le jeton envoyé est le bon
+function csrf_valide()
+{
+    return hash_equals(csrf_token(), $_POST['csrf_token'] ?? '');
+}
+
 // Pour les pages de suppression : accepte uniquement un POST avec un jeton valide.
 // Sinon, redirige vers $redirection sans rien supprimer.
 function exiger_post_csrf($redirection)
