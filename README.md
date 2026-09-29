@@ -26,7 +26,8 @@ publier et gérer le contenu.
 
 Une barre « Rédaction » apparaît sous le menu une fois connecté : liste des articles
 (recherche par titre, filtre par catégorie), catégories, messages de contact
-(avec le nombre de messages non lus) et, pour l'administrateur, les utilisateurs.
+(avec le nombre de messages non lus), les utilisateurs pour l'administrateur, et « Mon compte »
+où chacun modifie ses informations et son mot de passe (l'ancien mot de passe est demandé).
 
 ## Technologies
 
@@ -48,7 +49,8 @@ Xibaar_Yi/
 │   │   ├── articles/        liste (recherche, filtre), ajouter, modifier, supprimer
 │   │   ├── categories/      liste, ajouter, modifier, supprimer
 │   │   ├── messages/        liste, action (lu / non lu, supprimer)
-│   │   └── utilisateurs/    liste, ajouter, modifier, supprimer
+│   │   ├── utilisateurs/    liste, ajouter, modifier, supprimer
+│   │   └── compte.php       mon compte (infos + mot de passe)
 │   ├── assets/css/style.css
 │   └── uploads/             images des articles
 ├── includes/

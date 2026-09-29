@@ -1001,3 +1001,100 @@ button.btn-danger {
     display: inline-flex !important;
     align-items: center;
 }
+
+/* ============================================================
+   Messages de succès / d'erreur du back-office
+   (classes utilisées partout mais jamais définies jusqu'ici)
+   ============================================================ */
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+.alert svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+.alert-danger {
+    background: #fff0f0;
+    border-color: #ffcccc;
+    color: #cc0000;
+}
+.alert-success {
+    background: #f0fff4;
+    border-color: #b7ebc6;
+    color: #1a7f37;
+}
+
+/* Champs de formulaire du back-office */
+.form-group {
+    margin-bottom: 16px;
+}
+.form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #444;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+select.form-control {
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #111;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+}
+input.form-control:disabled {
+    background: #f5f5f5;
+    color: #888;
+}
+
+/* ============================================================
+   Page Mon compte
+   ============================================================ */
+.compte-titre {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    color: #111;
+    margin: 28px 0 12px;
+}
+.compte-carte {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+}
+.compte-aide {
+    font-size: 11px;
+    color: #999;
+    margin-top: 6px;
+}
+.compte-bouton {
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+    border: 1px solid #111;
+    cursor: pointer;
+    font-family: inherit;
+}
+.lien-compte {
+    font-size: 11px;
+    color: #555;
+    text-decoration: underline;
+}
+.lien-compte:hover {
+    color: #111;
+}
