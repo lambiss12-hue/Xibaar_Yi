@@ -5,9 +5,13 @@ public/uploads/*
 !public/uploads/politique.png
 !public/uploads/sport.png
 !public/uploads/technologie.png
+!public/uploads/.htaccess
 
 # Éditeurs / système
 .vscode/
 .idea/
 Thumbs.db
 .DS_Store
+
+# Identifiants de la base en ligne (voir includes/config.local.exemple.php)
+includes/config.local.php

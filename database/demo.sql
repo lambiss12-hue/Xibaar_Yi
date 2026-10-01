@@ -1,5 +1,5 @@
 -- Données de démonstration (pour la soutenance) — à importer APRÈS database.sql :
---   mysql -u root < database/demo.sql
+--   mysql -u root xibaar_yi < database/demo.sql   (ou phpMyAdmin > Importer)
 --
 -- Ajoute 2 éditeurs, 15 articles, des commentaires (validés et en attente),
 -- des messages de contact et des inscrits à la newsletter.
@@ -8,8 +8,6 @@
 --
 -- Comptes éditeurs : login "fatou" ou "moussa", mot de passe "redac123"
 -- Pour tout retirer : voir la section "Nettoyage" à la fin du fichier.
-
-USE xibaar_yi;
 
 INSERT IGNORE INTO utilisateurs (id, nom, prenom, email, telephone, login, mot_de_passe, role) VALUES
     (101, 'Ndiaye', 'Fatou',  'fatou.ndiaye@xibaar.sn', '77 123 45 67', 'fatou',  '$2y$10$XePVZZD0PWrfVF2r3WyQ7.S9rcx7uF4Op/VuR/HifuhNc3dw87axK', 'editeur'),

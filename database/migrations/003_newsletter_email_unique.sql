@@ -3,8 +3,6 @@
 -- 2. Supprime les doublons en gardant la première inscription
 -- 3. Ajoute un index UNIQUE pour que la base refuse les doublons à l'avenir
 
-USE xibaar_yi;
-
 UPDATE newsletter SET email = LOWER(TRIM(email));
 
 DELETE n1 FROM newsletter n1

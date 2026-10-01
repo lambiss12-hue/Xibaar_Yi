@@ -1,8 +1,12 @@
--- Base de données Xibaar Yi
--- Import : mysql -u root < database.sql
-
-CREATE DATABASE IF NOT EXISTS xibaar_yi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE xibaar_yi;
+-- Base de données Xibaar Yi : création des tables + données de départ.
+--
+-- Ce script ne crée pas la base elle-même : il remplit la base choisie.
+-- Il marche donc aussi chez un hébergeur, qui impose le nom de la base.
+--
+-- En local :
+--   mysql -u root -e "CREATE DATABASE IF NOT EXISTS xibaar_yi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+--   mysql -u root xibaar_yi < database/database.sql
+-- Avec phpMyAdmin : sélectionner la base à gauche, puis onglet Importer.
 
 CREATE TABLE IF NOT EXISTS categories (
     id  INT AUTO_INCREMENT PRIMARY KEY,

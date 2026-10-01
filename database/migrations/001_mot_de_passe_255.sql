@@ -5,6 +5,4 @@
 -- Les anciens mots de passe SHA-256 continuent de fonctionner :
 -- ils sont convertis automatiquement à la prochaine connexion de chaque utilisateur.
 
-USE xibaar_yi;
-
 ALTER TABLE utilisateurs MODIFY mot_de_passe VARCHAR(255) NOT NULL;

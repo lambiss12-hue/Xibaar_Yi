@@ -1,0 +1,3 @@
+# Ce dossier ne doit jamais être ouvert depuis un navigateur
+# (config.php et config.local.php contiennent les identifiants de la base).
+Require all denied

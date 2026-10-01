@@ -1,19 +1,46 @@
 <?php
-// Session démarrée en tout premier
-if (session_status() === PHP_SESSION_NONE) { session_start(); }
+// ------------------------------------------------------------
+// Réglages par défaut = développement local (Laragon, XAMPP...)
+// ------------------------------------------------------------
+$config = [
+    'db_hote'          => 'localhost',
+    'db_port'          => getenv('DB_PORT') ?: '3306',
+    'db_nom'           => 'xibaar_yi',
+    'db_utilisateur'   => 'root',
+    'db_mot_de_passe'  => '',
+    'afficher_erreurs' => true,   // false en ligne : les visiteurs ne voient pas les erreurs PHP
+];
+
+// En ligne : includes/config.local.php (jamais envoyé sur GitHub, voir .gitignore)
+// remplace ces valeurs. Modèle : includes/config.local.exemple.php
+if (is_file(__DIR__ . '/config.local.php')) {
+    $config = array_merge($config, require __DIR__ . '/config.local.php');
+}
+
+ini_set('display_errors', $config['afficher_erreurs'] ? '1' : '0');
+ini_set('log_errors', '1');
+
+// ------------------------------------------------------------
+// Session : cookie protégé
+//  - httponly : illisible par JavaScript (limite les dégâts d'une faille XSS)
+//  - samesite : pas envoyé depuis les formulaires d'autres sites (en plus du jeton CSRF)
+//  - secure   : seulement en HTTPS, quand le site est en HTTPS
+// ------------------------------------------------------------
+if (session_status() === PHP_SESSION_NONE) {
+    session_set_cookie_params([
+        'httponly' => true,
+        'samesite' => 'Lax',
+        'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    ]);
+    session_start();
+}
 
 // Connexion à la base de données
-$host     = 'localhost';
-$port     = getenv('DB_PORT') ?: '3306';
-$dbname   = 'xibaar_yi';
-$user     = 'root';
-$password = '';
-
 try {
     $pdo = new PDO(
-        "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",
-        $user,
-        $password
+        "mysql:host={$config['db_hote']};port={$config['db_port']};dbname={$config['db_nom']};charset=utf8mb4",
+        $config['db_utilisateur'],
+        $config['db_mot_de_passe']
     );
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
