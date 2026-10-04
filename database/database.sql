@@ -66,6 +66,15 @@ CREATE TABLE IF NOT EXISTS commentaires (
     FOREIGN KEY (id_article) REFERENCES articles(id) ON DELETE CASCADE
 );
 
+-- Échecs de connexion (adresse IP + date) : après 5 échecs en 15 minutes,
+-- la même adresse IP doit attendre avant de réessayer
+CREATE TABLE IF NOT EXISTS tentatives_connexion (
+    id             INT AUTO_INCREMENT PRIMARY KEY,
+    ip             VARCHAR(45) NOT NULL,
+    date_tentative DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_tentatives_ip_date (ip, date_tentative)
+);
+
 -- Données de départ
 INSERT IGNORE INTO categories (id, nom) VALUES
     (1, 'Politique'), (2, 'Sport'), (3, 'Culture'), (4, 'Education'), (5, 'Technologie');

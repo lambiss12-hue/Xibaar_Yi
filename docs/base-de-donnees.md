@@ -109,6 +109,12 @@ faite dans `traitement_newsletter.php`.
 ### `messages_contact`
 Messages du formulaire Contact. `lu` passe à 1 quand la rédaction marque le message comme lu.
 
+### `tentatives_connexion`
+Une ligne par échec de connexion (adresse IP + date). À partir de 5 échecs en 15 minutes,
+`connexion.php` refuse les nouvelles tentatives de cette adresse IP. Les lignes de plus d'un jour
+sont supprimées automatiquement, et une connexion réussie efface celles de son adresse IP.
+Table indépendante (aucune clé étrangère).
+
 ## Évolutions : les migrations
 
 Quand la structure change, on ajoute un script dans [`database/migrations/`](../database/migrations/)
@@ -122,5 +128,6 @@ pour mettre à jour les bases **déjà créées** (sans perdre les données) :
 | `004_messages_lu.sql` | colonne `lu` (messages lus / non lus) |
 | `005_articles_vues.sql` | colonne `vues` (articles les plus lus) |
 | `006_commentaires.sql` | table `commentaires` |
+| `007_tentatives_connexion.sql` | table `tentatives_connexion` (limite des échecs de connexion) |
 
 Une base neuve n'en a pas besoin : `database.sql` contient déjà la structure finale.
