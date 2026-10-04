@@ -29,14 +29,22 @@
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nom = trim($_POST['nom'] ?? '');
 
+        // Une AUTRE catégorie porte-t-elle déjà ce nom ? (la colonne nom est UNIQUE)
+        $stmt = $pdo->prepare("SELECT id FROM categories WHERE nom = ? AND id != ?");
+        $stmt->execute([$nom, $id]);
+
         if (empty($nom)) {
             $erreur = "Le nom est obligatoire.";
+        } elseif (mb_strlen($nom) > 100) {
+            $erreur = "Le nom ne doit pas dépasser 100 caractères.";
+        } elseif ($stmt->fetch()) {
+            $erreur = "Une autre catégorie porte déjà ce nom.";
         } else {
             $stmt = $pdo->prepare("UPDATE categories SET nom = ? WHERE id = ?");
             $stmt->execute([$nom, $id]);
-            
+
             // mise à jour de la nouvelle variable
-            $categorie_actuelle['nom'] = $nom; 
+            $categorie_actuelle['nom'] = $nom;
             $succes = "Catégorie modifiée avec succès !";
         }
     }
@@ -73,7 +81,7 @@
             <?= csrf_champ() ?>
             <div class="form-group">
                 <label class="form-label">Nom *</label>
-                <input type="text" name="nom" class="form-control" 
+                <input type="text" name="nom" class="form-control" maxlength="100"
                     value="<?= htmlspecialchars($categorie_actuelle['nom']) ?>" 
                     style="width:100%; margin-bottom:16px;">
             </div>

@@ -59,3 +59,24 @@ function enregistrer_image(?array $fichier, &$erreur)
 
     return $nom_image;
 }
+
+/*
+ * Supprime le fichier $image de public/uploads/ s'il n'est plus utilisé par aucun article
+ * (après la suppression d'un article, ou quand on remplace son image).
+ * Seulement les images envoyées depuis le back-office (nom aléatoire en hexadécimal) :
+ * les images d'exemple du projet (sport.png...) sont suivies par Git, on n'y touche pas.
+ */
+function supprimer_image_inutilisee(PDO $pdo, $image)
+{
+    if (!preg_match('/^[a-f0-9]{13,16}\.(jpg|jpeg|png|webp)$/', (string) $image)) {
+        return;
+    }
+
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM articles WHERE image = ?");
+    $stmt->execute([$image]);
+
+    $fichier = __DIR__ . '/../public/uploads/' . basename($image);
+    if ($stmt->fetchColumn() == 0 && is_file($fichier)) {
+        unlink($fichier);
+    }
+}

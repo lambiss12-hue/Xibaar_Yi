@@ -41,6 +41,17 @@
 
         if (empty($nom) || empty($prenom) || empty($login) || empty($role)) {
             $erreur = "Les champs nom, prénom, login et rôle sont obligatoires.";
+        } elseif (!in_array($role, ['editeur', 'administrateur'], true)) {
+            $erreur = "Rôle invalide.";
+        } elseif ($id === (int) $_SESSION['user_id'] && $role !== 'administrateur') {
+            // Sinon l'administrateur perdrait lui-même l'accès à cette page
+            // (et le site pourrait se retrouver sans aucun administrateur)
+            $erreur = "Vous ne pouvez pas retirer votre propre rôle d'administrateur.";
+        } elseif ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $erreur = "L'adresse email n'est pas valide.";
+        } elseif (mb_strlen($nom) > 100 || mb_strlen($prenom) > 100 || mb_strlen($login) > 50
+                  || mb_strlen($email) > 150 || mb_strlen($telephone) > 30) {
+            $erreur = "Un des champs est trop long.";
         } else {
             // Vérifier si le login est pris par un AUTRE utilisateur
             $stmt = $pdo->prepare("SELECT id FROM utilisateurs WHERE login = ? AND id != ?");
@@ -50,7 +61,7 @@
             } else {
                 // Modifier sans changer le mot de passe si vide
                 if (!empty($mdp)) {
-                    if (strlen($mdp) < 6) {
+                    if (mb_strlen($mdp) < 6) {
                         $erreur = "Le mot de passe doit contenir au moins 6 caractères.";
                     } else {
                         $stmt = $pdo->prepare("UPDATE utilisateurs SET nom=?, prenom=?, email=?, telephone=?, login=?, mot_de_passe=?, role=? WHERE id=?");
@@ -63,6 +74,15 @@
                     $succes = "Utilisateur modifié avec succès !";
                 }
             }
+        }
+
+        // On réaffiche ce qui a été tapé (après une erreur comme après un succès)
+        $user = array_merge($user, compact('nom', 'prenom', 'email', 'telephone', 'login', 'role'));
+
+        // Son propre compte : le nom affiché dans l'en-tête doit suivre
+        if ($succes && $id === (int) $_SESSION['user_id']) {
+            $_SESSION['user_login'] = $login;
+            $_SESSION['user_nom']   = $prenom . ' ' . $nom;
         }
     }
 
@@ -101,28 +121,28 @@
             <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Nom *</label>
-                    <input type="text" name="nom" class="form-control" value="<?= htmlspecialchars($user['nom']) ?>">
+                    <input type="text" name="nom" class="form-control" maxlength="100" value="<?= htmlspecialchars($user['nom']) ?>">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Prénom *</label>
-                    <input type="text" name="prenom" class="form-control" value="<?= htmlspecialchars($user['prenom']) ?>">
+                    <input type="text" name="prenom" class="form-control" maxlength="100" value="<?= htmlspecialchars($user['prenom']) ?>">
                 </div>
             </div>
 
             <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($user['email'] ?? '') ?>">
+                    <input type="email" name="email" class="form-control" maxlength="150" value="<?= htmlspecialchars($user['email'] ?? '') ?>">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Téléphone</label>
-                    <input type="text" name="telephone" class="form-control" value="<?= htmlspecialchars($user['telephone'] ?? '') ?>">
+                    <input type="text" name="telephone" class="form-control" maxlength="30" value="<?= htmlspecialchars($user['telephone'] ?? '') ?>">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Login *</label>
-                <input type="text" name="login" class="form-control" value="<?= htmlspecialchars($user['login']) ?>">
+                <input type="text" name="login" class="form-control" maxlength="50" value="<?= htmlspecialchars($user['login']) ?>">
             </div>
 
             <div class="form-group">

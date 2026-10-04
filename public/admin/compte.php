@@ -43,6 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valide()) {
         $erreur_infos = "Le nom et le prénom sont obligatoires.";
     } elseif ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erreur_infos = "L'adresse email n'est pas valide.";
+    } elseif (mb_strlen($nom) > 100 || mb_strlen($prenom) > 100
+              || mb_strlen($email) > 150 || mb_strlen($telephone) > 30) {
+        $erreur_infos = "Un des champs est trop long.";
     } else {
         $stmt = $pdo->prepare("UPDATE utilisateurs SET nom = ?, prenom = ?, email = ?, telephone = ? WHERE id = ?");
         $stmt->execute([$nom, $prenom, $email, $telephone, $id]);

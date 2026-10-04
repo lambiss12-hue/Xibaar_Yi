@@ -172,24 +172,7 @@ include __DIR__ . '/../includes/entete.php';
                     <path d="M16 2v4M8 2v4M3 10h18"/>
                 </svg>
             
-                <?php
-                
-                $mois_fr = [
-                    1 => 'janvier', 2 => 'février',   3 => 'mars',
-                    4 => 'avril',   5 => 'mai',        6 => 'juin',
-                    7 => 'juillet', 8 => 'août',       9 => 'septembre',
-                    10 => 'octobre', 11 => 'novembre', 12 => 'décembre'
-                ];
-
-                
-                $timestamp = strtotime($article['date_publication']);
-
-                $jour  = date('j', $timestamp);
-                $mois  = intval(date('n', $timestamp));
-                $annee = date('Y', $timestamp);
-
-                echo $jour . ' ' . $mois_fr[$mois] . ' ' . $annee;
-                ?>
+                <?= date_fr($article['date_publication']) ?>
             </span>
 
             <span>

@@ -6,27 +6,38 @@
     $erreur = '';
     $succes = '';
 
+    // Valeurs du formulaire (réaffichées en cas d'erreur)
+    $nom       = trim($_POST['nom'] ?? '');
+    $prenom    = trim($_POST['prenom'] ?? '');
+    $email     = trim($_POST['email'] ?? '');
+    $telephone = trim($_POST['telephone'] ?? '');
+    $login     = trim($_POST['login'] ?? '');
+    $role      = trim($_POST['role'] ?? '');
+
     // Jeton CSRF : le formulaire doit venir de notre site
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valide()) {
         $erreur = "Le formulaire a expiré. Veuillez réessayer.";
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $nom       = trim($_POST['nom'] ?? '');
-        $prenom    = trim($_POST['prenom'] ?? '');
-        $email     = trim($_POST['email'] ?? '');
-        $telephone = trim($_POST['telephone'] ?? '');
-        $login     = trim($_POST['login'] ?? '');
         $mdp       = trim($_POST['mot_de_passe'] ?? '');
-        $role      = trim($_POST['role'] ?? '');
 
         // Vérification 1 : champs obligatoires
         if (empty($nom) || empty($prenom) || empty($login) || empty($mdp) || empty($role)) {
             $erreur = "Les champs nom, prénom, login, mot de passe et rôle sont obligatoires.";
-        
-        // Vérification 2 : longueur mot de passe
-        } elseif (strlen($mdp) < 6) {
+
+        // Vérification 2 : rôle et email valides, longueurs des colonnes de la base
+        } elseif (!in_array($role, ['editeur', 'administrateur'], true)) {
+            $erreur = "Rôle invalide.";
+        } elseif ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $erreur = "L'adresse email n'est pas valide.";
+        } elseif (mb_strlen($nom) > 100 || mb_strlen($prenom) > 100 || mb_strlen($login) > 50
+                  || mb_strlen($email) > 150 || mb_strlen($telephone) > 30) {
+            $erreur = "Un des champs est trop long.";
+
+        // Vérification 3 : longueur mot de passe
+        } elseif (mb_strlen($mdp) < 6) {
             $erreur = "Le mot de passe doit contenir au moins 6 caractères.";
         
-        // Vérification 3 : login déjà pris
+        // Vérification 4 : login déjà pris
         } else {
             $stmt = $pdo->prepare("SELECT id FROM utilisateurs WHERE login = ?");
             $stmt->execute([$login]);
@@ -43,6 +54,9 @@
                     $login, password_hash($mdp, PASSWORD_DEFAULT), $role
                 ]);
                 $succes = "Utilisateur créé avec succès !";
+
+                // Formulaire vide pour le suivant
+                $nom = $prenom = $email = $telephone = $login = $role = '';
             }
         }
     }
@@ -80,28 +94,28 @@ require_once __DIR__ . '/../../../includes/entete.php';
             <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Nom *</label>
-                    <input type="text" name="nom" class="form-control" placeholder="Diallo">
+                    <input type="text" name="nom" class="form-control" maxlength="100" placeholder="Diallo" value="<?= htmlspecialchars($nom) ?>">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Prénom *</label>
-                    <input type="text" name="prenom" class="form-control" placeholder="Amadou">
+                    <input type="text" name="prenom" class="form-control" maxlength="100" placeholder="Amadou" value="<?= htmlspecialchars($prenom) ?>">
                 </div>
             </div>
 
             <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" placeholder="amadou@esp.sn">
+                    <input type="email" name="email" class="form-control" maxlength="150" placeholder="amadou@esp.sn" value="<?= htmlspecialchars($email) ?>">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Téléphone</label>
-                    <input type="text" name="telephone" class="form-control" placeholder="77 000 00 00">
+                    <input type="text" name="telephone" class="form-control" maxlength="30" placeholder="77 000 00 00" value="<?= htmlspecialchars($telephone) ?>">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Login *</label>
-                <input type="text" name="login" class="form-control" placeholder="amadou123">
+                <input type="text" name="login" class="form-control" maxlength="50" placeholder="amadou123" value="<?= htmlspecialchars($login) ?>">
             </div>
 
             <div class="form-group">
@@ -113,8 +127,8 @@ require_once __DIR__ . '/../../../includes/entete.php';
                 <label class="form-label">Rôle *</label>
                 <select name="role" class="form-control">
                     <option value="">-- Choisir un rôle --</option>
-                    <option value="editeur">Éditeur</option>
-                    <option value="administrateur">Administrateur</option>
+                    <option value="editeur" <?= $role === 'editeur' ? 'selected' : '' ?>>Éditeur</option>
+                    <option value="administrateur" <?= $role === 'administrateur' ? 'selected' : '' ?>>Administrateur</option>
                 </select>
             </div>
 
