@@ -2,6 +2,7 @@
 
     //always verifier qui est connecter
     require_once __DIR__ . '/../../../includes/auth.php';
+    require_once __DIR__ . '/../../../includes/upload.php';
 
     exiger_role(['editeur', 'administrateur']);
 
@@ -22,18 +23,8 @@
     $stmt = $pdo->prepare("DELETE FROM articles WHERE id = ?");
     $stmt->execute([$id]);
 
-    // On supprime aussi le fichier image s'il n'est plus utilisé par aucun article.
-    // Seulement les images envoyées depuis le back-office (nom aléatoire en hexadécimal) :
-    // les images d'exemple du projet (sport.png...) sont suivies par Git, on n'y touche pas.
-    if (preg_match('/^[a-f0-9]{13,16}\.(jpg|jpeg|png|webp)$/', $image)) {
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM articles WHERE image = ?");
-        $stmt->execute([$image]);
-
-        $fichier = __DIR__ . '/../../uploads/' . basename($image);
-        if ($stmt->fetchColumn() == 0 && is_file($fichier)) {
-            unlink($fichier);
-        }
-    }
+    // On supprime aussi le fichier image s'il n'est plus utilisé (voir includes/upload.php)
+    supprimer_image_inutilisee($pdo, $image);
 
     header('Location: ' . url($retour));
     exit;

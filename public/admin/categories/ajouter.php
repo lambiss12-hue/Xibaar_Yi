@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valide()) {
 
     if (empty($nom)) {
         $erreur = "Le nom de la catégorie est obligatoire.";
+    } elseif (mb_strlen($nom) > 100) {
+        $erreur = "Le nom ne doit pas dépasser 100 caractères.";
     } else {
         $stmt = $pdo->prepare("SELECT id FROM categories WHERE nom = ?");
         $stmt->execute([$nom]);
@@ -58,7 +60,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
             <?= csrf_champ() ?>
             <div class="form-group">
                 <label class="form-label">Nom *</label>
-                <input type="text" name="nom" class="form-control" placeholder="Agriculture" style="width:100%; margin-bottom:16px;">
+                <input type="text" name="nom" class="form-control" maxlength="100" placeholder="Agriculture" style="width:100%; margin-bottom:16px;">
             </div>
             <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>

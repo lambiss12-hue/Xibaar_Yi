@@ -2,8 +2,6 @@
 -- Commentaires des visiteurs : publiés seulement après validation (statut 'approuve').
 -- Supprimer un article supprime aussi ses commentaires (ON DELETE CASCADE).
 
-USE xibaar_yi;
-
 CREATE TABLE IF NOT EXISTS commentaires (
     id            INT AUTO_INCREMENT PRIMARY KEY,
     id_article    INT NOT NULL,

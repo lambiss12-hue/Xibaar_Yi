@@ -1,0 +1,19 @@
+# ------------------------------------------------------------
+# Utile seulement si l'hébergeur ne permet pas de choisir public/
+# comme racine du site (on envoie alors tout le projet dans htdocs/).
+# Avec Laragon, XAMPP ou php -S, ce fichier ne sert pas.
+# ------------------------------------------------------------
+
+# Pas de liste des fichiers quand un dossier n'a pas d'index
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Code interne, base de données, historique Git : interdits (erreur 403)
+    RewriteRule ^(includes|database|docs|\.git)(/|$) - [F,L]
+
+    # Tout le reste est servi depuis public/
+    RewriteCond %{REQUEST_URI} !/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

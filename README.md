@@ -82,15 +82,16 @@ cd Xibaar_Yi
 
 ### 2. Créer la base de données
 
-Démarrer MySQL (Laragon, XAMPP, WAMP…) puis importer le fichier SQL :
+Démarrer MySQL (Laragon, XAMPP, WAMP…), créer la base `xibaar_yi` puis y importer le fichier SQL :
 
 ```bash
-mysql -u root < database/database.sql
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS xibaar_yi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+mysql -u root xibaar_yi < database/database.sql
 ```
 
-Ou via phpMyAdmin / HeidiSQL : **Importer** → `database/database.sql`.
+Ou via phpMyAdmin / HeidiSQL : créer la base `xibaar_yi`, la sélectionner, puis **Importer** → `database/database.sql`.
 
-Le script crée la base `xibaar_yi`, les tables `categories`, `utilisateurs`, `articles`, `newsletter`, `messages_contact`, `commentaires`,
+Le script ne crée pas la base lui-même (chez un hébergeur, son nom est imposé) : il crée les tables `categories`, `utilisateurs`, `articles`, `newsletter`, `messages_contact`, `commentaires`,
 ainsi que 5 catégories, 5 articles d'exemple et un compte administrateur.
 
 > **Base déjà existante ?** Exécuter aussi les scripts de `database/migrations/` (une seule fois).
@@ -101,6 +102,11 @@ ainsi que 5 catégories, 5 articles d'exemple et un compte administrateur.
 
 Les paramètres sont dans [`includes/config.php`](includes/config.php) (par défaut : `root` sans mot de passe
 sur `localhost:3306`). Si MySQL tourne sur un autre port, définir la variable d'environnement `DB_PORT`.
+
+**En ligne** : copier [`includes/config.local.exemple.php`](includes/config.local.exemple.php) en
+`includes/config.local.php` et y mettre les identifiants donnés par l'hébergeur. Ce fichier est ignoré par Git :
+le mot de passe de la base ne part jamais sur GitHub. Les fichiers `.htaccess` interdisent l'accès direct
+à `includes/` et `database/`, et l'exécution de scripts dans `public/uploads/`.
 
 ### 4. Lancer le site
 
@@ -131,7 +137,7 @@ le nom ou l'emplacement du dossier.
 Pour une démo plus vivante (15 articles de plus, commentaires, messages, 2 éditeurs) :
 
 ```bash
-mysql -u root < database/demo.sql
+mysql -u root xibaar_yi < database/demo.sql
 ```
 
 Comptes éditeurs ajoutés : `fatou` et `moussa`, mot de passe `redac123`.

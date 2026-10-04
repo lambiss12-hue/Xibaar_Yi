@@ -1,6 +1,20 @@
 <?php
 require_once __DIR__ . '/../includes/config.php';
-include __DIR__ . '/../includes/entete.php'; 
+
+// Saisie gardée après une erreur (voir traitement_contact.php), affichée une seule fois
+$saisie = $_SESSION['contact_saisie'] ?? [];
+unset($_SESSION['contact_saisie']);
+$saisie += ['nom' => '', 'email' => '', 'sujet' => '', 'message' => ''];
+
+$sujets = [
+    'info'      => 'Partager une information',
+    'technique' => 'Problème technique',
+    'publicite' => 'Publicité / Partenariat',
+    'autre'     => 'Autre demande',
+];
+
+$titre_page = 'Contact';
+include __DIR__ . '/../includes/entete.php';
 ?>
 
 <main class="main">
@@ -31,30 +45,31 @@ include __DIR__ . '/../includes/entete.php';
             
             <div style="margin-bottom: 20px;">
                 <label style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">Nom complet</label>
-                <input type="text" name="nom" required placeholder="Ex: Moussa Diop" 
+                <input type="text" name="nom" required maxlength="150" placeholder="Ex: Moussa Diop"
+                       value="<?= htmlspecialchars($saisie['nom'], ENT_QUOTES, 'UTF-8') ?>"
                        style="width: 100%; padding: 12px; border: 1px solid #ddd; font-family: inherit; font-size: 14px;">
             </div>
 
             <div style="margin-bottom: 20px;">
                 <label style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">Adresse Email</label>
-                <input type="email" name="email" required placeholder="votre@email.com" 
+                <input type="email" name="email" required maxlength="150" placeholder="votre@email.com"
+                       value="<?= htmlspecialchars($saisie['email'], ENT_QUOTES, 'UTF-8') ?>"
                        style="width: 100%; padding: 12px; border: 1px solid #ddd; font-family: inherit; font-size: 14px;">
             </div>
 
             <div style="margin-bottom: 20px;">
                 <label style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">Sujet</label>
                 <select name="sujet" style="width: 100%; padding: 12px; border: 1px solid #ddd; background: #fff; font-family: inherit;">
-                    <option value="info">Partager une information</option>
-                    <option value="technique">Problème technique</option>
-                    <option value="publicite">Publicité / Partenariat</option>
-                    <option value="autre">Autre demande</option>
+                    <?php foreach ($sujets as $valeur => $libelle) : ?>
+                        <option value="<?= $valeur ?>" <?= $saisie['sujet'] === $valeur ? 'selected' : '' ?>><?= $libelle ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
             <div style="margin-bottom: 25px;">
                 <label style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">Votre message</label>
-                <textarea name="message" required rows="6" placeholder="Ecrivez votre message ici..." 
-                          style="width: 100%; padding: 12px; border: 1px solid #ddd; font-family: inherit; font-size: 14px; resize: vertical;"></textarea>
+                <textarea name="message" required rows="6" maxlength="5000" placeholder="Écrivez votre message ici..."
+                          style="width: 100%; padding: 12px; border: 1px solid #ddd; font-family: inherit; font-size: 14px; resize: vertical;"><?= htmlspecialchars($saisie['message'], ENT_QUOTES, 'UTF-8') ?></textarea>
             </div>
 
             <button type="submit" 

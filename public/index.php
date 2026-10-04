@@ -68,6 +68,23 @@ $stmt->execute($params);
 
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Colonne "En bref" : les derniers articles qui ne sont PAS déjà affichés
+// dans la colonne principale (sinon on verrait deux fois les mêmes)
+$ids_affiches = array_map('intval', array_column($articles, 'id'));
+$exclusion    = $ids_affiches ? 'WHERE articles.id NOT IN (' . implode(',', $ids_affiches) . ')' : '';
+
+$articles_bref = $pdo->query("SELECT articles.id,
+                                     articles.titre,
+                                     articles.date_publication,
+                                     categories.nom AS categorie_nom,
+                                     CONCAT(u.prenom, ' ', u.nom) AS auteur_nom
+                              FROM articles
+                              JOIN categories ON articles.id_categorie = categories.id
+                              JOIN utilisateurs u ON articles.id_auteur = u.id
+                              $exclusion
+                              ORDER BY articles.date_publication DESC
+                              LIMIT 3")->fetchAll(PDO::FETCH_ASSOC);
+
 $sql_cats = "SELECT id, nom FROM categories ORDER BY nom ASC";
 
 $stmt_cats = $pdo->query($sql_cats);
@@ -164,10 +181,7 @@ include __DIR__ . '/../includes/entete.php';
     <div class="main-mid">
         <div class="mid-section-title">En bref</div>
 
-        <?php
-        $articles_bref = array_slice($articles, 0, 3);
-
-        if (empty($articles_bref)) : ?>
+        <?php if (empty($articles_bref)) : ?>
             <p style="font-size: 11px; color: #999; padding-top: 10px;">
                 Aucun article disponible.
             </p>

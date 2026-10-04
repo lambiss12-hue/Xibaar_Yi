@@ -1,6 +1,12 @@
 <?php
     require_once __DIR__ . '/../includes/config.php';
 
+    // Déjà connecté : rien à faire ici
+    if (isset($_SESSION['user_role'])) {
+        header('Location: ' . url('index.php'));
+        exit;
+    }
+
     $erreur = '';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -57,7 +63,7 @@
 
     // RÉCUPÉRER LE DERNIER ARTICLE (reste inchangé)
     $dernierArticle = $pdo->query("
-        SELECT a.titre, u.nom, a.date_publication
+        SELECT a.titre, CONCAT(u.prenom, ' ', u.nom) AS auteur_nom, a.date_publication
         FROM articles a
         LEFT JOIN utilisateurs u ON a.id_auteur = u.id
         ORDER BY a.date_publication DESC
@@ -145,7 +151,7 @@
                 <?= htmlspecialchars($dernierArticle['titre']) ?>
             </div>
             <div style="font-size:10px; color:#bbb; margin-top:6px;">
-                <?= htmlspecialchars($dernierArticle['nom']) ?> · <?= date('d M Y', strtotime($dernierArticle['date_publication'])) ?>
+                <?= htmlspecialchars($dernierArticle['auteur_nom'] ?? '') ?> · <?= date_fr($dernierArticle['date_publication']) ?>
             </div>
         </div>
         <?php endif; ?>

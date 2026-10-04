@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../../includes/upload.php';
 exiger_role(['editeur', 'administrateur']);
 
 if (!isset($_GET['id'])) {
-    header('Location: ' . url('index.php'));
+    header('Location: ' . url('admin/articles/liste.php'));
     exit;
 }
 
@@ -17,7 +17,7 @@ $stmt->execute([$id]);
 $article = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$article) {
-    header('Location: ' . url('index.php'));
+    header('Location: ' . url('admin/articles/liste.php'));
     exit;
 }
 
@@ -35,10 +35,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valide()) {
     $description  = trim($_POST['description_courte'] ?? '');
     $contenu      = trim($_POST['contenu'] ?? '');
     $id_categorie = (int)($_POST['id_categorie'] ?? 0);
-    $image        = $article['image'];
+    $ancienne_image = $article['image'];
+    $image          = $ancienne_image;
 
     if (empty($titre) || empty($description) || empty($contenu) || $id_categorie === 0) {
         $erreur = "Tous les champs obligatoires doivent être remplis.";
+    } elseif (!in_array($id_categorie, array_map('intval', array_column($categories, 'id')), true)) {
+        $erreur = "Cette catégorie n'existe pas.";
+    } elseif (mb_strlen($titre) > 255) {
+        $erreur = "Le titre ne doit pas dépasser 255 caractères.";
     } else {
         // Nouvelle image envoyée ? Sinon on garde l'ancienne
         $nouvelle_image = enregistrer_image($_FILES['image'] ?? null, $erreur);
@@ -48,18 +53,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valide()) {
 
         if (empty($erreur)) {
             $stmt = $pdo->prepare("
-                UPDATE articles 
+                UPDATE articles
                 SET titre = ?, description_courte = ?, contenu = ?, id_categorie = ?, image = ?
                 WHERE id = ?
             ");
             $stmt->execute([$titre, $description, $contenu, $id_categorie, $image, $id]);
             $succes = "Article modifié avec succès !";
-            
+
+            // Image remplacée : l'ancien fichier ne sert plus à rien
+            if ($image !== $ancienne_image) {
+                supprimer_image_inutilisee($pdo, $ancienne_image);
+            }
+
             // Recharger l'article
             $stmt = $pdo->prepare("SELECT * FROM articles WHERE id = ?");
             $stmt->execute([$id]);
             $article = $stmt->fetch(PDO::FETCH_ASSOC);
         }
+    }
+
+    // En cas d'erreur, on réaffiche ce que l'utilisateur a tapé (pas l'ancienne version)
+    if ($erreur) {
+        $article['titre']              = $titre;
+        $article['description_courte'] = $description;
+        $article['contenu']            = $contenu;
+        $article['id_categorie']       = $id_categorie;
     }
 }
 
@@ -96,7 +114,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
 
             <div style="margin-bottom:20px;">
                 <label style="display:block; font-size:12px; font-weight:700; color:#444; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px;">Titre *</label>
-                <input type="text" name="titre" value="<?= htmlspecialchars($article['titre']) ?>"
+                <input type="text" name="titre" maxlength="255" value="<?= htmlspecialchars($article['titre']) ?>"
                     style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:4px; font-size:14px; font-family:inherit;">
             </div>
 

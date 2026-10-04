@@ -5,7 +5,7 @@ Scénario de démo d'environ **10 minutes**, puis les questions probables du jur
 ## Avant la soutenance (la veille)
 
 - [ ] Base à jour : `database/database.sql` (base neuve) ou les scripts de `database/migrations/` (base existante)
-- [ ] Données de démo importées : `mysql -u root < database/demo.sql`
+- [ ] Données de démo importées : `mysql -u root xibaar_yi < database/demo.sql`
 - [ ] Le site s'ouvre sur l'ordinateur de la présentation (accueil, un article, connexion)
 - [ ] Deux onglets prêts : un **visiteur** (navigation privée) et un **membre de la rédaction**
 - [ ] Comptes : `admin` / `admin123` (administrateur), `fatou` / `redac123` (éditrice)

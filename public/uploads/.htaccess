@@ -1,0 +1,6 @@
+# Dossier des images envoyées : aucun script ne doit pouvoir s'y exécuter,
+# même si un fichier dangereux passait malgré les vérifications de includes/upload.php.
+<FilesMatch "(?i)\.(php|php[0-9]|phtml|phar|pl|py|cgi|sh)$">
+    Require all denied
+</FilesMatch>
+Options -Indexes

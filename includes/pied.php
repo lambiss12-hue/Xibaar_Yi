@@ -35,12 +35,16 @@ require_once __DIR__ . '/config.php';
         <!-- Bloc droit : liens de navigation -->
         <div class="footer-links">
             <a href="<?= url('index.php') ?>">Accueil</a>
-            <a href="<?= url('index.php') ?>?categorie=Technologie">Technologie</a>
-            <a href="<?= url('index.php') ?>?categorie=Sport">Sport</a>
-             <a href="<?= url('index.php') ?>?categorie=Politique">Politique</a>
-              <a href="<?= url('index.php') ?>?categorie=Education">Education</a>
-               <a href="<?= url('index.php') ?>?categorie=Culture">Culture</a>
-            <a href="<?= url('connexion.php') ?>">Connexion</a>
+            <?php
+            // Mêmes catégories que le menu du haut (lues dans la base, jamais écrites en dur)
+            foreach ($pdo->query("SELECT nom FROM categories ORDER BY nom ASC") as $cat_pied) : ?>
+                <a href="<?= url('index.php') ?>?categorie=<?= urlencode($cat_pied['nom']) ?>">
+                    <?= htmlspecialchars($cat_pied['nom'], ENT_QUOTES, 'UTF-8') ?>
+                </a>
+            <?php endforeach; ?>
+            <?php if (!isset($_SESSION['user_role'])) : ?>
+                <a href="<?= url('connexion.php') ?>">Connexion</a>
+            <?php endif; ?>
             <a href="<?= url('contact.php') ?>">Contact</a>
         </div>
 

@@ -22,6 +22,10 @@ if (!mb_check_encoding($nom . $email . $message, 'UTF-8')
     || !filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 150
     || !in_array($sujet, $sujets_autorises, true)
     || $message === '' || mb_strlen($message) > 5000) {
+    // On garde la saisie pour la réafficher : le visiteur ne perd pas son message
+    if (mb_check_encoding($nom . $email . $message, 'UTF-8')) {
+        $_SESSION['contact_saisie'] = compact('nom', 'email', 'sujet', 'message');
+    }
     header('Location: ' . url('contact.php?envoi=erreur'));
     exit();
 }
