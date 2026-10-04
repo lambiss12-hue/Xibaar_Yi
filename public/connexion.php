@@ -9,11 +9,53 @@
 
     $erreur = '';
 
+    // Limite des tentatives : après 5 échecs en 15 minutes depuis la même adresse IP,
+    // on refuse d'essayer d'autres mots de passe pendant un moment.
+    const ECHECS_MAX      = 5;
+    const DUREE_BLOCAGE   = 15; // minutes
+
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+
+    // Nombre de minutes à attendre avant de pouvoir réessayer (0 = pas bloqué)
+    function minutes_de_blocage(PDO $pdo, $ip)
+    {
+        try {
+            $stmt = $pdo->prepare("SELECT COUNT(*) AS nb, MIN(date_tentative) AS premiere
+                                   FROM tentatives_connexion
+                                   WHERE ip = ? AND date_tentative > NOW() - INTERVAL " . DUREE_BLOCAGE . " MINUTE");
+            $stmt->execute([$ip]);
+            $echecs = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return 0; // Migration 007 pas encore exécutée : pas de limite
+        }
+
+        if ($echecs['nb'] < ECHECS_MAX) {
+            return 0;
+        }
+        // Le blocage se termine quand le plus ancien échec sort de la fenêtre de 15 minutes
+        return max(1, (int) ceil((strtotime($echecs['premiere']) + DUREE_BLOCAGE * 60 - time()) / 60));
+    }
+
+    function noter_echec(PDO $pdo, $ip)
+    {
+        try {
+            $pdo->prepare("INSERT INTO tentatives_connexion (ip) VALUES (?)")->execute([$ip]);
+            // Ménage : les échecs de plus d'un jour ne servent plus à rien
+            $pdo->exec("DELETE FROM tentatives_connexion WHERE date_tentative < NOW() - INTERVAL 1 DAY");
+        } catch (PDOException $e) {
+            // Migration 007 pas encore exécutée : on ne note rien
+        }
+    }
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $login = trim($_POST['login'] ?? '');
         $mdp   = trim($_POST['mot_de_passe'] ?? '');
+        $attente = minutes_de_blocage($pdo, $ip);
 
-        if (empty($login) || empty($mdp)) {
+        if ($attente > 0) {
+            // On ne vérifie même pas le mot de passe : un robot ne peut plus rien tester
+            $erreur = "Trop de tentatives de connexion. Réessayez dans $attente minute(s).";
+        } elseif (empty($login) || empty($mdp)) {
             $erreur = "Tous les champs sont obligatoires.";
         } else {
             $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE login = ?");
@@ -43,6 +85,13 @@
             }
 
             if ($mdp_valide) {
+                // Connexion réussie : on efface les échecs de cette adresse IP
+                try {
+                    $pdo->prepare("DELETE FROM tentatives_connexion WHERE ip = ?")->execute([$ip]);
+                } catch (PDOException $e) {
+                    // Migration 007 pas encore exécutée
+                }
+
                 // Nouvel identifiant de session à la connexion (évite le vol de session)
                 session_regenerate_id(true);
 
@@ -56,6 +105,7 @@
                 header('Location: ' . url('index.php'));
                 exit;
             } else {
+                noter_echec($pdo, $ip);
                 $erreur = "Login ou mot de passe incorrect.";
             }
         }

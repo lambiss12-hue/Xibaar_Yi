@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/config.php';
+// auth.php charge config.php et fournit csrf_champ() (bouton de déconnexion)
+require_once __DIR__ . '/auth.php';
 
 $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
 ?>
@@ -49,7 +50,12 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
                     <a href="<?= url('admin/compte.php') ?>" class="lien-compte" title="Mon compte">
                         <?php echo htmlspecialchars($_SESSION['user_login'], ENT_QUOTES, 'UTF-8'); ?>
                     </a>
-                    <a href="<?= url('deconnexion.php') ?>" class="btn-cnx">Se déconnecter</a>
+                    <!-- Formulaire POST + jeton CSRF (et pas un simple lien) :
+                         une autre page ne peut pas déconnecter l'utilisateur à son insu -->
+                    <form method="POST" action="<?= url('deconnexion.php') ?>" class="form-inline">
+                        <?= csrf_champ() ?>
+                        <button type="submit" class="btn-cnx">Se déconnecter</button>
+                    </form>
                 <?php else : ?>
                     <a href="<?= url('connexion.php') ?>" class="btn-cnx">Se connecter</a>
                 <?php endif; ?>
@@ -139,7 +145,22 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
         <?php endif; ?>
     </div>
 
+    <?php
+    // Bandeau FLASH : les 3 derniers articles publiés (mis à jour à chaque nouvel article)
+    $articles_flash = $pdo->query("SELECT id, titre FROM articles
+                                   ORDER BY date_publication DESC
+                                   LIMIT 3")->fetchAll(PDO::FETCH_ASSOC);
+    ?>
     <div class="ticker">
         <div class="ticker-label">FLASH</div>
-        <div class="ticker-text">Bienvenue sur Xibaar Yi — L'actualité du Sénégal en temps réel</div>
+        <div class="ticker-text">
+            <?php if (empty($articles_flash)) : ?>
+                Bienvenue sur Xibaar Yi — L'actualité du Sénégal
+            <?php else : ?>
+                <?php foreach ($articles_flash as $i => $flash) : ?>
+                    <?= $i > 0 ? '<span class="ticker-sep">·</span>' : '' ?>
+                    <a href="<?= url('article.php') ?>?id=<?= (int) $flash['id'] ?>"><?= htmlspecialchars($flash['titre'], ENT_QUOTES, 'UTF-8') ?></a>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
     </div>

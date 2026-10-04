@@ -94,9 +94,10 @@ Cacher un lien dans le menu ne suffit pas : quelqu'un pourrait taper l'adresse �
 | **Injection SQL** | requêtes préparées PDO (`prepare` + `execute`), jamais de variable collée dans le SQL | toutes les pages |
 | **XSS** (code JavaScript injecté) | tout texte saisi par un visiteur ou un rédacteur (titres, commentaires, noms, recherche...) est affiché via `htmlspecialchars()` ; le reste n'est que des identifiants numériques ou des valeurs fixées par le code | toutes les pages |
 | **Mots de passe volés** | `password_hash()` / `password_verify()` (bcrypt + sel) ; anciens hash SHA-256 convertis à la connexion | `connexion.php`, `admin/utilisateurs/`, `admin/compte.php` |
+| **Mots de passe devinés** (un robot essaie des milliers de mots de passe) | 5 échecs en 15 minutes depuis la même adresse IP = connexion bloquée jusqu'à la fin des 15 minutes | `connexion.php`, table `tentatives_connexion` |
 | **Vol de session** | nouvel identifiant de session à la connexion et au changement de mot de passe (`session_regenerate_id`) | `connexion.php`, `admin/compte.php` |
 | **CSRF** (un autre site déclenche une action à votre place) | jeton secret dans chaque formulaire du back-office | `includes/auth.php` |
-| **Suppression par simple lien** | suppressions uniquement en POST avec jeton | `admin/*/supprimer.php`, `admin/*/action.php` |
+| **Suppression par simple lien** | suppressions et déconnexion uniquement en POST avec jeton | `admin/*/supprimer.php`, `admin/*/action.php`, `deconnexion.php` |
 | **Perte de données** | refus de supprimer une catégorie ou un auteur qui a des articles | `admin/categories/supprimer.php`, `admin/utilisateurs/supprimer.php` |
 | **Fichier dangereux envoyé** (ex. `virus.php` renommé `photo.jpg`) | contenu vérifié par `getimagesize()`, 5 Mo max, nom aléatoire, extension selon le vrai type | `includes/upload.php` |
 | **Accès aux fichiers sensibles** | seule `public/` est exposée | structure des dossiers |

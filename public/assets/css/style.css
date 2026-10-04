@@ -155,6 +155,27 @@ img {
     font-size: 12px;
     color: #ccc;
     font-style: italic;
+    /* Une seule ligne : les titres trop longs sont coupés par "..." */
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ticker-text a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+.ticker-text a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.ticker-sep {
+    color: #e00;
+    margin: 0 10px;
+    font-style: normal;
 }
 
 .main {
@@ -635,8 +656,14 @@ body {
     transition: all 0.3s ease; 
 }
 
+/* "Se déconnecter" est un <button> : même police que les liens .btn-cnx */
+button.btn-cnx {
+    font-family: inherit;
+    line-height: inherit;
+}
+
 .btn-cnx:hover {
-    background-color: #111; 
+    background-color: #111;
     color: #fff;            
 }
 

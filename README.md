@@ -91,7 +91,7 @@ mysql -u root xibaar_yi < database/database.sql
 
 Ou via phpMyAdmin / HeidiSQL : créer la base `xibaar_yi`, la sélectionner, puis **Importer** → `database/database.sql`.
 
-Le script ne crée pas la base lui-même (chez un hébergeur, son nom est imposé) : il crée les tables `categories`, `utilisateurs`, `articles`, `newsletter`, `messages_contact`, `commentaires`,
+Le script ne crée pas la base lui-même (chez un hébergeur, son nom est imposé) : il crée les tables `categories`, `utilisateurs`, `articles`, `newsletter`, `messages_contact`, `commentaires`, `tentatives_connexion`,
 ainsi que 5 catégories, 5 articles d'exemple et un compte administrateur.
 
 > **Base déjà existante ?** Exécuter aussi les scripts de `database/migrations/` (une seule fois).
@@ -183,8 +183,9 @@ require_once __DIR__ . '/../../../includes/entete.php';
 ## Sécurité
 
 - Mots de passe hachés avec `password_hash()` (bcrypt)
+- Connexion bloquée 15 minutes après 5 échecs depuis la même adresse IP
 - Requêtes SQL préparées (PDO) contre les injections SQL
-- Jeton CSRF sur tous les formulaires du back-office
+- Jeton CSRF sur tous les formulaires du back-office (et sur le bouton de déconnexion)
 - Suppressions uniquement en POST ; impossible de supprimer une catégorie ou un
   utilisateur qui a encore des articles (évite d'effacer des articles par erreur)
 - Images vérifiées par leur contenu réel (jpg, png, webp, 5 Mo max), renommées aléatoirement

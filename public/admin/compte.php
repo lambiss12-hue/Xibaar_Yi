@@ -11,9 +11,10 @@ $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE id = ?");
 $stmt->execute([$id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Compte supprimé entre-temps : on déconnecte
+// Compte supprimé entre-temps : retour à la connexion
+// (config.php a déjà vidé la session dans ce cas)
 if (!$user) {
-    header('Location: ' . url('deconnexion.php'));
+    header('Location: ' . url('connexion.php'));
     exit;
 }
 
