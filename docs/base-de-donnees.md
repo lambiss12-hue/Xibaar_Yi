@@ -23,7 +23,7 @@ erDiagram
         varchar telephone
         varchar login UK
         varchar mot_de_passe "hash password_hash (bcrypt)"
-        enum role "editeur | administrateur"
+        enum role "editeur | administrateur | demo"
     }
     articles {
         int id PK
@@ -91,7 +91,8 @@ Membres de la rédaction (les visiteurs n'ont pas de compte).
 - `mot_de_passe` contient un **hash** `password_hash()` (bcrypt, 60 caractères), jamais le
   mot de passe en clair. La colonne fait 255 caractères pour les futurs algorithmes.
 - `role` : `editeur` (articles, catégories, messages, commentaires) ou
-  `administrateur` (tout, plus la gestion des utilisateurs).
+  `administrateur` (tout, plus la gestion des utilisateurs),
+  ou `demo` (voit tout le back-office, ne peut rien modifier : compte public du portfolio).
 
 ### `articles`
 - `description_courte` : le résumé affiché sur l'accueil.
@@ -129,5 +130,6 @@ pour mettre à jour les bases **déjà créées** (sans perdre les données) :
 | `005_articles_vues.sql` | colonne `vues` (articles les plus lus) |
 | `006_commentaires.sql` | table `commentaires` |
 | `007_tentatives_connexion.sql` | table `tentatives_connexion` (limite des échecs de connexion) |
+| `008_compte_demo.sql` | rôle `demo` + compte de démonstration en lecture seule |
 
 Une base neuve n'en a pas besoin : `database.sql` contient déjà la structure finale.

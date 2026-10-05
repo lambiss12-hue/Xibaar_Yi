@@ -126,6 +126,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion — Xibaar Yi</title>
+    <?php include __DIR__ . '/../includes/meta.php'; ?>
     <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
 </head>
 <body>
@@ -188,6 +189,17 @@
             </button>
         </form>
 
+        <!-- Compte de démonstration (portfolio) : lecture seule, voir includes/auth.php -->
+        <div class="encart-demo">
+            <div class="encart-demo-titre">Vous visitez ce projet ?</div>
+            <p>
+                Testez le back-office avec le compte démo
+                <code>demo</code> / <code>demo1234</code> :
+                tout est visible, rien ne peut être modifié.
+            </p>
+            <button type="button" id="remplirDemo" class="btn btn-secondary">Remplir avec le compte démo</button>
+        </div>
+
         <div style="display:flex; align-items:center; gap:12px; margin:28px 0;">
             <div style="flex:1; height:1px; background:#eee;"></div>
             <div style="font-size:11px; color:#ccc;">Dernière actualité</div>
@@ -210,6 +222,12 @@
 </div>
 
 <script>
+document.getElementById('remplirDemo').addEventListener('click', function () {
+    document.getElementById('login').value = 'demo';
+    document.getElementById('mdp').value   = 'demo1234';
+    document.getElementById('mdp').focus();
+});
+
 document.getElementById('formConnexion').addEventListener('submit', function(e) {
     const login = document.getElementById('login').value.trim();
     const mdp   = document.getElementById('mdp').value.trim();

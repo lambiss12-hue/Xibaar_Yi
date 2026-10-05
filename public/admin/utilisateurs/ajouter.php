@@ -25,7 +25,7 @@
             $erreur = "Les champs nom, prénom, login, mot de passe et rôle sont obligatoires.";
 
         // Vérification 2 : rôle et email valides, longueurs des colonnes de la base
-        } elseif (!in_array($role, ['editeur', 'administrateur'], true)) {
+        } elseif (!in_array($role, ['editeur', 'administrateur', 'demo'], true)) {
             $erreur = "Rôle invalide.";
         } elseif ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $erreur = "L'adresse email n'est pas valide.";
@@ -129,6 +129,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
                     <option value="">-- Choisir un rôle --</option>
                     <option value="editeur" <?= $role === 'editeur' ? 'selected' : '' ?>>Éditeur</option>
                     <option value="administrateur" <?= $role === 'administrateur' ? 'selected' : '' ?>>Administrateur</option>
+                    <option value="demo" <?= $role === 'demo' ? 'selected' : '' ?>>Démo (lecture seule)</option>
                 </select>
             </div>
 

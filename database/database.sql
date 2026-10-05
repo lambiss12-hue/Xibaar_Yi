@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS utilisateurs (
     telephone    VARCHAR(30),
     login        VARCHAR(50)  NOT NULL UNIQUE,
     mot_de_passe VARCHAR(255) NOT NULL,
-    role         ENUM('editeur', 'administrateur') NOT NULL DEFAULT 'editeur'
+    role         ENUM('editeur', 'administrateur', 'demo') NOT NULL DEFAULT 'editeur'
 );
 
 CREATE TABLE IF NOT EXISTS articles (
@@ -82,6 +82,11 @@ INSERT IGNORE INTO categories (id, nom) VALUES
 -- Compte admin : login "admin", mot de passe "admin123" (hash généré avec password_hash)
 INSERT IGNORE INTO utilisateurs (id, nom, prenom, email, telephone, login, mot_de_passe, role) VALUES
     (1, 'Admin', 'Xibaar', 'admin@xibaar.sn', '', 'admin', '$2y$10$Bg0oIp.tAJt5hq8njUCo0.TydQPgntFgHy1lEEbUqNacBfYmojjKK', 'administrateur');
+
+-- Compte de démonstration public : login "demo", mot de passe "demo1234".
+-- Voit tout le back-office mais ne peut rien modifier (voir exiger_role() dans includes/auth.php).
+INSERT IGNORE INTO utilisateurs (id, nom, prenom, email, telephone, login, mot_de_passe, role) VALUES
+    (900, 'Démo', 'Visiteur', '', '', 'demo', '$2y$10$puCMpfcJWdeSJM.3EIOQeO4uN0WiB7J4U8CcJ0AhfGv3FIoo2WCMu', 'demo');
 
 INSERT IGNORE INTO articles (id, titre, description_courte, contenu, image, id_categorie, id_auteur, date_publication) VALUES
     (1, 'Session parlementaire : les grands dossiers de la rentrée', 'Les députés reprennent les travaux avec un calendrier chargé.', 'Les députés ont ouvert la nouvelle session avec plusieurs projets de loi à l''ordre du jour.', 'politique.png', 1, 1, NOW() - INTERVAL 5 DAY),

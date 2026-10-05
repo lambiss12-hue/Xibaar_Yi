@@ -53,8 +53,8 @@ include __DIR__ . '/../../../includes/entete.php';
                     </td>
                     <td style="<?= $m['lu'] ? '' : 'font-weight:700;' ?>">
                         <?= htmlspecialchars($m['nom']) ?><br>
-                        <a href="mailto:<?= htmlspecialchars($m['email']) ?>" style="font-size:12px; color:#cc0000; font-weight:400;">
-                            <?= htmlspecialchars($m['email']) ?>
+                        <a href="mailto:<?= htmlspecialchars(masquer_si_demo($m['email'])) ?>" style="font-size:12px; color:#cc0000; font-weight:400;">
+                            <?= htmlspecialchars(masquer_si_demo($m['email'])) ?>
                         </a>
                     </td>
                     <td><span class="badge"><?= htmlspecialchars($libelles_sujets[$m['sujet']] ?? $m['sujet']) ?></span></td>

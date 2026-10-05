@@ -11,7 +11,7 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($titre_page, ENT_QUOTES, 'UTF-8'); ?> — Xibaar Yi</title>
-    <meta name="description" content="Xibaar Yi — L'actualité du Sénégal.">
+    <?php include __DIR__ . '/meta.php'; ?>
     <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
 
 </head>
@@ -85,7 +85,7 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
             
         </nav>
 
-        <?php if (in_array($_SESSION['user_role'] ?? '', ['editeur', 'administrateur'], true)) : ?>
+        <?php if (voit_back_office()) : ?>
             <?php
             // Compteurs affichés à côté des liens : messages non lus, commentaires à valider
             $requetes_compteurs = [
@@ -110,7 +110,8 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
                 'admin/messages/liste.php'     => 'Messages',
                 'admin/commentaires/liste.php' => 'Commentaires',
             ];
-            if ($_SESSION['user_role'] === 'administrateur') {
+            // Le compte démo voit aussi la page Utilisateurs (en lecture seule)
+            if (in_array($_SESSION['user_role'], ['administrateur', 'demo'], true)) {
                 $liens_admin['admin/utilisateurs/liste.php'] = 'Utilisateurs';
             }
             $liens_admin['admin/compte.php'] = 'Mon compte';
@@ -142,6 +143,20 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
                     </a>
                 <?php endforeach; ?>
             </nav>
+
+            <?php if (est_demo()) : ?>
+                <div class="bandeau-demo">
+                    <strong>Mode démo</strong> — explorez librement le back-office :
+                    les ajouts, modifications et suppressions sont désactivés,
+                    et les coordonnées des visiteurs sont masquées.
+                </div>
+                <?php if (!empty($_SESSION['message_demo'])) : ?>
+                    <?php unset($_SESSION['message_demo']); ?>
+                    <div class="alert alert-danger bandeau-demo-refus">
+                        Action non enregistrée : le compte démo est en lecture seule.
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 

@@ -74,8 +74,8 @@ include __DIR__ . '/../../../includes/entete.php';
                     </td>
                     <td>
                         <?= htmlspecialchars($c['nom']) ?><br>
-                        <a href="mailto:<?= htmlspecialchars($c['email']) ?>" style="font-size:12px; color:#cc0000;">
-                            <?= htmlspecialchars($c['email']) ?>
+                        <a href="mailto:<?= htmlspecialchars(masquer_si_demo($c['email'])) ?>" style="font-size:12px; color:#cc0000;">
+                            <?= htmlspecialchars(masquer_si_demo($c['email'])) ?>
                         </a>
                     </td>
                     <td><?= nl2br(htmlspecialchars($c['contenu'])) ?></td>
