@@ -36,13 +36,23 @@ include __DIR__ . '/../includes/entete.php';
                 </p>
             <?php else : ?>
                 <p style="max-width: 600px; background: #fff0f0; color: #cc0000; border: 1px solid #ffcccc; padding: 12px 16px; font-size: 13px; margin-bottom: 20px;">
-                    ✗ Message non envoyé : vérifiez que tous les champs sont remplis et que l'email est valide.
+                    <?php if ($_GET['envoi'] === 'trop_rapide') : ?>
+                        ✗ Message non envoyé : merci de patienter une minute avant d'envoyer un nouveau message.
+                    <?php else : ?>
+                        ✗ Message non envoyé : vérifiez que tous les champs sont remplis et que l'email est valide.
+                    <?php endif; ?>
                 </p>
             <?php endif; ?>
         <?php endif; ?>
 
         <form action="<?= url('traitement_contact.php') ?>" method="POST" style="max-width: 600px;">
-            
+
+            <!-- Champ piège anti-robots : invisible pour les humains, ne pas remplir -->
+            <div class="champ-piege" aria-hidden="true">
+                <label for="site_web">Ne pas remplir ce champ</label>
+                <input type="text" id="site_web" name="site_web" tabindex="-1" autocomplete="off">
+            </div>
+
             <div style="margin-bottom: 20px;">
                 <label style="display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">Nom complet</label>
                 <input type="text" name="nom" required maxlength="150" placeholder="Ex: Moussa Diop"
@@ -97,6 +107,8 @@ include __DIR__ . '/../includes/entete.php';
             <?php include __DIR__ . '/../includes/message_newsletter.php'; ?>
             <form action="<?= url('traitement_newsletter.php') ?>" method="POST">
                 <input type="hidden" name="retour" value="contact.php">
+                <!-- Champ piège anti-robots (caché) -->
+                <input type="text" name="site_web" class="champ-piege" tabindex="-1" autocomplete="off" aria-hidden="true">
                 <input type="email" name="email" placeholder="Votre email" required style="width: 100%; padding: 8px; font-size: 12px; border: 1px solid #ddd; margin-bottom: 8px;">
                 <button type="submit" style="width: 100%; background: #111; color: #fff; border: none; padding: 8px; font-size: 11px; font-weight: bold; cursor: pointer; width: 100%;">S'ABONNER</button>
             </form>

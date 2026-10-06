@@ -49,9 +49,13 @@ function voit_back_office()
     return in_array($_SESSION['user_role'] ?? '', ['editeur', 'administrateur', 'demo'], true);
 }
 
-// Le compte démo est public : il ne doit pas voir les vraies coordonnées
-// des visiteurs (commentaires, messages) ni celles de la rédaction.
-// "moussa.fall@xibaar.sn" -> "m•••@xibaar.sn", "77 123 45 67" -> "•• ••• •• 67"
+// Le compte démo est public : il ne doit pas voir les données privées
+// des visiteurs (messages, commentaires pas encore publiés) ni les logins de la rédaction.
+//   email     "moussa.fall@xibaar.sn" -> "m•••@xibaar.sn"
+//   telephone "77 123 45 67"          -> "•• ••• •• 67"
+//   nom       "Moussa Fall"           -> "M. F."
+//   login     "moussa"                -> "m•••"
+//   texte     (message entier)        -> remplacé par une mention
 function masquer_si_demo($texte, $type = 'email')
 {
     if (!est_demo() || $texte === null || $texte === '') {
@@ -60,6 +64,16 @@ function masquer_si_demo($texte, $type = 'email')
     if ($type === 'email' && strpos($texte, '@') !== false) {
         [$nom, $domaine] = explode('@', $texte, 2);
         return mb_substr($nom, 0, 1) . '•••@' . $domaine;
+    }
+    if ($type === 'nom') {
+        $mots = preg_split('/\s+/u', trim($texte));
+        return implode(' ', array_map(fn($mot) => mb_strtoupper(mb_substr($mot, 0, 1)) . '.', $mots));
+    }
+    if ($type === 'login') {
+        return $texte === 'demo' ? $texte : mb_substr($texte, 0, 1) . '•••';
+    }
+    if ($type === 'texte') {
+        return '[Contenu masqué en mode démo]';
     }
     return preg_replace('/\d(?=(?:\D*\d){2})/u', '•', $texte);
 }

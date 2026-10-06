@@ -49,7 +49,7 @@ include __DIR__ . '/../../../includes/entete.php';
             <?php foreach ($utilisateurs as $u): ?>
             <tr>
                 <td><?= htmlspecialchars($u['prenom'] . ' ' . $u['nom']) ?></td>
-                <td><?= htmlspecialchars($u['login']) ?></td>
+                <td><?= htmlspecialchars(masquer_si_demo($u['login'], 'login')) ?></td>
                 <td>
                     <span class="badge"><?= htmlspecialchars($u['role']) ?></span>
                 </td>

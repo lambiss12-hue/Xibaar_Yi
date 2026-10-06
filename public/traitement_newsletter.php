@@ -5,6 +5,13 @@ require_once __DIR__ . '/../includes/config.php';
 $pages_retour = ['index.php', 'contact.php'];
 $retour = in_array($_POST['retour'] ?? '', $pages_retour, true) ? $_POST['retour'] : 'index.php';
 
+// Anti-spam : champ piège rempli (robot) ou inscriptions en rafale (une toutes les 30 secondes).
+// Le robot reçoit le message de succès, mais rien n'est enregistré.
+if (!empty($_POST['site_web']) || time() - ($_SESSION['derniere_inscription'] ?? 0) < 30) {
+    header('Location: ' . url($retour . '?newsletter=ok'));
+    exit();
+}
+
 // On récupère l'email envoyé par le formulaire via $_POST
 $email = isset($_POST['email']) ? trim($_POST['email']) : '';
 
@@ -37,6 +44,8 @@ try {
     }
     throw $e;
 }
+
+$_SESSION['derniere_inscription'] = time();
 
 // On redirige avec un message de succès
 header('Location: ' . url($retour . '?newsletter=ok'));

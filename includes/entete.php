@@ -1,8 +1,6 @@
 <?php
 // auth.php charge config.php et fournit csrf_champ() (bouton de déconnexion)
 require_once __DIR__ . '/auth.php';
-
-$titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
 ?>
 
 <!DOCTYPE html>
@@ -10,8 +8,8 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($titre_page, ENT_QUOTES, 'UTF-8'); ?> — Xibaar Yi</title>
-    <?php include __DIR__ . '/meta.php'; ?>
+    <?php include __DIR__ . '/meta.php'; // calcule $meta_titre à partir de $titre_page ?>
+    <title><?= htmlspecialchars($meta_titre, ENT_QUOTES, 'UTF-8') ?></title>
     <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
 
 </head>
@@ -148,7 +146,7 @@ $titre_page = isset($titre_page) ? $titre_page : 'Xibaar Yi';
                 <div class="bandeau-demo">
                     <strong>Mode démo</strong> — explorez librement le back-office :
                     les ajouts, modifications et suppressions sont désactivés,
-                    et les coordonnées des visiteurs sont masquées.
+                    et les données privées (messages, commentaires en attente, coordonnées, logins) sont masquées.
                 </div>
                 <?php if (!empty($_SESSION['message_demo'])) : ?>
                     <?php unset($_SESSION['message_demo']); ?>

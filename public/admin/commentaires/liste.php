@@ -65,6 +65,14 @@ include __DIR__ . '/../../../includes/entete.php';
             </thead>
             <tbody>
                 <?php foreach ($commentaires as $c) : ?>
+                <?php
+                // Compte démo : un commentaire pas encore publié reste privé
+                // (ceux qui sont approuvés sont déjà visibles de tous sur le site)
+                if ($c['statut'] !== 'approuve') {
+                    $c['nom']     = masquer_si_demo($c['nom'], 'nom');
+                    $c['contenu'] = masquer_si_demo($c['contenu'], 'texte');
+                }
+                ?>
                 <tr style="<?= $c['statut'] === 'en_attente' ? 'background:#fffaf5;' : '' ?>">
                     <td style="white-space:nowrap;">
                         <?php if ($c['statut'] === 'en_attente') : ?>

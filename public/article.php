@@ -93,6 +93,14 @@ $messages_commentaire = [
 ];
 $message_commentaire = $messages_commentaire[$_GET['commentaire'] ?? ''] ?? null;
 
+// Onglet et aperçu du lien partagé (voir includes/meta.php) : ceux de l'article
+$titre_page       = $article['titre'];
+$meta_description = $article['description_courte'];
+$meta_type        = 'article';
+if (!empty($article['image'])) {
+    $meta_image = 'uploads/' . rawurlencode($article['image']);
+}
+
 ?>
 <?php
 

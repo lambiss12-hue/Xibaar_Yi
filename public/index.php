@@ -115,6 +115,12 @@ function url_page($numero, $categorie, $recherche)
 
 ?>
 <?php
+// Titre de l'onglet : accueil (valeur par défaut), catégorie ou recherche
+if ($recherche !== '') {
+    $titre_page = 'Recherche : ' . $recherche;
+} elseif ($filtre_categorie !== '') {
+    $titre_page = $filtre_categorie;
+}
 include __DIR__ . '/../includes/entete.php';
 ?>
 
@@ -258,6 +264,8 @@ include __DIR__ . '/../includes/entete.php';
 
         <form action="<?= url('traitement_newsletter.php') ?>" method="POST">
             <input type="hidden" name="retour" value="index.php">
+            <!-- Champ piège anti-robots (caché) -->
+            <input type="text" name="site_web" class="champ-piege" tabindex="-1" autocomplete="off" aria-hidden="true">
             <input type="email" name="email" placeholder="Votre email..." required 
                    style="width: 100%; padding: 10px; font-size: 12px; border: 1px solid #ddd; margin-bottom: 10px; display: block;">
             

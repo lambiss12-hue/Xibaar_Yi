@@ -142,7 +142,7 @@
 
             <div class="form-group">
                 <label class="form-label">Login *</label>
-                <input type="text" name="login" class="form-control" maxlength="50" value="<?= htmlspecialchars($user['login']) ?>">
+                <input type="text" name="login" class="form-control" maxlength="50" value="<?= htmlspecialchars(masquer_si_demo($user['login'], 'login')) ?>">
             </div>
 
             <div class="form-group">

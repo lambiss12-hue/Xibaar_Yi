@@ -7,6 +7,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
+// Anti-spam 1 : champ piège "site_web", caché par le CSS (comme pour les commentaires).
+// Un robot le remplit : on fait comme si tout s'était bien passé, sans rien enregistrer.
+if (!empty($_POST['site_web'])) {
+    header('Location: ' . url('contact.php?envoi=ok'));
+    exit();
+}
+
 $nom     = trim($_POST['nom'] ?? '');
 $email   = trim($_POST['email'] ?? '');
 $sujet   = $_POST['sujet'] ?? '';
@@ -30,8 +37,17 @@ if (!mb_check_encoding($nom . $email . $message, 'UTF-8')
     exit();
 }
 
+// Anti-spam 2 : un message par minute maximum par visiteur
+if (time() - ($_SESSION['dernier_contact'] ?? 0) < 60) {
+    $_SESSION['contact_saisie'] = compact('nom', 'email', 'sujet', 'message');
+    header('Location: ' . url('contact.php?envoi=trop_rapide'));
+    exit();
+}
+
 $stmt = $pdo->prepare("INSERT INTO messages_contact (nom, email, sujet, message) VALUES (?, ?, ?, ?)");
 $stmt->execute([$nom, $email, $sujet, $message]);
+
+$_SESSION['dernier_contact'] = time();
 
 header('Location: ' . url('contact.php?envoi=ok'));
 exit();
