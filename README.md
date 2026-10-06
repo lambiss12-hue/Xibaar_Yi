@@ -19,12 +19,16 @@ back-office where the editorial team publishes and moderates content.
   on the real file content, XSS escaping everywhere (details below).
 - **Deployed on shared hosting** (InfinityFree): `.htaccess` rules expose only `public/`, credentials live in
   a git-ignored config file, and PHP errors are logged, never shown to visitors.
+- **Real headlines, no cron**: headlines are imported from the RSS feeds of Senegalese media (APS, Le Soleil,
+  wiwsport...) and filed into categories by keyword. Free hosting has no scheduled tasks, so the import runs at
+  most every 3 hours, after a visitor's page has been sent, with a MySQL lock against concurrent runs.
 - **Read-only demo mode**: a dedicated `demo` role can open every back-office page, but every form submission is
-  rejected centrally in `exiger_role()`, and visitors' emails and phone numbers are masked.
+  rejected centrally in `exiger_role()`, and private data (messages, pending comments, contact details, logins) is masked.
 
 ## Features
 
 **Public site**
+- Real Senegalese headlines (title, short teaser, photo credited to the outlet, link to the original article), refreshed automatically
 - Latest articles with pagination, category filter, and full-text search (title, summary, content)
 - Article page with view counter ("Most read") and "Read also" suggestions
 - Comments, published only after moderation (anti-spam honeypot + rate limit)
@@ -37,9 +41,9 @@ back-office where the editorial team publishes and moderates content.
 |------|:--------:|:----------:|:-------------------:|:-----:|
 | Editor | ✅ | ✅ | ✅ | ❌ |
 | Administrator | ✅ | ✅ | ✅ | ✅ |
-| Demo | 👁 read-only | 👁 | 👁 (contact details masked) | 👁 |
+| Demo | 👁 read-only | 👁 | 👁 (private data masked) | 👁 |
 
-- Article management with image upload, search and category filter
+- Article management with image upload, search and category filter; "Refresh now" button for the headline import
 - Comment moderation (pending / approved), contact inbox with unread counter
 - User management for administrators; "My account" page to update one's own profile and password
 
@@ -51,7 +55,7 @@ back-office where the editorial team publishes and moderates content.
 ## Tech stack
 
 - **PHP 8** (PDO, sessions), no framework, no Composer dependency
-- **MySQL 8**: 7 tables with foreign keys, schema in [`database/database.sql`](database/database.sql),
+- **MySQL 8**: 8 tables with foreign keys, schema in [`database/database.sql`](database/database.sql),
   versioned migrations in [`database/migrations/`](database/migrations/)
 - **HTML / CSS / vanilla JavaScript** (client-side form checks; the server always re-validates)
 - Hosted on **InfinityFree** (Apache), deployed over FTP

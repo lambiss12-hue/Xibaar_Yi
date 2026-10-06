@@ -41,7 +41,10 @@ if (envoi_trop_lourd()) {
     $ancienne_image = $article['image'];
     $image          = $ancienne_image;
 
-    if (empty($titre) || empty($description) || empty($contenu) || $id_categorie === 0) {
+    // Titre importé d'un flux RSS : pas de contenu (le texte complet reste chez le média)
+    $contenu_obligatoire = empty($article['source_url']);
+
+    if (empty($titre) || empty($description) || ($contenu_obligatoire && empty($contenu)) || $id_categorie === 0) {
         $erreur = "Tous les champs obligatoires doivent être remplis.";
     } elseif (!in_array($id_categorie, array_map('intval', array_column($categories, 'id')), true)) {
         $erreur = "Cette catégorie n'existe pas.";
@@ -128,7 +131,7 @@ require_once __DIR__ . '/../../../includes/entete.php';
             </div>
 
             <div style="margin-bottom:20px;">
-                <label style="display:block; font-size:12px; font-weight:700; color:#444; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px;">Contenu complet *</label>
+                <label style="display:block; font-size:12px; font-weight:700; color:#444; margin-bottom:6px; text-transform:uppercase; letter-spacing:.5px;">Contenu complet<?= $article['source_url'] ? ' (titre importé : facultatif)' : ' *' ?></label>
                 <textarea name="contenu" rows="10"
                     style="width:100%; padding:10px 14px; border:1px solid #ddd; border-radius:4px; font-size:14px; font-family:inherit; resize:vertical;"><?= htmlspecialchars($article['contenu']) ?></textarea>
             </div>
@@ -172,7 +175,9 @@ document.getElementById('formModifier').addEventListener('submit', function(e) {
     const contenu    = document.querySelector('[name="contenu"]').value.trim();
     const categorie  = document.querySelector('[name="id_categorie"]').value;
 
-    if (!titre || !description || !contenu || !categorie) {
+    const contenuObligatoire = <?= $article['source_url'] ? 'false' : 'true' ?>;
+
+    if (!titre || !description || (contenuObligatoire && !contenu) || !categorie) {
         e.preventDefault();
         alert('Veuillez remplir tous les champs obligatoires.');
     }

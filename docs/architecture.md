@@ -64,6 +64,7 @@ Le traitement est fait **avant** d'afficher l'en-tête : on peut encore redirige
 | `config.php` | démarre la session, se connecte à MySQL (PDO), définit `url()` et `motif_like()` |
 | `auth.php` | `exiger_role()`, jeton CSRF : `csrf_champ()`, `csrf_valide()`, `exiger_post_csrf()` |
 | `upload.php` | `enregistrer_image()` : vérifie et enregistre une image envoyée |
+| `actualites.php` | import des titres depuis les flux RSS (sources, rubriques par mots-clés, nettoyage) |
 | `entete.php` | début du HTML, recherche, menu des catégories, barre « Rédaction » |
 | `pied.php` | pied de page, fin du HTML |
 | `message_newsletter.php` | message affiché après une inscription à la newsletter |
@@ -122,6 +123,7 @@ Cacher un lien dans le menu ne suffit pas : quelqu'un pourrait taper l'adresse �
 | Contact | `public/contact.php`, `public/traitement_contact.php` |
 | Newsletter | `public/traitement_newsletter.php`, `includes/message_newsletter.php` |
 | Gestion des articles | `public/admin/articles/` |
+| Titres importés (flux RSS) | `includes/actualites.php`, `includes/pied.php` (import automatique), `public/admin/articles/importer.php` |
 | Gestion des catégories | `public/admin/categories/` |
 | Messages de contact | `public/admin/messages/` |
 | Modération des commentaires | `public/admin/commentaires/` |

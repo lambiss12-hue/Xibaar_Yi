@@ -19,12 +19,17 @@ avec `demo` / `demo1234` (compte en lecture seule : tout est visible, rien ne pe
   images vérifiées par leur contenu, échappement XSS partout (détails plus bas).
 - **En ligne sur un hébergement mutualisé** (InfinityFree) : des règles `.htaccess` n'exposent que `public/`,
   les identifiants sont dans un fichier ignoré par Git, et les erreurs PHP vont dans le journal, jamais à l'écran.
+- **De vrais titres, sans cron** : les titres sont importés des flux RSS de médias sénégalais (APS, Le Soleil,
+  wiwsport...) et rangés par rubrique grâce à des mots-clés. L'hébergeur gratuit n'a pas de tâches planifiées :
+  l'import se lance au plus toutes les 3 heures, une fois la page d'un visiteur envoyée, avec un verrou MySQL.
 - **Mode démo en lecture seule** : un rôle `demo` ouvre toutes les pages du back-office, mais tout envoi de
-  formulaire est refusé à un seul endroit (`exiger_role()`), et les emails et téléphones des visiteurs sont masqués.
+  formulaire est refusé à un seul endroit (`exiger_role()`), et les données privées (messages, commentaires en attente,
+  coordonnées, logins) sont masquées.
 
 ## Fonctionnalités
 
 **Partie publique**
+- Vrais titres de l'actualité sénégalaise (titre, courte accroche, photo créditée au média, lien vers l'article original), mis à jour automatiquement
 - Derniers articles avec pagination, filtre par catégorie et recherche (titre, résumé, contenu)
 - Page article avec compteur de vues (« Les plus lus ») et suggestions « À lire aussi »
 - Commentaires publiés après validation par la rédaction (champ piège anti-robots + un commentaire toutes les 30 s)
@@ -51,7 +56,7 @@ avec `demo` / `demo1234` (compte en lecture seule : tout est visible, rien ne pe
 ## Technologies
 
 - **PHP 8** (PDO, sessions), sans framework ni dépendance Composer
-- **MySQL 8** : 7 tables reliées par des clés étrangères, schéma dans [`database/database.sql`](database/database.sql),
+- **MySQL 8** : 8 tables reliées par des clés étrangères, schéma dans [`database/database.sql`](database/database.sql),
   migrations dans [`database/migrations/`](database/migrations/)
 - **HTML / CSS / JavaScript** (vérification des formulaires ; le serveur revérifie toujours)
 - Hébergé chez **InfinityFree** (Apache), mis en ligne par FTP

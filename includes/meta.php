@@ -4,7 +4,7 @@
 // Une page peut définir avant l'inclusion (sinon, valeurs du site) :
 //   $titre_page       titre de l'onglet et de l'aperçu
 //   $meta_description résumé affiché sous le titre
-//   $meta_image       image de l'aperçu (chemin dans public/)
+//   $meta_image       image de l'aperçu (chemin dans public/, ou adresse complète https://...)
 $description_site = "Xibaar Yi — site d'actualité sénégalaise : articles par catégorie, recherche, "
                   . "commentaires modérés et back-office de rédaction. Projet PHP / MySQL.";
 
@@ -24,6 +24,6 @@ $url_hote  = ($https ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'lo
     <meta property="og:site_name" content="Xibaar Yi">
     <meta property="og:title" content="<?= htmlspecialchars($meta_titre, ENT_QUOTES, 'UTF-8') ?>">
     <meta property="og:description" content="<?= htmlspecialchars($meta_description, ENT_QUOTES, 'UTF-8') ?>">
-    <meta property="og:image" content="<?= htmlspecialchars($url_hote . url($meta_image), ENT_QUOTES, 'UTF-8') ?>">
+    <meta property="og:image" content="<?= htmlspecialchars(preg_match('#^https?://#', $meta_image) ? $meta_image : $url_hote . url($meta_image), ENT_QUOTES, 'UTF-8') ?>">
     <meta property="og:locale" content="fr_FR">
     <meta name="twitter:card" content="summary_large_image">

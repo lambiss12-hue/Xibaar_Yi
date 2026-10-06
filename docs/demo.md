@@ -1,5 +1,8 @@
 # Démonstration — soutenance
 
+> Scénario de la soutenance (septembre 2026). Depuis, les 20 articles d'exemple ont été remplacés
+> par de vrais titres importés des flux RSS de médias sénégalais (voir `includes/actualites.php`).
+
 Scénario de démo d'environ **10 minutes**, puis les questions probables du jury.
 
 ## Avant la soutenance (la veille)

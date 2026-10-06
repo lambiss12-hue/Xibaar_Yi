@@ -65,3 +65,16 @@ require_once __DIR__ . '/config.php';
 <!-- Fin du document HTML.
      Chaque page PHP du projet se termine donc avec include 'pied.php'
      qui ferme proprement toutes les balises ouvertes dans entete.php. -->
+<?php
+// Page entièrement envoyée : on met à jour les titres d'actualité si le dernier
+// import date de plus de 3 heures (l'hébergeur gratuit n'a pas de tâches planifiées).
+// Le visiteur a déjà sa page ; au pire, son navigateur attend quelques secondes de plus.
+require_once __DIR__ . '/actualites.php';
+session_write_close(); // sinon la session reste verrouillée : la page suivante du visiteur attendrait la fin de l'import
+if (function_exists('fastcgi_finish_request')) {
+    fastcgi_finish_request();
+} else {
+    flush();
+}
+actualiser_si_necessaire($pdo);
+?>

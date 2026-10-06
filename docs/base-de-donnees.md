@@ -31,10 +31,13 @@ erDiagram
         text description_courte
         longtext contenu
         varchar image "nom du fichier dans uploads/"
+        varchar image_url "titre importé : photo du média"
         datetime date_publication
         int vues "compteur de lectures"
         int id_categorie FK
-        int id_auteur FK
+        int id_auteur FK "NULL si titre importé"
+        varchar source_nom "titre importé : média"
+        varchar source_url UK "titre importé : lien original"
     }
     commentaires {
         int id PK
@@ -98,6 +101,12 @@ Membres de la rédaction (les visiteurs n'ont pas de compte).
 - `description_courte` : le résumé affiché sur l'accueil.
 - `image` : seulement le **nom** du fichier ; l'image est dans `public/uploads/`.
 - `vues` : +1 à chaque lecture, une seule fois par visiteur et par session.
+- `source_nom`, `source_url` : remplis pour un **titre importé** d'un flux RSS (voir `includes/actualites.php`).
+  `id_auteur` est alors `NULL` et `contenu` est vide : le texte complet reste chez le média.
+  `source_url` est **unique** : un même article n'est jamais importé deux fois.
+- `image_url` : photo d'un titre importé, prise dans le flux ou dans l'image d'aperçu (`og:image`) de la page
+  de l'article. Elle reste chez le média (on n'affiche que son adresse). `NULL` = pas encore cherchée,
+  `''` = aucune. `image` garde l'image de la rubrique, affichée si la photo ne se charge pas.
 
 ### `commentaires`
 Créés avec `statut = 'en_attente'` ; visibles sur le site seulement quand un membre de la
@@ -116,6 +125,10 @@ Une ligne par échec de connexion (adresse IP + date). À partir de 5 échecs en
 sont supprimées automatiquement, et une connexion réussie efface celles de son adresse IP.
 Table indépendante (aucune clé étrangère).
 
+### `imports_rss`
+Une ligne par import de titres (date, nombre de titres ajoutés, sources qui n'ont pas répondu).
+La date du dernier import décide si le prochain visiteur déclenche un nouvel import (toutes les 3 heures).
+
 ## Évolutions : les migrations
 
 Quand la structure change, on ajoute un script dans [`database/migrations/`](../database/migrations/)
@@ -131,5 +144,7 @@ pour mettre à jour les bases **déjà créées** (sans perdre les données) :
 | `006_commentaires.sql` | table `commentaires` |
 | `007_tentatives_connexion.sql` | table `tentatives_connexion` (limite des échecs de connexion) |
 | `008_compte_demo.sql` | rôle `demo` + compte de démonstration en lecture seule |
+| `009_actualites_importees.sql` | colonnes `source_nom` / `source_url`, table `imports_rss`, suppression des articles d'exemple |
+| `010_image_source.sql` | colonne `image_url` (photo des titres importés) |
 
 Une base neuve n'en a pas besoin : `database.sql` contient déjà la structure finale.

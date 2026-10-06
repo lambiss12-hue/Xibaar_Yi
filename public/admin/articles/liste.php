@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../../includes/auth.php';
+require_once __DIR__ . '/../../../includes/actualites.php';
 
 exiger_role(['editeur', 'administrateur']);
 
@@ -24,10 +25,11 @@ $where = $conditions ? 'WHERE ' . implode(' AND ', $conditions) : '';
 $stmt = $pdo->prepare("
     SELECT a.id, a.titre, a.date_publication,
            c.nom AS categorie_nom,
+           a.source_nom, a.source_url,
            CONCAT(u.prenom, ' ', u.nom) AS auteur_nom
     FROM articles a
     JOIN categories c   ON a.id_categorie = c.id
-    JOIN utilisateurs u ON a.id_auteur = u.id
+    LEFT JOIN utilisateurs u ON a.id_auteur = u.id
     $where
     ORDER BY a.date_publication DESC
 ");
@@ -35,6 +37,11 @@ $stmt->execute($params);
 $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $categories = $pdo->query("SELECT id, nom FROM categories ORDER BY nom ASC")->fetchAll(PDO::FETCH_ASSOC);
+
+// Titres d'actualité importés (voir includes/actualites.php)
+$dernier_import = dernier_import($pdo);
+$rapport_import = $_SESSION['rapport_import'] ?? null; // résultat d'un import lancé à la main
+unset($_SESSION['rapport_import']);
 
 include __DIR__ . '/../../../includes/entete.php';
 ?>
@@ -48,6 +55,32 @@ include __DIR__ . '/../../../includes/entete.php';
             Nouvel article
         </a>
     </div>
+
+    <div class="import-rss">
+        <div>
+            <strong>Titres d'actualité importés</strong>
+            (APS, Le Soleil, wiwsport... — mis à jour automatiquement toutes les 3 heures)<br>
+            <?php if ($dernier_import) : ?>
+                Dernière mise à jour : <?= date('d/m/Y à H:i', strtotime($dernier_import['date_import'])) ?>
+                · <?= (int) $dernier_import['nb_ajoutes'] ?> nouveau(x) titre(s)
+            <?php else : ?>
+                Aucun import pour le moment.
+            <?php endif; ?>
+        </div>
+        <form method="POST" action="<?= url('admin/articles/importer.php') ?>" class="form-inline">
+            <?= csrf_champ() ?>
+            <button type="submit" class="btn btn-secondary" style="cursor:pointer; font-family:inherit;">Actualiser maintenant</button>
+        </form>
+    </div>
+
+    <?php if ($rapport_import) : ?>
+        <div class="alert <?= $rapport_import['erreurs'] ? 'alert-danger' : 'alert-success' ?>">
+            <?= htmlspecialchars($rapport_import['message']) ?>
+            <?php foreach ($rapport_import['erreurs'] as $erreur_flux) : ?>
+                <br>· <?= htmlspecialchars($erreur_flux) ?>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
     <form method="GET" action="<?= url('admin/articles/liste.php') ?>"
           style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
@@ -77,7 +110,7 @@ include __DIR__ . '/../../../includes/entete.php';
             <tr>
                 <th>Titre</th>
                 <th>Catégorie</th>
-                <th>Auteur</th>
+                <th>Auteur / source</th>
                 <th>Date</th>
                 <th>Actions</th>
             </tr>
@@ -91,7 +124,15 @@ include __DIR__ . '/../../../includes/entete.php';
                     </a>
                 </td>
                 <td><span class="badge"><?= htmlspecialchars($a['categorie_nom']) ?></span></td>
-                <td><?= htmlspecialchars($a['auteur_nom']) ?></td>
+                <td>
+                    <?php if ($a['source_url']) : ?>
+                        <a href="<?= htmlspecialchars($a['source_url']) ?>" target="_blank" rel="noopener" title="Article original">
+                            <?= htmlspecialchars($a['source_nom']) ?> ↗
+                        </a>
+                    <?php else : ?>
+                        <?= htmlspecialchars($a['auteur_nom']) ?>
+                    <?php endif; ?>
+                </td>
                 <td style="white-space:nowrap;"><?= date('d/m/Y', strtotime($a['date_publication'])) ?></td>
                 <td style="display:flex; gap:8px;">
                     <a href="<?= url('admin/articles/modifier.php') ?>?id=<?= $a['id'] ?>" class="btn btn-secondary">Modifier</a>

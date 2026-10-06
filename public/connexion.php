@@ -113,7 +113,7 @@
 
     // RÉCUPÉRER LE DERNIER ARTICLE (reste inchangé)
     $dernierArticle = $pdo->query("
-        SELECT a.titre, CONCAT(u.prenom, ' ', u.nom) AS auteur_nom, a.date_publication
+        SELECT a.titre, COALESCE(a.source_nom, CONCAT(u.prenom, ' ', u.nom)) AS auteur_nom, a.date_publication
         FROM articles a
         LEFT JOIN utilisateurs u ON a.id_auteur = u.id
         ORDER BY a.date_publication DESC

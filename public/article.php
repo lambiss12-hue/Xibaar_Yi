@@ -20,12 +20,15 @@ $sql = "SELECT articles.id,
                articles.description_courte,
                articles.date_publication,
                articles.image,
+               articles.image_url,
                articles.vues,
                categories.nom AS categorie_nom,
+               articles.source_nom,
+               articles.source_url,
                CONCAT(u.prenom, ' ', u.nom) AS auteur_nom
         FROM articles
         JOIN categories ON articles.id_categorie = categories.id
-        JOIN utilisateurs u ON articles.id_auteur = u.id
+        LEFT JOIN utilisateurs u ON articles.id_auteur = u.id
         WHERE articles.id = :id_article
         LIMIT 1";
 
@@ -97,7 +100,9 @@ $message_commentaire = $messages_commentaire[$_GET['commentaire'] ?? ''] ?? null
 $titre_page       = $article['titre'];
 $meta_description = $article['description_courte'];
 $meta_type        = 'article';
-if (!empty($article['image'])) {
+if (!empty($article['image_url'])) {
+    $meta_image = $article['image_url'];            // photo du média (adresse complète)
+} elseif (!empty($article['image'])) {
     $meta_image = 'uploads/' . rawurlencode($article['image']);
 }
 
@@ -152,12 +157,13 @@ include __DIR__ . '/../includes/entete.php';
             <?php echo htmlspecialchars($article['titre'], ENT_QUOTES, 'UTF-8'); ?>
         </h1>
 
-       
+        <?php if ($article['description_courte'] !== '') : ?>
         <p style="font-size: 16px; color: #444; font-style: italic;
                   line-height: 1.6; margin-bottom: 16px; border-left: 3px solid #e00;
                   padding-left: 14px;">
             <?php echo htmlspecialchars($article['description_courte'], ENT_QUOTES, 'UTF-8'); ?>
         </p>
+        <?php endif; ?>
 
        
         <div class="hero-meta" style="margin-bottom: 24px; padding-bottom: 20px;
@@ -170,7 +176,7 @@ include __DIR__ . '/../includes/entete.php';
                     <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                 </svg>
-                <?php echo htmlspecialchars($article['auteur_nom'], ENT_QUOTES, 'UTF-8'); ?>
+                <?php echo htmlspecialchars($article['source_nom'] ?? $article['auteur_nom'], ENT_QUOTES, 'UTF-8'); ?>
             </span>
 
             <span>
@@ -193,17 +199,38 @@ include __DIR__ . '/../includes/entete.php';
             </span>
         </div>
 
-        <?php if (!empty($article['image'])) : ?>
+        <?php if ($article['source_url'] && !empty($article['image_url'])) : ?>
+            <!-- Titre importé : la photo reste chez le média, on la crédite -->
+            <figure class="article-figure">
+                <img src="<?= htmlspecialchars($article['image_url'], ENT_QUOTES, 'UTF-8') ?>"<?= image_secours($article) ?>
+                     alt="<?= htmlspecialchars($article['titre'], ENT_QUOTES, 'UTF-8') ?>"
+                     class="article-image">
+                <figcaption>Photo : <?= htmlspecialchars($article['source_nom'], ENT_QUOTES, 'UTF-8') ?></figcaption>
+            </figure>
+        <?php elseif (!empty($article['image']) && !$article['source_url']) : ?>
+            <?php // Sans photo du média, un titre importé n'a que l'image de sa rubrique : pas en grand ?>
             <img src="<?= url('uploads/' . rawurlencode($article['image'])) ?>"
                  alt="<?= htmlspecialchars($article['titre'], ENT_QUOTES, 'UTF-8') ?>"
                  class="article-image">
         <?php endif; ?>
 
-        <div style="font-size: 15px; color: #333; line-height: 1.8;">
-            <?php
-            echo nl2br(htmlspecialchars($article['contenu'], ENT_QUOTES, 'UTF-8'));
-            ?>
-        </div>
+        <?php if ($article['source_url']) : ?>
+            <!-- Titre importé d'un flux RSS : le texte complet reste chez le média -->
+            <div class="article-source">
+                <p>Cette actualité a été publiée par <strong><?= htmlspecialchars($article['source_nom'], ENT_QUOTES, 'UTF-8') ?></strong>.
+                   Xibaar Yi n'en reprend que le titre et le début.</p>
+                <a href="<?= htmlspecialchars($article['source_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener"
+                   class="article-source-lien">
+                    Lire l'article complet sur <?= htmlspecialchars($article['source_nom'], ENT_QUOTES, 'UTF-8') ?> →
+                </a>
+            </div>
+        <?php else : ?>
+            <div style="font-size: 15px; color: #333; line-height: 1.8;">
+                <?php
+                echo nl2br(htmlspecialchars($article['contenu'], ENT_QUOTES, 'UTF-8'));
+                ?>
+            </div>
+        <?php endif; ?>
 
         
         <div class="article-actions">

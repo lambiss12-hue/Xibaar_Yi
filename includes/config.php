@@ -115,3 +115,24 @@ function url($chemin = '')
 {
     return BASE_URL . '/' . ltrim($chemin, '/');
 }
+
+// Image d'un article : la photo du média pour un titre importé (image_url),
+// sinon le fichier de public/uploads/ (image envoyée par la rédaction, ou image de la rubrique).
+function image_article(array $article)
+{
+    if (!empty($article['image_url'])) {
+        return $article['image_url'];
+    }
+    return !empty($article['image']) ? url('uploads/' . rawurlencode($article['image'])) : '';
+}
+
+// Attribut onerror : si la photo du média ne s'affiche pas (supprimée, blocage),
+// on la remplace par l'image de la rubrique
+function image_secours(array $article)
+{
+    if (empty($article['image_url']) || empty($article['image'])) {
+        return '';
+    }
+    $secours = url('uploads/' . rawurlencode($article['image']));
+    return ' onerror="this.onerror=null; this.src=\'' . htmlspecialchars($secours, ENT_QUOTES, 'UTF-8') . '\'"';
+}

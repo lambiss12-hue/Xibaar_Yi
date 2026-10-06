@@ -54,11 +54,13 @@ $sql = "SELECT articles.id,
                articles.description_courte,
                articles.date_publication,
                articles.image,
+               articles.image_url,
+               articles.source_nom,
                categories.nom AS categorie_nom,
-               CONCAT(u.prenom, ' ', u.nom) AS auteur_nom
+               COALESCE(articles.source_nom, CONCAT(u.prenom, ' ', u.nom)) AS auteur_nom
         FROM articles
         JOIN categories ON articles.id_categorie = categories.id
-        JOIN utilisateurs u ON articles.id_auteur = u.id
+        LEFT JOIN utilisateurs u ON articles.id_auteur = u.id
         $where
         ORDER BY articles.date_publication DESC
         LIMIT " . (int) $articles_par_page . " OFFSET " . (int) $offset;
@@ -77,10 +79,10 @@ $articles_bref = $pdo->query("SELECT articles.id,
                                      articles.titre,
                                      articles.date_publication,
                                      categories.nom AS categorie_nom,
-                                     CONCAT(u.prenom, ' ', u.nom) AS auteur_nom
+                                     COALESCE(articles.source_nom, CONCAT(u.prenom, ' ', u.nom)) AS auteur_nom
                               FROM articles
                               JOIN categories ON articles.id_categorie = categories.id
-                              JOIN utilisateurs u ON articles.id_auteur = u.id
+                              LEFT JOIN utilisateurs u ON articles.id_auteur = u.id
                               $exclusion
                               ORDER BY articles.date_publication DESC
                               LIMIT 3")->fetchAll(PDO::FETCH_ASSOC);
@@ -159,9 +161,9 @@ include __DIR__ . '/../includes/entete.php';
                 
                 <a href="<?= url('article.php') ?>?id=<?php echo intval($article['id']); ?>" class="hero">
                     <div class="hero-img">
-                        <?php if (!empty($article['image'])) : ?>
-                            <img src="<?= url('uploads/') ?><?php echo htmlspecialchars($article['image'], ENT_QUOTES, 'UTF-8'); ?>"
-                                 alt="<?php echo htmlspecialchars($article['titre'], ENT_QUOTES, 'UTF-8'); ?>"
+                        <?php if (image_article($article) !== '') : ?>
+                            <img src="<?= htmlspecialchars(image_article($article), ENT_QUOTES, 'UTF-8') ?>"<?= image_secours($article) ?>
+                                 alt="<?php echo htmlspecialchars($article['titre'], ENT_QUOTES, 'UTF-8'); ?>" loading="lazy"
                                  style="width:100%; height:100%; object-fit:cover; display:block;">
                         <?php else : ?>
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
@@ -177,7 +179,7 @@ include __DIR__ . '/../includes/entete.php';
                     </div>
                     <h2 class="hero-title"><?php echo htmlspecialchars($article['titre']); ?></h2>
                     <p class="hero-desc"><?php echo htmlspecialchars($article['description_courte']); ?></p>
-                    <div class="hero-meta">Par <b><?php echo htmlspecialchars($article['auteur_nom']); ?></b></div>
+                    <div class="hero-meta"><?= $article['source_nom'] ? 'Source :' : 'Par' ?> <b><?php echo htmlspecialchars($article['auteur_nom']); ?></b></div>
                 </a>
 
             <?php endforeach; ?>
