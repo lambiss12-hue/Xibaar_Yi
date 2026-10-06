@@ -93,7 +93,7 @@ INSERT IGNORE INTO categories (id, nom) VALUES
 
 -- Compte admin : login "admin", mot de passe "admin123" (hash généré avec password_hash)
 INSERT IGNORE INTO utilisateurs (id, nom, prenom, email, telephone, login, mot_de_passe, role) VALUES
-    (1, 'Admin', 'Xibaar', 'admin@xibaar.sn', '', 'admin', '$2y$10$Bg0oIp.tAJt5hq8njUCo0.TydQPgntFgHy1lEEbUqNacBfYmojjKK', 'administrateur');
+    (1, 'Admin', 'Xibaar', '', '', 'admin', '$2y$10$Bg0oIp.tAJt5hq8njUCo0.TydQPgntFgHy1lEEbUqNacBfYmojjKK', 'administrateur');
 
 -- Compte de démonstration public : login "demo", mot de passe "demo1234".
 -- Voit tout le back-office mais ne peut rien modifier (voir exiger_role() dans includes/auth.php).

@@ -87,13 +87,12 @@ cd Xibaar_Yi
 
 mysql -u root -e "CREATE DATABASE xibaar_yi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
 mysql -u root xibaar_yi < database/database.sql
-mysql -u root xibaar_yi < database/demo.sql      # optionnel : 15 articles de plus, commentaires, messages
 
 php -S localhost:8000 -t public
 ```
 
-Puis ouvrir <http://localhost:8000>. Avec phpMyAdmin : créer la base, la sélectionner, puis **Importer**
-`database/database.sql` (et `demo.sql` si besoin). Avec Laragon / XAMPP, on peut aussi placer le dossier dans
+Puis ouvrir <http://localhost:8000> : la première visite importe les derniers titres. Avec phpMyAdmin : créer
+la base, la sélectionner, puis **Importer** `database/database.sql`. Avec Laragon / XAMPP, on peut aussi placer le dossier dans
 `www/` (ou `htdocs/`) et ouvrir <http://localhost/Xibaar_Yi/public/> : les liens sont construits par la fonction
 `url()`, le site marche quel que soit le dossier.
 
@@ -101,7 +100,6 @@ Puis ouvrir <http://localhost:8000>. Avec phpMyAdmin : créer la base, la sélec
 |-------|--------------|------|
 | `admin` | `admin123` | administrateur |
 | `demo` | `demo1234` | démo (lecture seule) |
-| `fatou`, `moussa` | `redac123` | éditeurs (avec `demo.sql`) |
 
 > ⚠️ Changer ces mots de passe sur tout serveur public (sauf celui du compte `demo`, qui ne peut rien modifier).
 
@@ -131,7 +129,7 @@ Xibaar_Yi/
 │   ├── upload.php           vérification et nettoyage des images
 │   ├── entete.php / pied.php / meta.php
 │   └── message_newsletter.php
-├── database/                database.sql, demo.sql, migrations/
+├── database/                database.sql, migrations/
 └── docs/                    architecture, base de données, captures d'écran
 ```
 

@@ -146,5 +146,6 @@ pour mettre à jour les bases **déjà créées** (sans perdre les données) :
 | `008_compte_demo.sql` | rôle `demo` + compte de démonstration en lecture seule |
 | `009_actualites_importees.sql` | colonnes `source_nom` / `source_url`, table `imports_rss`, suppression des articles d'exemple |
 | `010_image_source.sql` | colonne `image_url` (photo des titres importés) |
+| `011_suppression_donnees_fictives.sql` | retire les dernières données inventées (comptes, messages, inscrits de démo) |
 
 Une base neuve n'en a pas besoin : `database.sql` contient déjà la structure finale.

@@ -152,11 +152,8 @@
             </div>
         </div>
         <div style="border-left:2px solid #333; padding-left:16px;">
-            <div style="font-family:Georgia,serif; font-size:14px; color:#555; font-style:italic; line-height:1.6;">
-                "L'information est le premier droit du citoyen."
-            </div>
-            <div style="font-size:11px; color:#444; margin-top:8px; letter-spacing:.5px;">
-                — École Supérieure Polytechnique, 2026
+            <div style="font-size:11px; color:#555; line-height:1.6; letter-spacing:.5px;">
+                Projet né à l'École Supérieure Polytechnique de Dakar
             </div>
         </div>
     </div>

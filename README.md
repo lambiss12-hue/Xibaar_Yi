@@ -86,13 +86,12 @@ cd Xibaar_Yi
 
 mysql -u root -e "CREATE DATABASE xibaar_yi CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
 mysql -u root xibaar_yi < database/database.sql
-mysql -u root xibaar_yi < database/demo.sql      # optional: 15 more articles, comments, messages
 
 php -S localhost:8000 -t public
 ```
 
-Then open <http://localhost:8000>. Accounts: `admin` / `admin123` (administrator), `demo` / `demo1234` (read-only),
-and with `demo.sql`, `fatou` or `moussa` / `redac123` (editors). Change these passwords on any public server.
+Then open <http://localhost:8000>: the first visit imports the latest headlines. Accounts: `admin` / `admin123`
+(administrator), `demo` / `demo1234` (read-only). Change the admin password on any public server.
 
 The database settings are in [`includes/config.php`](includes/config.php) (`root` without password on port 3306;
 set the `DB_PORT` environment variable for another port). For production, copy
@@ -105,7 +104,7 @@ public/          web root: the only folder exposed to the browser
   admin/         back-office (articles, categories, comments, messages, users, account)
   assets/        CSS, favicon, preview image
 includes/        config, access control + CSRF, upload, shared header/footer
-database/        schema, demo data, migrations
+database/        schema and migrations
 docs/            architecture, database schema, screenshots (in French)
 ```
 

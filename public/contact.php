@@ -92,13 +92,16 @@ include __DIR__ . '/../includes/entete.php';
 
     <aside class="main-sidebar">
         <div class="sidebar-section">
-            <div class="sb-title">Nos bureaux</div>
+            <div class="sb-title">À propos</div>
             <p style="font-size: 12px; color: #444; line-height: 1.6;">
-                <strong>Xibaar Yi Média</strong><br>
-                Avenue Cheikh Anta Diop<br>
-                Dakar, Sénégal<br><br>
-                <strong>Téléphone :</strong> +221 33 000 00 00<br>
-                <strong>Email :</strong> redaction@xibaaryi.sn
+                <strong>Xibaar Yi</strong> est un projet portfolio de Salamba Diène, né à
+                l'École Supérieure Polytechnique de Dakar.<br><br>
+                Les titres viennent des flux publics de médias sénégalais (APS, Le Soleil, Dakaractu,
+                PressAfrik, wiwsport...) : chaque article renvoie vers sa source.<br><br>
+                Votre message arrive directement dans l'espace de rédaction du site.<br><br>
+                <a href="https://github.com/lambiss12-hue/Xibaar_Yi" target="_blank" rel="noopener" style="color: #cc0000;">
+                    Voir le code source sur GitHub →
+                </a>
             </p>
         </div>
 
