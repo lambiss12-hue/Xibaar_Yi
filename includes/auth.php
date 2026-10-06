@@ -11,11 +11,71 @@ function exiger_role(array $roles_autorises)
         exit;
     }
 
+    // Compte démo (portfolio) : il peut OUVRIR toutes les pages du back-office,
+    // mais tout envoi de formulaire (ajout, modification, suppression...) est refusé ici,
+    // avant même que la page ne traite quoi que ce soit.
+    if (est_demo()) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $_SESSION['message_demo'] = true;
+
+            // Retour sur la page où était le formulaire (même site uniquement)
+            $retour = $_SERVER['HTTP_REFERER'] ?? '';
+            $notre_hote = parse_url('//' . ($_SERVER['HTTP_HOST'] ?? ''), PHP_URL_HOST);
+            if ($retour === '' || parse_url($retour, PHP_URL_HOST) !== $notre_hote) {
+                $retour = url('admin/articles/liste.php');
+            }
+            header('Location: ' . $retour);
+            exit;
+        }
+        return;
+    }
+
     // Connecté mais sans le bon rôle -> accueil
     if (!in_array($_SESSION['user_role'], $roles_autorises, true)) {
         header('Location: ' . url('index.php'));
         exit;
     }
+}
+
+// true si l'utilisateur connecté est le compte de démonstration (lecture seule)
+function est_demo()
+{
+    return ($_SESSION['user_role'] ?? '') === 'demo';
+}
+
+// Membre de la rédaction, ou visiteur du compte démo : voit le back-office
+function voit_back_office()
+{
+    return in_array($_SESSION['user_role'] ?? '', ['editeur', 'administrateur', 'demo'], true);
+}
+
+// Le compte démo est public : il ne doit pas voir les données privées
+// des visiteurs (messages, commentaires pas encore publiés) ni les logins de la rédaction.
+//   email     "moussa.fall@xibaar.sn" -> "m•••@xibaar.sn"
+//   telephone "77 123 45 67"          -> "•• ••• •• 67"
+//   nom       "Moussa Fall"           -> "M. F."
+//   login     "moussa"                -> "m•••"
+//   texte     (message entier)        -> remplacé par une mention
+function masquer_si_demo($texte, $type = 'email')
+{
+    if (!est_demo() || $texte === null || $texte === '') {
+        return $texte;
+    }
+    if ($type === 'email' && strpos($texte, '@') !== false) {
+        [$nom, $domaine] = explode('@', $texte, 2);
+        return mb_substr($nom, 0, 1) . '•••@' . $domaine;
+    }
+    if ($type === 'nom') {
+        $mots = preg_split('/\s+/u', trim($texte));
+        return implode(' ', array_map(fn($mot) => mb_strtoupper(mb_substr($mot, 0, 1)) . '.', $mots));
+    }
+    if ($type === 'login') {
+        return $texte === 'demo' ? $texte : mb_substr($texte, 0, 1) . '•••';
+    }
+    if ($type === 'texte') {
+        return '[Contenu masqué en mode démo]';
+    }
+    return preg_replace('/\d(?=(?:\D*\d){2})/u', '•', $texte);
 }
 
 // Jeton CSRF : prouve que le formulaire vient bien de notre site.

@@ -65,6 +65,14 @@ include __DIR__ . '/../../../includes/entete.php';
             </thead>
             <tbody>
                 <?php foreach ($commentaires as $c) : ?>
+                <?php
+                // Compte démo : un commentaire pas encore publié reste privé
+                // (ceux qui sont approuvés sont déjà visibles de tous sur le site)
+                if ($c['statut'] !== 'approuve') {
+                    $c['nom']     = masquer_si_demo($c['nom'], 'nom');
+                    $c['contenu'] = masquer_si_demo($c['contenu'], 'texte');
+                }
+                ?>
                 <tr style="<?= $c['statut'] === 'en_attente' ? 'background:#fffaf5;' : '' ?>">
                     <td style="white-space:nowrap;">
                         <?php if ($c['statut'] === 'en_attente') : ?>
@@ -74,8 +82,8 @@ include __DIR__ . '/../../../includes/entete.php';
                     </td>
                     <td>
                         <?= htmlspecialchars($c['nom']) ?><br>
-                        <a href="mailto:<?= htmlspecialchars($c['email']) ?>" style="font-size:12px; color:#cc0000;">
-                            <?= htmlspecialchars($c['email']) ?>
+                        <a href="mailto:<?= htmlspecialchars(masquer_si_demo($c['email'])) ?>" style="font-size:12px; color:#cc0000;">
+                            <?= htmlspecialchars(masquer_si_demo($c['email'])) ?>
                         </a>
                     </td>
                     <td><?= nl2br(htmlspecialchars($c['contenu'])) ?></td>

@@ -17,8 +17,11 @@ $description  = trim($_POST['description_courte'] ?? '');
 $contenu      = trim($_POST['contenu'] ?? '');
 $id_categorie = (int) ($_POST['id_categorie'] ?? 0);
 
+// Envoi trop lourd pour le serveur : le formulaire arrive vide (voir includes/upload.php)
+if (envoi_trop_lourd()) {
+    $erreur = "L'image est trop lourde (5 Mo maximum).";
 // Jeton CSRF : le formulaire doit venir de notre site
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valide()) {
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valide()) {
     $erreur = "Le formulaire a expiré. Veuillez réessayer.";
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_auteur   = $_SESSION['user_id'];

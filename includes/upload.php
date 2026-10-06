@@ -11,6 +11,17 @@ const IMAGES_AUTORISEES = [
 const TAILLE_MAX_IMAGE = 5 * 1024 * 1024; // 5 Mo
 
 /*
+ * true si le formulaire envoyé dépassait la limite du serveur (post_max_size) :
+ * PHP jette alors TOUT le formulaire ($_POST et $_FILES vides, jeton CSRF compris).
+ * Sans ce test, on afficherait "Le formulaire a expiré" au lieu de "image trop lourde".
+ */
+function envoi_trop_lourd()
+{
+    return $_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST) && empty($_FILES)
+        && (int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > 0;
+}
+
+/*
  * Enregistre $fichier (une entrée de $_FILES) dans public/uploads/.
  * Retourne :
  *   - le nom du fichier enregistré si tout va bien

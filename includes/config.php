@@ -20,6 +20,11 @@ if (is_file(__DIR__ . '/config.local.php')) {
 ini_set('display_errors', $config['afficher_erreurs'] ? '1' : '0');
 ini_set('log_errors', '1');
 
+// Aucun formulaire du site n'envoie de tableau : une adresse trafiquée comme
+// index.php?q[]=x ferait planter trim() ou htmlspecialchars(). On ne garde que les textes.
+$_GET  = array_filter($_GET, 'is_string');
+$_POST = array_filter($_POST, 'is_string');
+
 // Heure de Dakar (UTC+0, sans heure d'été), quel que soit le fuseau du serveur
 date_default_timezone_set('Africa/Dakar');
 

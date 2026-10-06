@@ -52,13 +52,13 @@ include __DIR__ . '/../../../includes/entete.php';
                         <?= date('d/m/Y H:i', strtotime($m['date_envoi'])) ?>
                     </td>
                     <td style="<?= $m['lu'] ? '' : 'font-weight:700;' ?>">
-                        <?= htmlspecialchars($m['nom']) ?><br>
-                        <a href="mailto:<?= htmlspecialchars($m['email']) ?>" style="font-size:12px; color:#cc0000; font-weight:400;">
-                            <?= htmlspecialchars($m['email']) ?>
+                        <?= htmlspecialchars(masquer_si_demo($m['nom'], 'nom')) ?><br>
+                        <a href="mailto:<?= htmlspecialchars(masquer_si_demo($m['email'])) ?>" style="font-size:12px; color:#cc0000; font-weight:400;">
+                            <?= htmlspecialchars(masquer_si_demo($m['email'])) ?>
                         </a>
                     </td>
                     <td><span class="badge"><?= htmlspecialchars($libelles_sujets[$m['sujet']] ?? $m['sujet']) ?></span></td>
-                    <td><?= nl2br(htmlspecialchars($m['message'])) ?></td>
+                    <td><?= nl2br(htmlspecialchars(masquer_si_demo($m['message'], 'texte'))) ?></td>
                     <td>
                         <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-start;">
                             <form method="POST" action="<?= url('admin/messages/action.php') ?>" class="form-inline">

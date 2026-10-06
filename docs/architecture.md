@@ -75,14 +75,19 @@ le site fonctionne avec Laragon, XAMPP ou `php -S`, quel que soit le nom du doss
 
 ## Rôles et droits
 
-| | Visiteur | Éditeur | Administrateur |
-|---|:-:|:-:|:-:|
-| Lire les articles, rechercher, commenter, contact, newsletter | ✅ | ✅ | ✅ |
-| Articles : ajouter, modifier, supprimer | ❌ | ✅ | ✅ |
-| Catégories | ❌ | ✅ | ✅ |
-| Messages de contact, modération des commentaires | ❌ | ✅ | ✅ |
-| Mon compte (infos + mot de passe) | ❌ | ✅ | ✅ |
-| Utilisateurs | ❌ | ❌ | ✅ |
+| | Visiteur | Démo | Éditeur | Administrateur |
+|---|:-:|:-:|:-:|:-:|
+| Lire les articles, rechercher, commenter, contact, newsletter | ✅ | ✅ | ✅ | ✅ |
+| Articles : ajouter, modifier, supprimer | ❌ | 👁 | ✅ | ✅ |
+| Catégories | ❌ | 👁 | ✅ | ✅ |
+| Messages de contact, modération des commentaires | ❌ | 👁 | ✅ | ✅ |
+| Mon compte (infos + mot de passe) | ❌ | 👁 | ✅ | ✅ |
+| Utilisateurs | ❌ | 👁 | ❌ | ✅ |
+
+👁 = page visible, mais aucun envoi de formulaire n'est accepté. Le compte **démo** (`demo` / `demo1234`)
+sert aux visiteurs du portfolio : `exiger_role()` le laisse ouvrir toutes les pages du back-office
+et refuse toutes ses requêtes POST, avant que la page ne traite quoi que ce soit.
+Les emails et téléphones des visiteurs et de la rédaction lui sont masqués (`masquer_si_demo()`).
 
 Le contrôle est fait **côté serveur** par `exiger_role()` au début de chaque page admin.
 Cacher un lien dans le menu ne suffit pas : quelqu'un pourrait taper l'adresse à la main.

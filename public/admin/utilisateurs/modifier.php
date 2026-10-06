@@ -41,7 +41,7 @@
 
         if (empty($nom) || empty($prenom) || empty($login) || empty($role)) {
             $erreur = "Les champs nom, prénom, login et rôle sont obligatoires.";
-        } elseif (!in_array($role, ['editeur', 'administrateur'], true)) {
+        } elseif (!in_array($role, ['editeur', 'administrateur', 'demo'], true)) {
             $erreur = "Rôle invalide.";
         } elseif ($id === (int) $_SESSION['user_id'] && $role !== 'administrateur') {
             // Sinon l'administrateur perdrait lui-même l'accès à cette page
@@ -132,17 +132,17 @@
             <div class="form-grille">
                 <div class="form-group">
                     <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" maxlength="150" value="<?= htmlspecialchars($user['email'] ?? '') ?>">
+                    <input type="email" name="email" class="form-control" maxlength="150" value="<?= htmlspecialchars(masquer_si_demo($user['email'] ?? '')) ?>">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Téléphone</label>
-                    <input type="text" name="telephone" class="form-control" maxlength="30" value="<?= htmlspecialchars($user['telephone'] ?? '') ?>">
+                    <input type="text" name="telephone" class="form-control" maxlength="30" value="<?= htmlspecialchars(masquer_si_demo($user['telephone'] ?? '', 'telephone')) ?>">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Login *</label>
-                <input type="text" name="login" class="form-control" maxlength="50" value="<?= htmlspecialchars($user['login']) ?>">
+                <input type="text" name="login" class="form-control" maxlength="50" value="<?= htmlspecialchars(masquer_si_demo($user['login'], 'login')) ?>">
             </div>
 
             <div class="form-group">
@@ -155,6 +155,7 @@
                 <select name="role" class="form-control">
                     <option value="editeur" <?= $user['role'] === 'editeur' ? 'selected' : '' ?>>Éditeur</option>
                     <option value="administrateur" <?= $user['role'] === 'administrateur' ? 'selected' : '' ?>>Administrateur</option>
+                    <option value="demo" <?= $user['role'] === 'demo' ? 'selected' : '' ?>>Démo (lecture seule)</option>
                 </select>
             </div>
 

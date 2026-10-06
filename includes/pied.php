@@ -28,7 +28,12 @@ require_once __DIR__ . '/config.php';
             <!-- date('Y') affiche l'année courante dynamiquement.
                  Ainsi le copyright se met à jour automatiquement chaque année. -->
             <div class="footer-text">
-                &copy; <?php echo date('Y'); ?> — École Supérieure Polytechnique
+                &copy; <?php echo date('Y'); ?> Salamba Diène — projet né à l'École Supérieure Polytechnique de Dakar
+            </div>
+            <div class="footer-text">
+                <a href="https://github.com/lambiss12-hue/Xibaar_Yi" target="_blank" rel="noopener" class="footer-source">
+                    Code source sur GitHub
+                </a>
             </div>
         </div>
 

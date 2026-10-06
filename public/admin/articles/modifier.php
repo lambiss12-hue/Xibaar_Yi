@@ -27,8 +27,11 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY nom ASC")->fetchAll
 $erreur = '';
 $succes = '';
 
+// Envoi trop lourd pour le serveur : le formulaire arrive vide (voir includes/upload.php)
+if (envoi_trop_lourd()) {
+    $erreur = "L'image est trop lourde (5 Mo maximum).";
 // Jeton CSRF : le formulaire doit venir de notre site
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valide()) {
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_valide()) {
     $erreur = "Le formulaire a expiré. Veuillez réessayer.";
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titre        = trim($_POST['titre'] ?? '');

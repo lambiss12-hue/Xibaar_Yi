@@ -125,7 +125,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion — Xibaar Yi</title>
+    <?php $titre_page = 'Connexion'; include __DIR__ . '/../includes/meta.php'; ?>
+    <title><?= htmlspecialchars($meta_titre, ENT_QUOTES, 'UTF-8') ?></title>
     <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
 </head>
 <body>
